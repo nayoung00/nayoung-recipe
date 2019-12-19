@@ -64,7 +64,7 @@ public class App {
       recipe = recipes[i];
       
       System.out.printf("%d, %s, %s, %d, %d\n", 
-          recipe.no,  recipe.cook,  recipe.material,  recipe.expense,  recipe.time);
+          recipe.no,  recipe.cook,  recipe.method,  recipe.expense,  recipe.time);
     }
     
     keyboard.close();
