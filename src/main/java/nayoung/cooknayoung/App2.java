@@ -5,41 +5,48 @@ import java.util.Scanner;
 public class App2 {
   public static void main(String[] args) {
     Scanner keyboard = new Scanner(System.in);
-
     
-    final int SIZE = 100;
-    int[] no = new int[SIZE];
-    String[] name = new String[SIZE];
-    String[] email = new String[SIZE];
-    String[] password = new String[SIZE];
-    String[] photo = new String[SIZE];
-    int[] tel = new int[SIZE];
+    class Member{
+      int no;
+      String name;
+      String email;
+      String password;
+      String photo;
+      int tel;      
+    }
+    
+      final int SIZE = 100;
+      Member[] members = new Member[SIZE];
 
     int count = 0;
     for (int i = 0; i < SIZE; i++) {
       count++;;
       
+      Member member = new Member();
+      
       System.out.print("번호? ");
-      no[i] = keyboard.nextInt();
+      member.no = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.print("이름? ");
-      name[i] = keyboard.nextLine();
+      member.name = keyboard.nextLine();
 
       System.out.print("이메일? ");
-      email[i] = keyboard.nextLine();
+      member.email = keyboard.nextLine();
 
       System.out.print("암호? ");
-      password[i] = keyboard.nextLine();
+      member.password = keyboard.nextLine();
 
       System.out.print("사진? ");
-      photo[i] = keyboard.nextLine();
+      member.photo = keyboard.nextLine();
 
       System.out.print("전화? ");
-      tel[i] = keyboard.nextInt();
+      member.tel = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.println(); 
+      
+      members[i] = member;
 
       System.out.print("계속 입력하시겠습니까?(Y/n) ");
       String response = keyboard.nextLine();
@@ -50,8 +57,12 @@ public class App2 {
     System.out.println(); 
 
     for (int i = 0; i <count; i++) {
+      Member member;
+      member = members[i];
+      
       System.out.printf("%d, %s, %s, %s, %s, %d\n", 
-          no[i], name[i], email[i], password[i], photo[i], tel[i]);
+          member.no, member.name, member.email, 
+          member.password, member.photo, member.tel);
     }
     keyboard.close();
   }

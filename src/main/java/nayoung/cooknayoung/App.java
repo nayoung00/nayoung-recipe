@@ -5,44 +5,49 @@ import java.util.Scanner;
 public class App {
   public static void main(String[] args) {
     Scanner keyboard = new Scanner(System.in);
-
+  
+    class Recipe{
+      int no;
+      String cook;
+      String material;
+      String method;
+      int expense;
+      int time;     
+    }
+    
     final int SIZE = 100;
-
-    int[] no = new int[SIZE];
-    String[] cook = new String[SIZE];
-    String[] material = new String[SIZE];
-    String[] method = new String[SIZE];
-    int[] expense = new int[SIZE];
-    int[] time = new int[SIZE];
-
+    Recipe[] recipes = new Recipe[SIZE];
 
     int count = 0;
     for (int i = 0; i < 100; i++) {
       count++;
+      Recipe recipe = new Recipe();
 
       System.out.print("번호? ");
-      no[i] = keyboard.nextInt();
+      recipe.no = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.print("요리? ");
-      cook[i] = keyboard.nextLine();
+      recipe.cook = keyboard.nextLine();
 
       System.out.print("재료? ");
-      material[i] = keyboard.nextLine();
+      recipe.material = keyboard.nextLine();
 
       System.out.print("방법? ");
-      method[i] = keyboard.nextLine();
+      recipe.method = keyboard.nextLine();
 
       System.out.print("비용? ");
-      expense[i] = keyboard.nextInt();
+      recipe.expense = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.print("시간? ");
-      time[i] = keyboard.nextInt();
+      recipe.time = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.println(); 
 
+      recipes[i] = recipe; 
+      
       System.out.print("계속 입력하시겠습니까?(Y/n) ");
       String response = keyboard.nextLine();
       if (!response.equalsIgnoreCase("y")) {
@@ -54,9 +59,14 @@ public class App {
     System.out.println();
 
     for (int i = 0; i <count; i++) {
+      
+      Recipe recipe;
+      recipe = recipes[i];
+      
       System.out.printf("%d, %s, %s, %d, %d\n", 
-          no[i], cook[i], material[i], expense[i], time[i]);
+          recipe.no,  recipe.cook,  recipe.material,  recipe.expense,  recipe.time);
     }
+    
     keyboard.close();
   }
 }
