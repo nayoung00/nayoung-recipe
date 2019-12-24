@@ -1,25 +1,17 @@
-package nayoung.cooknayoung;
+package nayoung.cooknayoung.handler;
 
-import java.sql.Date;
 import java.util.Scanner;
+import nayoung.cooknayoung.domain.Recipe;
 
 public class RecipeHandler {
   
-  static class Recipe{
-    int no;
-    String cook;
-    String material;
-    String method;
-    int expense;
-    int time;     
-  }
-  
+
+  public static Scanner keyboard;
   static final int RECIPE_SIZE = 100;
   static Recipe[] recipes = new Recipe[RECIPE_SIZE];    
   static int recipeCount = 0;
-  static Scanner keyboard;
 
-  static void addRecipe() {
+  public static void addRecipe() {
     Recipe recipe = new Recipe();
 
     System.out.print("번호? ");
@@ -49,8 +41,7 @@ public class RecipeHandler {
     System.out.println("저장하였습니다.");
   }
 
-
-  static void listRecipe() {
+ public static void listRecipe() {
     for (int i = 0; i <recipeCount; i++) {
       Recipe r = recipes[i];
       System.out.printf("%d, %s, %s, %d, %d\n", 

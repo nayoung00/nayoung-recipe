@@ -1,24 +1,18 @@
-package nayoung.cooknayoung;
+package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import java.util.Scanner;
+import nayoung.cooknayoung.domain.Board;
 
 public class BoardHandler {
 
-  static class Board{
-    int no;
-    String title;
-    Date date;
-    int viewCount;
-  }
-
+  public static Scanner keyboard;
   static final int BOARD_SIZE = 100;
   static Board[] boards = new Board[BOARD_SIZE];
   static int boardCount = 0;
-  static Scanner keyboard;
 
 
-  static void listBoard() {
+  public static void listBoard() {
     for (int i = 0; i < boardCount; i++) {
       Board b = boards[i];
       System.out.printf("%d, %s, %s, %d\n", 
@@ -26,7 +20,7 @@ public class BoardHandler {
     }
   }
 
-  static void addBoard() {
+  public static void addBoard() {
     Board board = new Board();
 
     System.out.print("번호? ");
@@ -42,7 +36,5 @@ public class BoardHandler {
     boards[boardCount++] = board;
     System.out.println("저장하였습니다.");
   }
-
  
-  
 }
