@@ -6,12 +6,13 @@ import nayoung.cooknayoung.domain.Recipe;
 public class RecipeHandler {
   
 
-  public static Scanner keyboard;
+  Recipe[] recipes = new Recipe[RECIPE_SIZE];    
+  int recipeCount = 0;
+  
   static final int RECIPE_SIZE = 100;
-  static Recipe[] recipes = new Recipe[RECIPE_SIZE];    
-  static int recipeCount = 0;
+  public static Scanner keyboard;
 
-  public static void addRecipe() {
+  public void addRecipe() {
     Recipe recipe = new Recipe();
 
     System.out.print("번호? ");
@@ -37,13 +38,13 @@ public class RecipeHandler {
 
     System.out.println(); 
 
-    recipes[recipeCount++] = recipe; 
+    this.recipes[this.recipeCount++] = recipe; 
     System.out.println("저장하였습니다.");
   }
 
- public static void listRecipe() {
-    for (int i = 0; i <recipeCount; i++) {
-      Recipe r = recipes[i];
+ public void listRecipe() {
+    for (int i = 0; i <this.recipeCount; i++) {
+      Recipe r = this.recipes[i];
       System.out.printf("%d, %s, %s, %d, %d\n", 
           r.no,  r.cook,  r.method,  r.expense,  r.time);
     }       

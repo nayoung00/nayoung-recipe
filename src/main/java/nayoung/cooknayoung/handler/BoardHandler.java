@@ -6,12 +6,13 @@ import nayoung.cooknayoung.domain.Board;
 
 public class BoardHandler {
 
-  static final int BOARD_SIZE = 100;
-  static Board[] boards = new Board[BOARD_SIZE];
-  static int boardCount = 0;
-  public static Scanner keyboard;
+  Board[] boards = new Board[BOARD_SIZE];
+  int boardCount = 0;
 
-  public static void addBoard() {
+  static final int BOARD_SIZE = 100;
+  public static Scanner keyboard;
+  
+  public void addBoard() {
     Board board = new Board();
 
     System.out.print("번호? ");
@@ -24,27 +25,26 @@ public class BoardHandler {
     board.date = new Date(System.currentTimeMillis());
     board.viewCount = 0;
 
-    boards[boardCount++] = board;
+    this.boards[this.boardCount++] = board;
     System.out.println("저장하였습니다.");
   }
-
-  public static void listBoard() {
-    for (int i = 0; i < boardCount; i++) {
-      Board b = boards[i];
+  public void listBoard() {
+    for (int i = 0; i < this.boardCount; i++) {
+      Board b = this.boards[i];
       System.out.printf("%d, %s, %s, %d\n", 
           b.no, b.title, b.date, b.viewCount);
     }
   }
-  public static void detailBoard() {
+  public void detailBoard() {
     System.out.println("게시물 번호? ");
     int no = keyboard.nextInt();
     keyboard.nextLine(); // 숫자 뒤의 남은 공백 제거 
 
     Board board = null;
 
-    for (int i = 0; i < boardCount; i++) {
-      if (boards[i].no == no) {
-        board = boards[i];
+    for (int i = 0; i < this.boardCount; i++) {
+      if (this.boards[i].no == no) {
+        board = this.boards[i];
         break;       
       }
     }   
