@@ -1,40 +1,55 @@
 package nayoung.cooknayoung.handler;
 
 import java.util.Scanner;
+import nayoung.cooknayoung.domain.Member;
 import nayoung.cooknayoung.domain.Recipe;
 
 public class RecipeHandler {
   
-
-  Recipe[] recipes = new Recipe[RECIPE_SIZE];    
+  
+  Recipe[] recipes;    
   int recipeCount = 0;
+  Scanner input;
   
   static final int RECIPE_SIZE = 100;
-  public static Scanner keyboard;
+  
+  public RecipeHandler(Scanner input) {
+    this. input = input;
+    this. recipes = new Recipe[RECIPE_SIZE];
+  }
+  
+  public RecipeHandler(Scanner input, int capacity) {
+    this.input = input;
+    if (capacity < RECIPE_SIZE || capacity > 10000)
+      this.recipes = new Recipe[RECIPE_SIZE];
+    else
+      this.recipes = new Recipe[capacity];
+  }
+
 
   public void addRecipe() {
     Recipe recipe = new Recipe();
 
     System.out.print("번호? ");
-    recipe.no = keyboard.nextInt();
-    keyboard.nextLine();
+    recipe.no = input.nextInt();
+    input.nextLine();
 
     System.out.print("요리? ");
-    recipe.cook = keyboard.nextLine();
+    recipe.cook = input.nextLine();
 
     System.out.print("재료? ");
-    recipe.material = keyboard.nextLine();
+    recipe.material = input.nextLine();
 
     System.out.print("방법? ");
-    recipe.method = keyboard.nextLine();
+    recipe.method = input.nextLine();
 
     System.out.print("비용? ");
-    recipe.expense = keyboard.nextInt();
-    keyboard.nextLine();
+    recipe.expense = input.nextInt();
+    input.nextLine();
 
     System.out.print("시간? ");
-    recipe.time = keyboard.nextInt();
-    keyboard.nextLine();
+    recipe.time = input.nextInt();
+    input.nextLine();
 
     System.out.println(); 
 

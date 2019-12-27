@@ -11,17 +11,13 @@ public class App {
 
   public static void main(String[] args) {
 
-    RecipeHandler.keyboard = keyboard;
-    MemberHandler.keyboard = keyboard;
-    BoardHandler.keyboard = keyboard;
+    RecipeHandler recipe = new RecipeHandler(keyboard);
 
-    RecipeHandler recipe = new RecipeHandler();
+    MemberHandler member = new MemberHandler(keyboard);
 
-    MemberHandler member = new MemberHandler();
-
-    BoardHandler board1 = new BoardHandler();
-    BoardHandler board2 = new BoardHandler();
-    BoardHandler board3 = new BoardHandler();
+    BoardHandler board1 = new BoardHandler(keyboard);
+    BoardHandler board2 = new BoardHandler(keyboard);
+    BoardHandler board3 = new BoardHandler(keyboard);
 
     String command;
 
