@@ -1,23 +1,39 @@
-# 009 - 생성자가 필요한 이유
+# 010 - 인스턴스 연산자와 메서드
 
-- 생성자의 용도 이해한다.
-- 생성자를 이용하여 인스턴스를 사용하기 전에 필요한 값들을 준비할 수 있다.
+- 메서드를 활용하여 인스턴스 값을 다루는 연산자를 정의할 수 있다.
+- 캡슐화의 의미를 이해하고, 셋터/겟터를 만들 수 있다.
 
 ## 실습 소스 및 결과
 
-- src/main/java/com/eomcs/lms/handler/BoardHandler.java 변경
+- src/main/java/com/eomcs/lms/domain/Lesson.java 변경
+- src/main/java/com/eomcs/lms/domain/Member.java 변경
+- src/main/java/com/eomcs/lms/domain/Board.java 변경
 - src/main/java/com/eomcs/lms/handler/LessonHandler.java 변경
 - src/main/java/com/eomcs/lms/handler/MemberHandler.java 변경
-- src/main/java/com/eomcs/lms/App.java 변경
+- src/main/java/com/eomcs/lms/handler/BoardHandler.java 변경
 
 
-### 작업1) 핸들러 객체의 필수 입력 값인 keyboard를 반드시 설정하게 만들라!
 
+### 작업1) Recipe 인스턴스의 값을 다룰 연산자를 정의하라.
+
+- Recipe.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
 - RecipeHandler.java
-    - 기본 생성자 대신에 파라미터로 keyboard를 받는 생성자를 추가한다.
+    - Recipe 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.
+
+### 작업2) Member 인스턴스의 값을 다룰 연산자를 정의하라.
+
+- Member.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
 - MemberHandler.java
-    - 기본 생성자 대신에 파라미터로 keyboard를 받는 생성자를 추가한다.
+    - Member 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.
+
+### 작업3) Board 인스턴스의 값을 다룰 연산자를 정의하라.
+
+- Board.java
+    - 인스턴스 변수(필드)를 비공개(private)로 전환한다.
+    - 값을 설정하고 리턴해주는 세터/게터를 정의한다.
 - BoardHandler.java
-    - 기본 생성자 대신에 파라미터로 keyboard를 받는 생성자를 추가한다.
-- App.java
-    - 핸들러의 인스턴스를 생성할 때 파라미터의 값으로 keyboard 객체를 넘긴다.
+    - Board 인스턴스에 값을 넣고 꺼낼 때 세터/겟터를 사용한다.

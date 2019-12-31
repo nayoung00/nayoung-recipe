@@ -31,24 +31,24 @@ public class RecipeHandler {
     Recipe recipe = new Recipe();
 
     System.out.print("번호? ");
-    recipe.no = input.nextInt();
+    recipe.setNo(input.nextInt());
     input.nextLine();
 
     System.out.print("요리? ");
-    recipe.cook = input.nextLine();
+    recipe.setCook(input.nextLine());
 
     System.out.print("재료? ");
-    recipe.material = input.nextLine();
+    recipe.setMaterial(input.nextLine());
 
     System.out.print("방법? ");
-    recipe.method = input.nextLine();
+    recipe.setMethod(input.nextLine());
 
     System.out.print("비용? ");
-    recipe.expense = input.nextInt();
+    recipe.setExpense(input.nextInt());
     input.nextLine();
 
     System.out.print("시간? ");
-    recipe.time = input.nextInt();
+    recipe.setTime(input.nextInt());
     input.nextLine();
 
     System.out.println(); 
@@ -61,7 +61,7 @@ public class RecipeHandler {
     for (int i = 0; i <this.recipeCount; i++) {
       Recipe r = this.recipes[i];
       System.out.printf("%d, %s, %s, %d, %d\n", 
-          r.no,  r.cook,  r.method,  r.expense,  r.time);
+          r.getNo(),  r.getCook(),  r.getMethod(),  r.getExpense(),  r.getTime());
     }       
   }
 }

@@ -15,7 +15,7 @@ public class App {
 
     MemberHandler member = new MemberHandler(keyboard);
 
-    BoardHandler board1 = new BoardHandler(keyboard);
+    BoardHandler board = new BoardHandler(keyboard);
     BoardHandler board2 = new BoardHandler(keyboard);
     BoardHandler board3 = new BoardHandler(keyboard);
 
@@ -38,14 +38,14 @@ public class App {
         case "/member/list":
           member.listMember();
           break;
-        case "/board1/add":
-          board1.addBoard();
+        case "/board/add":
+          board.addBoard();
           break;
-        case "/board1/list":
-          board1.listBoard();
+        case "/board/list":
+          board.listBoard();
           break;
-        case "/board1/detail":
-          board1.detailBoard();
+        case "/board/detail":
+          board.detailBoard();
           break;
         case "/board2/add":
           board2.addBoard();
