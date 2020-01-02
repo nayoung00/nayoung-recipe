@@ -2,38 +2,33 @@ package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import java.util.Scanner;
-import nayoung.cooknayoung.domain.Board;
 import nayoung.cooknayoung.domain.Member;
 
 public class MemberHandler {
-
-  Member[] members;
-  int memberCount = 0;
   
-  public static Scanner input;
-  static final int MEMBER_SIZE = 100;
+  MemberList memberList;
+  
+  Scanner input;
+
   
   public MemberHandler(Scanner input) {
     this. input = input;
-    this. members = new Member[MEMBER_SIZE];
+    memberList = new MemberList();
   }
   
   public MemberHandler(Scanner input, int capacity) {
     this.input = input;
-    if (capacity < MEMBER_SIZE || capacity > 10000)
-      this.members = new Member[MEMBER_SIZE];
-    else
-      this.members = new Member[capacity];
+    memberList = new MemberList(capacity);
   }
   
-  
   public void listMember() {
-    for (int i = 0; i < this.memberCount; i++) {
-      Member m = this.members[i];
+    Member[] members = this.memberList.toArray();
+    for (Member m : members) {
       System.out.printf("%d, %s, %s, %s, %s\n", 
           m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisteredDate());
     }
   }
+  
 
   public void addMember() {
     Member member = new Member();
@@ -59,7 +54,8 @@ public class MemberHandler {
 
     member.setRegisteredDate(new Date(System.currentTimeMillis()));
 
-    this.members[this.memberCount++] = member;
+    memberList.add(member);
+    
     System.out.println("저장하였습니다.");
   }
   

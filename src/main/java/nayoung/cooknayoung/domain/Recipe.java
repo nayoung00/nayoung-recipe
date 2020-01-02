@@ -44,7 +44,4 @@ public class Recipe {
   public void setTime(int time) {
     this.time = time;
   }     
-
-  
-  
 }
