@@ -5,18 +5,18 @@ import nayoung.cooknayoung.domain.Recipe;
 
 public class RecipeHandler {
   
-  RecipeList recipeList;
+  ArrayList recipeList;
 
   Scanner input;
   
   public RecipeHandler(Scanner input) {
     this. input = input;
-    recipeList = new RecipeList();
+    recipeList = new ArrayList();
   }
   
   public RecipeHandler(Scanner input, int capacity) {
     this.input = input;
-    recipeList = new RecipeList();
+    recipeList = new ArrayList();
   }
 
   public void addRecipe() {
@@ -51,8 +51,9 @@ public class RecipeHandler {
   }
 
   public void listRecipe() {
-    Recipe[] recipes = this.recipeList.toArray();
-    for (Recipe r : recipes) {
+    Object[] arr = recipeList.toArray();
+    for (Object obj : arr) {
+      Recipe r = (Recipe)obj;
       System.out.printf("%d, %s, %s, %d, %d\n", 
           r.getNo(),  r.getCook(),  r.getMethod(),  r.getExpense(),  r.getTime());
     }       
