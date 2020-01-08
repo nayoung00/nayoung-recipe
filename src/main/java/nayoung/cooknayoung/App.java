@@ -11,13 +11,9 @@ public class App {
 
   public static void main(String[] args) {
 
-    RecipeHandler recipe = new RecipeHandler(keyboard);
-
-    MemberHandler member = new MemberHandler(keyboard);
-
-    BoardHandler board = new BoardHandler(keyboard);
-    BoardHandler board2 = new BoardHandler(keyboard);
-    BoardHandler board3 = new BoardHandler(keyboard);
+    RecipeHandler RecipeHandler = new RecipeHandler(keyboard);
+    MemberHandler MemberHandler = new MemberHandler(keyboard);
+    BoardHandler BoardHandler = new BoardHandler(keyboard);
 
     String command;
 
@@ -27,45 +23,50 @@ public class App {
 
       switch (command) {
         case "/recipe/add":
-          recipe.addRecipe();
+          RecipeHandler.addRecipe();
           break;
         case "/recipe/list":
-          recipe.listRecipe();
+          RecipeHandler.listRecipe();
+          break;
+        case "/recipe/detail":
+          RecipeHandler.detailRecipe();
+          break;
+        case "/recipe/update":
+          RecipeHandler.updateRecipe();
+          break;
+        case "/recipe/delete":
+          RecipeHandler.deleteRecipe();
           break;
         case "/member/add":
-          member.addMember();
+          MemberHandler.addMember();
           break;
         case "/member/list":
-          member.listMember();
+          MemberHandler.listMember();
+          break;
+        case "/member/detail":
+          MemberHandler.detailMember();
+          break;
+        case "/member/update":
+          MemberHandler.updateMember();
+          break;
+        case "/member/delete":
+          MemberHandler.deleteMember();
           break;
         case "/board/add":
-          board.addBoard();
+          BoardHandler.addBoard();
           break;
         case "/board/list":
-          board.listBoard();
+          BoardHandler.listBoard();
           break;
         case "/board/detail":
-          board.detailBoard();
+          BoardHandler.detailBoard();
           break;
-        case "/board2/add":
-          board2.addBoard();
+        case "/board/update":
+          BoardHandler.updateBoard();
           break;
-        case "/board2/list":
-          board2.listBoard();
+        case "/board/delete":
+          BoardHandler.deleteBoard();
           break;
-        case "/board2/detail":
-          board2.detailBoard();
-          break;
-        case "/board3/add":
-          board3.addBoard();
-          break;
-        case "/board3/list":
-          board3.listBoard();
-          break;
-        case "/board3/detail":
-          board3.detailBoard();
-          break;
-
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");
