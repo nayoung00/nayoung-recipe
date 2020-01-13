@@ -4,16 +4,19 @@ import java.util.Scanner;
 import nayoung.cooknayoung.handler.BoardHandler;
 import nayoung.cooknayoung.handler.MemberHandler;
 import nayoung.cooknayoung.handler.RecipeHandler;
+import util.Prompt;
 
 public class App {
 
   static Scanner keyboard = new Scanner(System.in);
 
   public static void main(String[] args) {
+    
+    Prompt prompt = new Prompt(keyboard); 
 
     RecipeHandler RecipeHandler = new RecipeHandler(keyboard);
     MemberHandler MemberHandler = new MemberHandler(keyboard);
-    BoardHandler BoardHandler = new BoardHandler(keyboard);
+    BoardHandler BoardHandler = new BoardHandler(prompt);
 
     String command;
 

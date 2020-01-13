@@ -1,5 +1,4 @@
-# 13 - 제네릭을 사용하는 방법과 이점 
-       CRUD(Create/Retrieve/Update/Delete) 기능 완성
+# 13_2 - CRUD(Create/Retrieve/Update/Delete) 기능 완성
 
 ### 작업1) ArrayList 클래스에 제네릭을 적용하라.
 
@@ -177,8 +176,8 @@
 게시글을 변경했습니다.
 
 명령> /board/update
-번호? 20
-해당 게시글을 찾을 수 없습니다.
+게시물 인덱스? 20
+게시글 인덱스가 유효하지 않습니다.
 
 명령> /board/delete
 번호? 2
