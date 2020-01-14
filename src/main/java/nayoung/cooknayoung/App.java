@@ -14,8 +14,8 @@ public class App {
     
     Prompt prompt = new Prompt(keyboard); 
 
-    RecipeHandler RecipeHandler = new RecipeHandler(keyboard);
-    MemberHandler MemberHandler = new MemberHandler(keyboard);
+    RecipeHandler RecipeHandler = new RecipeHandler(prompt);
+    MemberHandler MemberHandler = new MemberHandler(prompt);
     BoardHandler BoardHandler = new BoardHandler(prompt);
 
     String command;
