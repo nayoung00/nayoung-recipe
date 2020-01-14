@@ -27,7 +27,7 @@ public class LinkedList<E> {
       return null;
 
     Node<E> cursor = first;
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size -1; i++) {
       cursor = cursor.next;
     }
     return cursor.value;

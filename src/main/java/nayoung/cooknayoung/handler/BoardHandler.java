@@ -2,24 +2,24 @@ package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import nayoung.cooknayoung.domain.Board;
-import util.ArrayList;
+import util.LinkedList;
 import util.Prompt;
 
 
 public class BoardHandler {
 
-  ArrayList<Board> BoardList;
+  LinkedList<Board> BoardList;
   
   Prompt prompt;
 
   public BoardHandler(Prompt prompt) {
     this.prompt = prompt;
-    this.BoardList = new ArrayList<>();
+    this.BoardList = new LinkedList<>();
   }
 
   public BoardHandler(Prompt prompt, int capacity) {
     this.prompt = prompt;
-    this.BoardList = new ArrayList<>(capacity);
+    this.BoardList = new LinkedList<>();
   }
 
   public void listBoard() {

@@ -5,13 +5,17 @@ import nayoung.cooknayoung.handler.BoardHandler;
 import nayoung.cooknayoung.handler.MemberHandler;
 import nayoung.cooknayoung.handler.RecipeHandler;
 import util.Prompt;
+import util.Stack;
 
 public class App {
 
   static Scanner keyboard = new Scanner(System.in);
 
+  static Stack<String> commandStack = new Stack<>();
+
+
   public static void main(String[] args) {
-    
+
     Prompt prompt = new Prompt(keyboard); 
 
     RecipeHandler RecipeHandler = new RecipeHandler(prompt);
@@ -19,10 +23,10 @@ public class App {
     BoardHandler BoardHandler = new BoardHandler(prompt);
 
     String command;
-
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
+      commandStack.push(command);      
 
       switch (command) {
         case "/recipe/add":
@@ -70,6 +74,9 @@ public class App {
         case "/board/delete":
           BoardHandler.deleteBoard();
           break;
+        case "history":
+          printCommandHistory();
+          break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");
@@ -81,5 +88,20 @@ public class App {
 
     keyboard.close();
   }
-}
+  private static void printCommandHistory() {
+    Stack<String> historyStack = commandStack.clone();
+    int count = 0;
+    while (!historyStack.empty()) {
+      System.out.println(historyStack.pop());
+      count++;
 
+      if ((count % 5 ) == 0 ) {
+        System.out.print(":");
+        String str = keyboard.nextLine();
+        if (str.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
+  }
+}

@@ -32,6 +32,7 @@ public class RecipeHandler {
     System.out.println(); 
     RecipeList.add(recipe);
     System.out.println("저장하였습니다.");
+
   }
 
   public void listRecipe() {
@@ -44,7 +45,6 @@ public class RecipeHandler {
 
   public void detailRecipe() {
     int index = indexOfRecipe(prompt.inputInt("번호?"));
-
 
     if (index == -1) {
       System.out.println("해당 번호의 레시피가 없습니다.");
@@ -61,6 +61,7 @@ public class RecipeHandler {
   }
 
   public void updateRecipe() {
+    System.out.println(indexOfRecipe(0));
     int index = indexOfRecipe(prompt.inputInt("번호?? "));
 
 
@@ -107,7 +108,7 @@ public class RecipeHandler {
   public void deleteRecipe() {
     int index = indexOfRecipe(prompt.inputInt("번호? "));
 
-    if(index == -1l) {
+    if(index == -1) {
       System.out.println("해당 번호의 레시피가 없습니다. ");
       return;
     }
@@ -123,6 +124,5 @@ public class RecipeHandler {
     }
     return -1;
   }
-
 }
 

@@ -31,7 +31,7 @@ public class ArrayList<E> {
   
     @SuppressWarnings("unchecked")
   public E get(int index) {
-    if (index >= 0 || index >= this.size) {
+    if (index < 0 || index >= this.size) {
       return null;
     }
     return (E) this.elementData[index];
@@ -90,14 +90,12 @@ public class ArrayList<E> {
       this.elementData = Arrays.copyOf(this.elementData, newSize);
     }
     for (int i = size -1; i >= index; i--)
-      this.elementData[i+ 1] = this.elementData[i];
+      this.elementData[i + 1] = this.elementData[i];
     
     this.elementData[index] = value;
     this.size++;
   }
 
-
- 
 
   private Object[] grow() {
     int oldSize = this.elementData.length;
