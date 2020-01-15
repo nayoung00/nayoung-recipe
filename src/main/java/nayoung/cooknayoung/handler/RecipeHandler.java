@@ -1,22 +1,17 @@
 package nayoung.cooknayoung.handler;
 
 import nayoung.cooknayoung.domain.Recipe;
-import util.ArrayList;
+import util.AbstractList;
 import util.Prompt;
 
 public class RecipeHandler {
 
-  ArrayList<Recipe> RecipeList;
-
+  AbstractList<Recipe> RecipeList;
   Prompt prompt;
 
-  public RecipeHandler(Prompt prompt) {
+  public RecipeHandler(Prompt prompt, AbstractList<Recipe> list) {
     this. prompt = prompt;
-    RecipeList = new ArrayList<>();
-  }
-  public RecipeHandler(Prompt prompt, int capacity) {
-    this.prompt = prompt;
-    RecipeList = new ArrayList<>();
+    RecipeList = list;
   }
 
   public void addRecipe() {

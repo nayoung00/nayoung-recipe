@@ -2,20 +2,20 @@ package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import nayoung.cooknayoung.domain.Member;
-import util.ArrayList;
+import util.AbstractList;
 import util.Prompt;
 
 public class MemberHandler {
 
-  ArrayList<Member> memberList;
+  AbstractList<Member> memberList;
 
   Prompt prompt;
 
-  public MemberHandler(Prompt prompt) {
+  public MemberHandler(Prompt prompt, AbstractList<Member> list) {
     this.prompt = prompt;
-    this.memberList = new ArrayList<>();
+    this.memberList = list;
   }
-
+  
   public void listMember() {
     Member[] arr = this.memberList.toArray(new Member[] {});
     for (Member m : arr) {

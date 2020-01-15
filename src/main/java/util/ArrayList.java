@@ -1,11 +1,10 @@
 package util;
 import java.util.Arrays;
-public class ArrayList<E> {
+public class ArrayList<E> extends AbstractList<E> {
 
-  static final int DEFAULT_CAPACITY = 100;
+  private static final int DEFAULT_CAPACITY = 100;
 
   Object[] elementData;
-  int size;
 
   public ArrayList() {
     this.elementData = new Object[DEFAULT_CAPACITY];
@@ -19,6 +18,7 @@ public class ArrayList<E> {
     }
   }
 
+  @Override
   public void add(E e) {
     if (this.size == this.elementData.length) {
      int oldSize = this.elementData.length;
@@ -29,6 +29,7 @@ public class ArrayList<E> {
     this.elementData[this.size++] = e;
   }
   
+  @Override
     @SuppressWarnings("unchecked")
   public E get(int index) {
     if (index < 0 || index >= this.size) {
@@ -37,6 +38,7 @@ public class ArrayList<E> {
     return (E) this.elementData[index];
   }
     
+  @Override
   @SuppressWarnings("unchecked")
   public E set(int index, E e) {
     if (index < 0 || index >= this.size) {
@@ -47,6 +49,7 @@ public class ArrayList<E> {
     return oldValue;
   }
   
+  @Override
   @SuppressWarnings("unchecked")
   public E[] toArray(E[] arr) {
     if (arr.length < this.size) {
@@ -56,6 +59,7 @@ public class ArrayList<E> {
     return arr;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public E remove(int index) {
     
@@ -70,15 +74,13 @@ public class ArrayList<E> {
     return oldValue;
   }
 
-  public int size() {
-    return this.size;
-  }
 
-  public Object toArray() {
+  @Override
+  public Object[] toArray() {
     return Arrays.copyOf(this.elementData, this.size);
   }
 
-  
+  @Override
   public void add (int index, E value) {
     if(index < 0 || index >= this.size)
       return;
@@ -98,12 +100,14 @@ public class ArrayList<E> {
 
 
   private Object[] grow() {
+    
     int oldSize = this.elementData.length;
     int newSize = oldSize + (oldSize >> 1 );
     return this.elementData = Arrays.copyOf(this.elementData, newSize);
   }
 
   private int newCapacity() {
+    
     int oldSize = this.elementData.length;
     return oldSize + (oldSize >> 1);
   }

@@ -1,9 +1,14 @@
 package nayoung.cooknayoung;
 
 import java.util.Scanner;
+import nayoung.cooknayoung.domain.Board;
+import nayoung.cooknayoung.domain.Member;
+import nayoung.cooknayoung.domain.Recipe;
 import nayoung.cooknayoung.handler.BoardHandler;
 import nayoung.cooknayoung.handler.MemberHandler;
 import nayoung.cooknayoung.handler.RecipeHandler;
+import util.ArrayList;
+import util.LinkedList;
 import util.Prompt;
 import util.Queue;
 import util.Stack;
@@ -20,64 +25,72 @@ public class App {
 
     Prompt prompt = new Prompt(keyboard); 
 
-    RecipeHandler RecipeHandler = new RecipeHandler(prompt);
-    MemberHandler MemberHandler = new MemberHandler(prompt);
-    BoardHandler BoardHandler = new BoardHandler(prompt);
+    LinkedList<Recipe> recipeList = new LinkedList<>();
+    RecipeHandler recipeHandler = new RecipeHandler(prompt, recipeList);
+
+    ArrayList<Member> memberList = new ArrayList<>();
+    MemberHandler memberHandler = new MemberHandler(prompt, memberList);
+
+    LinkedList<Board> boardList = new LinkedList<>();
+    BoardHandler boardHandler = new BoardHandler(prompt, boardList);
 
     String command;
-    
+
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
       
+      if(command.length() == 0)
+        continue;
+
       commandStack.push(command);      
       commandQueue.offer(command);
 
       switch (command) {
         case "/recipe/add":
-          RecipeHandler.addRecipe();
+          recipeHandler.addRecipe();
           break;
         case "/recipe/list":
-          RecipeHandler.listRecipe();
+          recipeHandler.listRecipe();
           break;
         case "/recipe/detail":
-          RecipeHandler.detailRecipe();
+          recipeHandler.detailRecipe();
           break;
         case "/recipe/update":
-          RecipeHandler.updateRecipe();
+          recipeHandler.updateRecipe();
           break;
         case "/recipe/delete":
-          RecipeHandler.deleteRecipe();
+          recipeHandler.deleteRecipe();
           break;
         case "/member/add":
-          MemberHandler.addMember();
+          memberHandler.addMember();
           break;
         case "/member/list":
-          MemberHandler.listMember();
+          memberHandler.listMember();
           break;
         case "/member/detail":
-          MemberHandler.detailMember();
+          memberHandler.detailMember();
           break;
         case "/member/update":
-          MemberHandler.updateMember();
+          memberHandler.updateMember();
           break;
         case "/member/delete":
-          MemberHandler.deleteMember();
+          memberHandler.deleteMember();
           break;
         case "/board/add":
-          BoardHandler.addBoard();
+          boardHandler.addBoard();
           break;
         case "/board/list":
-          BoardHandler.listBoard();
+          boardHandler.listBoard();
           break;
         case "/board/detail":
-          BoardHandler.detailBoard();
+          boardHandler.detailBoard();
           break;
         case "/board/update":
-          BoardHandler.updateBoard();
+          boardHandler.updateBoard();
           break;
         case "/board/delete":
-          BoardHandler.deleteBoard();
+          boardHandler.deleteBoard();
           break;
         case "history":
           printCommandHistory();
@@ -111,14 +124,14 @@ public class App {
       }
     }
   }
-  
+
   private static void printCommandHistory2() {
     Queue<String> historyQueue = commandQueue.clone();
     int count = 0;
-    
+
     while (historyQueue.size() > 0) {
       System.out.println(historyQueue.poll());
-      
+
       if ((++count % 5) == 0) {
         System.out.print(":");
         String str = keyboard.nextLine();
@@ -127,7 +140,5 @@ public class App {
         }
       }
     }
-    
   }
-
 }
