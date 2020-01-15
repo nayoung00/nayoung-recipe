@@ -4,8 +4,9 @@ package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import nayoung.cooknayoung.domain.Board;
-import util.AbstractList;
-import util.Prompt;
+import nayoung.cooknayoung.util.AbstractList;
+import nayoung.cooknayoung.util.Iterator;
+import nayoung.cooknayoung.util.Prompt;
 
 public class BoardHandler {
 
@@ -19,11 +20,10 @@ public class BoardHandler {
   }
   
     public void listBoard() {
-      Board[] arr = new Board[this.boardList.size()];
-
-      this.boardList.toArray(arr);
-
-      for (Board b : arr) {
+      
+        Iterator<Board> iterator = boardList.iterator();
+        while ( iterator.hasNext()) {
+          Board b = iterator.next();
         System.out.printf("%d, %s, %s, %d\n", 
             b.getNo(), b.getTitle(), b.getDate(), b.getViewCount());
       }

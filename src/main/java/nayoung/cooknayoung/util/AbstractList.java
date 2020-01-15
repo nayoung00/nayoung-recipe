@@ -1,4 +1,4 @@
-package util;
+package nayoung.cooknayoung.util;
 
 
   public abstract class AbstractList<E> implements List<E>{
@@ -7,6 +7,11 @@ package util;
     
     public int size() {
       return size;
+    }
+    
+    @Override
+    public Iterator<E> iterator(){
+      return new ListIterator<>(this);
     }
   }
 

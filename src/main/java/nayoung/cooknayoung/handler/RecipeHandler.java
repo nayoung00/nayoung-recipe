@@ -1,17 +1,18 @@
 package nayoung.cooknayoung.handler;
 
 import nayoung.cooknayoung.domain.Recipe;
-import util.AbstractList;
-import util.Prompt;
+import nayoung.cooknayoung.util.AbstractList;
+import nayoung.cooknayoung.util.Iterator;
+import nayoung.cooknayoung.util.Prompt;
 
 public class RecipeHandler {
 
-  AbstractList<Recipe> RecipeList;
+  AbstractList<Recipe> recipeList;
   Prompt prompt;
 
   public RecipeHandler(Prompt prompt, AbstractList<Recipe> list) {
     this. prompt = prompt;
-    RecipeList = list;
+    recipeList = list;
   }
 
   public void addRecipe() {
@@ -25,14 +26,16 @@ public class RecipeHandler {
     recipe.setTime(prompt.inputInt("시간? "));
 
     System.out.println(); 
-    RecipeList.add(recipe);
+    recipeList.add(recipe);
     System.out.println("저장하였습니다.");
 
   }
 
   public void listRecipe() {
-    Recipe[] arr = RecipeList.toArray(new Recipe[this.RecipeList.size()]);
-    for (Recipe r : arr) {
+    Iterator<Recipe> iterator = recipeList.iterator();
+    while(iterator.hasNext()) {
+      Recipe r = iterator.next();
+        
       System.out.printf("%d, %s, %s, %d, %d\n", 
           r.getNo(),  r.getCook(),  r.getMethod(),  r.getExpense(),  r.getTime());
     }       
@@ -45,7 +48,7 @@ public class RecipeHandler {
       System.out.println("해당 번호의 레시피가 없습니다.");
       return;
     }
-    Recipe recipe = this.RecipeList.get(index);
+    Recipe recipe = this.recipeList.get(index);
     
     System.out.printf("번호? %d\n", recipe.getNo());
     System.out.printf("요리: %s\n", recipe.getCook());
@@ -65,7 +68,7 @@ public class RecipeHandler {
       return;
     }
 
-    Recipe oldRecipe = this.RecipeList.get(index);
+    Recipe oldRecipe = this.recipeList.get(index);
     Recipe newRecipe = new Recipe();
 
     newRecipe.setNo(oldRecipe.getNo());
@@ -96,7 +99,7 @@ public class RecipeHandler {
       System.out.println("레시피 변경을 취소하였습니다.");
       return;
     }
-    this.RecipeList.set(index, newRecipe);
+    this.recipeList.set(index, newRecipe);
     System.out.println("요리를 변경했습니다.");
   }
 
@@ -108,13 +111,13 @@ public class RecipeHandler {
       return;
     }
 
-    this.RecipeList.remove(index);
+    this.recipeList.remove(index);
     System.out.println("레시피를 삭제했습니다.");
   }
 
   private int indexOfRecipe(int no) {
-    for(int i=0; i< this.RecipeList.size(); i++) {
-      if(this.RecipeList.get(i).getNo() == no)
+    for(int i=0; i< this.recipeList.size(); i++) {
+      if(this.recipeList.get(i).getNo() == no)
         return i;
     }
     return -1;

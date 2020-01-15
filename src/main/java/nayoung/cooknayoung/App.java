@@ -7,11 +7,13 @@ import nayoung.cooknayoung.domain.Recipe;
 import nayoung.cooknayoung.handler.BoardHandler;
 import nayoung.cooknayoung.handler.MemberHandler;
 import nayoung.cooknayoung.handler.RecipeHandler;
-import util.ArrayList;
-import util.LinkedList;
-import util.Prompt;
-import util.Queue;
-import util.Stack;
+import nayoung.cooknayoung.util.ArrayList;
+import nayoung.cooknayoung.util.Iterator;
+import nayoung.cooknayoung.util.LinkedList;
+import nayoung.cooknayoung.util.Prompt;
+import nayoung.cooknayoung.util.Queue;
+import nayoung.cooknayoung.util.Stack;
+
 
 public class App {
 
@@ -93,10 +95,10 @@ public class App {
           boardHandler.deleteBoard();
           break;
         case "history":
-          printCommandHistory();
+          printCommandHistory(commandStack.iterator());
           break;
         case "history2":
-          printCommandHistory2();
+          printCommandHistory(commandQueue.iterator());
           break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
@@ -109,28 +111,13 @@ public class App {
 
     keyboard.close();
   }
-  private static void printCommandHistory() {
-    Stack<String> historyStack = commandStack.clone();
-    int count = 0;
-    while (!historyStack.empty()) {
-      System.out.println(historyStack.pop());
+  
 
-      if ((++count % 5 ) == 0 ) {
-        System.out.print(":");
-        String str = keyboard.nextLine();
-        if (str.equalsIgnoreCase("q")) {
-          break;
-        }
-      }
-    }
-  }
-
-  private static void printCommandHistory2() {
-    Queue<String> historyQueue = commandQueue.clone();
+  private static void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
 
-    while (historyQueue.size() > 0) {
-      System.out.println(historyQueue.poll());
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
 
       if ((++count % 5) == 0) {
         System.out.print(":");

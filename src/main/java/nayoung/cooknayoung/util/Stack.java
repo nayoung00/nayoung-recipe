@@ -1,4 +1,4 @@
-package util;
+package nayoung.cooknayoung.util;
 
 import java.util.Arrays;
 
@@ -62,6 +62,10 @@ public class Stack<E> implements Cloneable {
       System.out.println(ex);
       return null;
     }
+  }
+  
+  public Iterator<E> iterator(){
+    return new StackIterator<E>(this);
   }
 }
 

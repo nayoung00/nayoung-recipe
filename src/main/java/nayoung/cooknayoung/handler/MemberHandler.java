@@ -2,8 +2,9 @@ package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
 import nayoung.cooknayoung.domain.Member;
-import util.AbstractList;
-import util.Prompt;
+import nayoung.cooknayoung.util.AbstractList;
+import nayoung.cooknayoung.util.Iterator;
+import nayoung.cooknayoung.util.Prompt;
 
 public class MemberHandler {
 
@@ -17,8 +18,10 @@ public class MemberHandler {
   }
   
   public void listMember() {
-    Member[] arr = this.memberList.toArray(new Member[] {});
-    for (Member m : arr) {
+    Iterator<Member> iterator = memberList.iterator();
+    while (iterator.hasNext()) {
+      Member m = iterator.next();
+    
       System.out.printf("%d, %s, %s, %s, %s\n", 
           m.getNo(), m.getName(), m.getEmail(), 
           m.getTel(), m.getRegisteredDate());

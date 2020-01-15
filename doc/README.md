@@ -1,60 +1,77 @@
-  # 17 - 인터페이스를 활용하여 객체 사용 규칙 정의하기
-  
-  ## 소스 및 결과
-  
-  - src/main/java/nayoung/cooknayoung/List.java 추가
-  - src/main/java/nayoung/cooknayoung/ArrayList.java 변경
-  - src/main/java/nayoung/cooknayoung/LinkedList.java 변경
-  - src/main/java/nayoung/cooknayoung/handler/RecipeHandler.java 변경
-  - src/main/java/nayoung/cooknayoung/handler/MemberHandler.java 변경
-  - src/main/java/nayoung/cooknayoung/handler/BoardHandler.java 변경
-  - src/main/java/nayoung/cooknayoung/lms/App.java 변경
-  - src/main/java/nayoung/cooknayoung/util/AbstractList.java 변경(List.java의 이름 변경)
-  - src/main/java/nayoung/cooknayoung/util/List.java 추가
-  - src/main/java/nayoung/cooknayoung/AbstractList.java 변경
-  
-  ## 실습
-  
-  ### 훈련1. 데이터 목록을 다루는 ArrayList와 LinkedList의 공통점을 찾아 별도의 클래스로 분리하라.
-  
-  - List.java
-      - ArrayList와 LinkedList의 공통 멤버를(필드와 메서드)를 선언한다.
-      - 서브 클래스에서 반드시 재정의 해야 하는 메서드는 추상 메서드로 구현하지 않고 놓아 둔다. 
-  - ArrayList.java
-      - `AbstractList`를 상속 받는다.
-      - 상속 받은 추상 메서드를 구현한다.
-  - LinkedList.java
-      - `AbstractList`를 상속 받는다.
-      - 상속 받은 추상 메서드를 구현한다.
-  - RecipeHandler.java
-      - ArrayList 또는 LinkedList를 직접 지정하는 대신에 추상클래스를 필드로 선언한다.
-      - 생성자에서 구체적으로 구현한 서브 클래스를 공급받도록 변경한다.
-      - 따라서 특정 클래스(ArrayList나 LinkedList)에 의존하는 코드를 제거한다.
-  - MemberHandler.java
-      - ArrayList 또는 LinkedList를 직접 지정하는 대신에 추상클래스를 필드로 선언한다.
-      - 생성자에서 구체적으로 구현한 서브 클래스를 공급받도록 변경한다.
-      - 따라서 특정 클래스(ArrayList나 LinkedList)에 의존하는 코드를 제거한다.
-  - BoardHandler.java
-      - ArrayList 또는 LinkedList를 직접 지정하는 대신에 추상클래스를 필드로 선언한다.
-      - 생성자에서 구체적으로 구현한 서브 클래스를 공급받도록 변경한다.
-      - 따라서 특정 클래스(ArrayList나 LinkedList)에 의존하는 코드를 제거한다.
-  - App.java
-      - XxxHandler가 사용할 의존 객체(AbstractList 객체)를 준비한다.
-      - XxxHandler를 생성할 때 해당 의존 객체를 넘겨준다.
-      
-      
+# 18_1 - `Iterator` 디자인 패턴의 활용
 
-### 훈련2. List.java에 추상 클래스와 추상 메서드 문법을 적용하라. 
 
-  - AbstractList.java 
-      - List 클래스의 이름을 AbstractList로 변경한다.
-      - AbstractList 클래스를 추상 클래스로 선언한다.
-      - AbstractList의 메서드를 추상 메서드로 정의한다.       
+## 실습 소스 및 결과
+
+- src/main/java/nayoung/cooknayoung/util/Iterator.java 추가
+- src/main/java/nayoung/cooknayoung/util/ListIterator.java 추가
+- src/main/java/nayoung/cooknayoung/util/List.java 변경
+- src/main/java/nayoung/cooknayoung/util/AbstractList.java 변경
+- src/main/java/nayoung/cooknayoung/lms/handler/RecipeHandler.java 변경
+- src/main/java/nayoung/cooknayoung/lms/handler/MemberHandler.java 변경
+- src/main/java/nayoung/cooknayoung/lms/handler/BoardHandler.java 변경
+- src/main/java/nayoung/cooknayoung/util/StackIterator.java 추가
+- src/main/java/nayoung/cooknayoung/util/Stack.java 변경
+- src/main/java/nayoung/cooknayoung/util/QueueIterator.java 추가
+- src/main/java/nayoung/cooknayoung/util/Queue.java 변경
+- src/main/java/nayoung/cooknayoung/lms/App.java 변경
+
+## 실습
+
+### 훈련1. Stack 이나 Queue, List 에서 값을 꺼내는 방법을 통일하라.
+
+- Iterator.java 생성
+    - 인터페이스로 값을 꺼내는 규칙을 정의한다.
+
+### 훈련2. List에서 값을 꺼내는 Iterator 구현체를 정의하라.
+
+- ListIterator.java 생성
+    - List 객체에서 값을 꺼내는 일을 한다.
+    - Iterator 사용법을 따른다.
+
+### 훈련3. 모든 List 구현체(ArrayList, LinkedList)가 Iterator 객체를 리턴하도록 규칙을 추가하라.
+
+- List.java 변경
+    - iterator() 메서드 추가
+
+### 훈련4. 모든 List 구현체가 Iterator 객체를 리턴하도록 iterator() 메서드를 구현하라.
+
+- AbstractList.java 변경
+    - List 인터페이스에 추가된 iterator() 규칙을 구현한다.
+    - ArrayList나 LinkedList는 이 클래스를 상속 받기 때문에 이 클래스에서 iterator()를 구현하면 된다.
+
+### 훈련5. List(예: ArrayList, LinkedList)에서 목록을 꺼내는 경우 Iterator를 활용하라.
+
+- BoardHandler.java 변경
+  - listBoard() 변경
+- MemberHandler.java 변경
+  - listMember() 변경
+- RecipeHandler.java 변경
+  - listRecipe() 변경 
+
+### 훈련6. Stack 객체에 들어 있는 값을 꺼내 줄 Iterator 구현체를 준비하고 리턴한다.
+
+- StackIterator.java 생성
+  - Iterator 인터페이스를 구현한다.
+- Stack.java 변경
+    - `Iterator` 구현체를 리턴하는 iterator() 를 정의한다.
+
+### 훈련7. Queue 객체에 들어 있는 값을 꺼내 줄 Iterator 구현체를 준비하고 리턴한다.
     
-### 훈련3. 추상 클래스에서 추상 메서드를 추출하여 인터페이스를 정의하라.
+- QueueIterator.java 생성
+  - Iterator 인터페이스를 구현한다.
+- Queue.java 변경
+    - `Iterator` 구현체를 리턴하는 iterator() 를 정의한다.
+    
+### 훈련8. Stack과 Queue에서 값을 꺼낼 때 Iterator를 사용하도록 변경하라.
 
-  - List.java
-      - AbstractList 추상 클래스에 있는 추상 메서드를 추출하여 따로 메서드 사용 규칙을 정의한다.
-  - AbstractList.java
-     - 추상 메서드를 List 인터페이스로 옮긴다.
-     - List 규칙을 따른다.
+- App.java 변경
+    - `history`, `history2` 명령을 처리할 때 Stack, Queue 객체에서 직접 값을 꺼내지 않고 Iterator 구현체를 통해서 꺼낸다.
+    - printCommandHistory()와 printCommandHistory2()는 코드가 같기 때문에 하나로 합친다.
+    
+    
+    
+    
+    
+    
+    

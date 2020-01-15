@@ -1,4 +1,4 @@
-package util;
+package nayoung.cooknayoung.util;
 import java.util.Arrays;
 public class ArrayList<E> extends AbstractList<E> {
 

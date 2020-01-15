@@ -1,4 +1,4 @@
-package util;
+package nayoung.cooknayoung.util;
 
 public interface List<E> {
   public abstract void add(E e);
@@ -16,5 +16,7 @@ public interface List<E> {
   E[] toArray(E[] arr);
 
   int size();
+  
+  Iterator<E> iterator() ;
 
 }

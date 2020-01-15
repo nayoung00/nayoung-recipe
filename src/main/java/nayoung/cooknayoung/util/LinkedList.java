@@ -1,4 +1,4 @@
-package util;
+package nayoung.cooknayoung.util;
 
 import java.lang.reflect.Array;
 
