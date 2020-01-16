@@ -1,11 +1,9 @@
-
-
 package nayoung.cooknayoung.handler;
 
 import java.sql.Date;
+import java.util.AbstractList;
+import java.util.Iterator;
 import nayoung.cooknayoung.domain.Board;
-import nayoung.cooknayoung.util.AbstractList;
-import nayoung.cooknayoung.util.Iterator;
 import nayoung.cooknayoung.util.Prompt;
 
 public class BoardHandler {

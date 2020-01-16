@@ -1,29 +1,30 @@
-# 18 - `Iterator` 구현체와 익명 클래스(local class)
+# 19 - 자바 컬렉션 API 사용하기
 
-## 학습 목표
-
-- 익명 클래스를 사용할 수 있다.
-- 익명 클래스의 용도를 이해한다.
 
 ## 실습 소스 및 결과
 
-- src/main/java/nayoung/cooknayoung/util/AbstractList.java 변경
-- src/main/java/nayoung/cooknayoung/util/Stack.java 변경
-- src/main/java/nayoung/cooknayoung/util/Queue.java 변경
+- src/main/java/nayoung/cooknayoung/util/List.java 삭제
+- src/main/java/nayoung/cooknayoung/utill/AbstractList.java 삭제
+- src/main/java/nayoung/cooknayoung/util/ArrayList.java 삭제
+- src/main/java/nayoung/cooknayoung/util/LinkedList.java 삭제
+- src/main/java/nayoung/cooknayoung/util/Iterator.java 삭제
+- src/main/java/cnayoung/cooknayoung/util/Stack.java 삭제
+- src/main/java/nayoung/cooknayoung/util/Queue.java 삭제
+- src/main/java/nayoung/cooknayoung/handler/LessonHandler.java 변경
+- src/main/java/nayoung/cooknayoung/handler/MemberHandler.java 변경
+- src/main/java/nayoung/cooknayoung/handler/BoardHandler.java 변경
+- src/main/java/nayoung/cooknayoung/App.java 변경
 
 ## 실습
 
-### 훈련1. ListIterator 로컬 클래스를 익명 클래스로 만들라.
+### 훈련1. ArrayList, LinkedList, Stack, Queue 클래스를 자바 컬렉션 API로 교체하라.
 
-- AbstractList.java
-  - interator() 메서드를 변경한다.
-
-### 훈련2. QueueIterator 로컬 클래스를 익명 클래스로 만들라.
-
-- Queue.java
-  - interator() 메서드를 변경한다.
-
-### 훈련3. StackIterator 로컬 클래스를 익명 클래스로 만들라.
-
-- Stack.java
-  - interator() 메서드를 변경한다.
+- LessonHandler.java
+    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+- MemberHandler.java
+    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+- BoardHandler.java
+    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+- App.java
+    - 핸들러를 생성할 때 자바 컬렉션 API에서 제공하는 `java.util.List`의 구현체를 넘겨준다.
+    - 명령 내역을 저장할 때도 자바 컬렉션 API의 Stack과 Queue 구현체를 사용한다.

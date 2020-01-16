@@ -1,5 +1,11 @@
 package nayoung.cooknayoung;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import nayoung.cooknayoung.domain.Board;
 import nayoung.cooknayoung.domain.Member;
@@ -7,20 +13,15 @@ import nayoung.cooknayoung.domain.Recipe;
 import nayoung.cooknayoung.handler.BoardHandler;
 import nayoung.cooknayoung.handler.MemberHandler;
 import nayoung.cooknayoung.handler.RecipeHandler;
-import nayoung.cooknayoung.util.ArrayList;
-import nayoung.cooknayoung.util.Iterator;
-import nayoung.cooknayoung.util.LinkedList;
 import nayoung.cooknayoung.util.Prompt;
-import nayoung.cooknayoung.util.Queue;
-import nayoung.cooknayoung.util.Stack;
 
 
 public class App {
 
   static Scanner keyboard = new Scanner(System.in);
 
-  static Stack<String> commandStack = new Stack<>();
-  static Queue<String> commandQueue = new Queue<>();
+  static Deque<String> commandStack = new ArrayDeque<>();
+  static Queue<String> commandQueue = new LinkedList<>();
 
 
   public static void main(String[] args) {

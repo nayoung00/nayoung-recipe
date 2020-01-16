@@ -1,8 +1,0 @@
-package nayoung.cooknayoung.util;
-
-public interface Iterator<E> {
-  
-  boolean hasNext();
-  E next();
-  
-}
