@@ -11,7 +11,29 @@ package nayoung.cooknayoung.util;
     
     @Override
     public Iterator<E> iterator(){
-      return new ListIterator<>(this);
+      
+      return new Iterator<E>(){
+        
+        List<E> list;
+        int cursor;
+        
+       {
+          this.list = (List<E>) AbstractList.this;
+        }
+
+        @Override
+        public boolean hasNext() {
+          return cursor <list.size();
+        }
+        
+        @Override
+        public E next() {
+          return list.get(cursor++);
+        }
+      } ;
     }
+    
+   
+
   }
 

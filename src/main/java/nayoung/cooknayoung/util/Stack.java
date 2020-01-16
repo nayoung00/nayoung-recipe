@@ -65,7 +65,21 @@ public class Stack<E> implements Cloneable {
   }
   
   public Iterator<E> iterator(){
-    return new StackIterator<E>(this);
+    
+    return new  Iterator<E>() {
+      
+      Stack<E> stack= (Stack<E>)Stack.this.clone();
+      
+      @Override
+      public boolean hasNext() {
+        return !stack.empty();
+      }
+      
+      @Override
+      public E next() {
+        return stack.pop();
+      }
+    };
   }
 }
 
