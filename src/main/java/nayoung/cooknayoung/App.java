@@ -3,6 +3,7 @@ package nayoung.cooknayoung;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -10,9 +11,22 @@ import java.util.Scanner;
 import nayoung.cooknayoung.domain.Board;
 import nayoung.cooknayoung.domain.Member;
 import nayoung.cooknayoung.domain.Recipe;
-import nayoung.cooknayoung.handler.BoardHandler;
-import nayoung.cooknayoung.handler.MemberHandler;
-import nayoung.cooknayoung.handler.RecipeHandler;
+import nayoung.cooknayoung.handler.BoardAddCommand;
+import nayoung.cooknayoung.handler.BoardDeleteCommand;
+import nayoung.cooknayoung.handler.BoardDetailCommand;
+import nayoung.cooknayoung.handler.BoardListCommand;
+import nayoung.cooknayoung.handler.BoardUpdateCommand;
+import nayoung.cooknayoung.handler.Command;
+import nayoung.cooknayoung.handler.MemberAddCommand;
+import nayoung.cooknayoung.handler.MemberDeleteCommand;
+import nayoung.cooknayoung.handler.MemberDetailCommand;
+import nayoung.cooknayoung.handler.MemberListCommand;
+import nayoung.cooknayoung.handler.MemberUpdateCommand;
+import nayoung.cooknayoung.handler.RecipeAddCommand;
+import nayoung.cooknayoung.handler.RecipeDeleteCommand;
+import nayoung.cooknayoung.handler.RecipeDetailCommand;
+import nayoung.cooknayoung.handler.RecipeListCommand;
+import nayoung.cooknayoung.handler.RecipeUpdateCommand;
 import nayoung.cooknayoung.util.Prompt;
 
 
@@ -26,93 +40,66 @@ public class App {
 
   public static void main(String[] args) {
 
-    Prompt prompt = new Prompt(keyboard); 
+    Prompt prompt = new Prompt(keyboard);
+    HashMap<String, Command> commandMap = new HashMap<>();
+
+
 
     LinkedList<Recipe> recipeList = new LinkedList<>();
-    RecipeHandler recipeHandler = new RecipeHandler(prompt, recipeList);
+    commandMap.put("/recipe/add", new RecipeAddCommand(prompt, recipeList));
+    commandMap.put("/recipe/delete", new RecipeDeleteCommand(prompt, recipeList));
+    commandMap.put("/recipe/detail", new RecipeDetailCommand(prompt, recipeList));
+    commandMap.put("/recipe/list", new RecipeListCommand(recipeList));
+    commandMap.put("/recipe/update", new RecipeUpdateCommand(prompt, recipeList));
 
     ArrayList<Member> memberList = new ArrayList<>();
-    MemberHandler memberHandler = new MemberHandler(prompt, memberList);
+    commandMap.put("/member/add", new MemberAddCommand(prompt, memberList));
+    commandMap.put("/member/delete", new MemberDeleteCommand(prompt, memberList));
+    commandMap.put("/member/detail", new MemberDetailCommand(prompt, memberList));
+    commandMap.put("/member/list", new MemberListCommand(memberList));
+    commandMap.put("/member/update", new MemberUpdateCommand(prompt, memberList));
 
     LinkedList<Board> boardList = new LinkedList<>();
-    BoardHandler boardHandler = new BoardHandler(prompt, boardList);
+    commandMap.put("/board/add", new BoardAddCommand(prompt, boardList));
+    commandMap.put("/board/delete", new BoardDeleteCommand(prompt, boardList));
+    commandMap.put("/board/detail", new BoardDetailCommand(prompt, boardList));
+    commandMap.put("/board/list", new BoardListCommand(boardList));
+    commandMap.put("/board/update", new BoardUpdateCommand(prompt, boardList));
+
 
     String command;
 
-    do {
+    while (true) {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
-      
-      if(command.length() == 0)
+
+      if (command.length() == 0)
         continue;
 
-      commandStack.push(command);      
+      if (command.equals("quit")) {
+        System.out.println("안녕!");
+        break;
+      } else if (command.equals("history")) {
+        printCommandHistory(commandStack.iterator());
+        continue;
+      } else if (command.equals("history2")) {
+        printCommandHistory(commandQueue.iterator());
+        continue;
+      }
+      commandStack.push(command);
       commandQueue.offer(command);
 
-      switch (command) {
-        case "/recipe/add":
-          recipeHandler.addRecipe();
-          break;
-        case "/recipe/list":
-          recipeHandler.listRecipe();
-          break;
-        case "/recipe/detail":
-          recipeHandler.detailRecipe();
-          break;
-        case "/recipe/update":
-          recipeHandler.updateRecipe();
-          break;
-        case "/recipe/delete":
-          recipeHandler.deleteRecipe();
-          break;
-        case "/member/add":
-          memberHandler.addMember();
-          break;
-        case "/member/list":
-          memberHandler.listMember();
-          break;
-        case "/member/detail":
-          memberHandler.detailMember();
-          break;
-        case "/member/update":
-          memberHandler.updateMember();
-          break;
-        case "/member/delete":
-          memberHandler.deleteMember();
-          break;
-        case "/board/add":
-          boardHandler.addBoard();
-          break;
-        case "/board/list":
-          boardHandler.listBoard();
-          break;
-        case "/board/detail":
-          boardHandler.detailBoard();
-          break;
-        case "/board/update":
-          boardHandler.updateBoard();
-          break;
-        case "/board/delete":
-          boardHandler.deleteBoard();
-          break;
-        case "history":
-          printCommandHistory(commandStack.iterator());
-          break;
-        case "history2":
-          printCommandHistory(commandQueue.iterator());
-          break;
-        default:
-          if (!command.equalsIgnoreCase("quit")) {
-            System.out.println("실행할 수 없는 명령입니다.");
-          }
+      Command commandHandler = commandMap.get(command);
+
+      if (commandHandler != null) {
+        commandHandler.execute();
+      } else {
+        System.out.println("실행할 수 없는 명령입니다.");
       }
-    } while (!command.equalsIgnoreCase("quit"));
-
-    System.out.println("안녕!");
-
+    }
     keyboard.close();
   }
-  
+
 
   private static void printCommandHistory(Iterator<String> iterator) {
     int count = 0;

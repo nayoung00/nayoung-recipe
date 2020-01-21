@@ -1,30 +1,49 @@
-# 19 - 자바 컬렉션 API 사용하기
-
+# 20 - `커맨드(Command)` 디자인 패턴을 적용하기
 
 ## 실습 소스 및 결과
 
-- src/main/java/nayoung/cooknayoung/util/List.java 삭제
-- src/main/java/nayoung/cooknayoung/utill/AbstractList.java 삭제
-- src/main/java/nayoung/cooknayoung/util/ArrayList.java 삭제
-- src/main/java/nayoung/cooknayoung/util/LinkedList.java 삭제
-- src/main/java/nayoung/cooknayoung/util/Iterator.java 삭제
-- src/main/java/cnayoung/cooknayoung/util/Stack.java 삭제
-- src/main/java/nayoung/cooknayoung/util/Queue.java 삭제
-- src/main/java/nayoung/cooknayoung/handler/LessonHandler.java 변경
-- src/main/java/nayoung/cooknayoung/handler/MemberHandler.java 변경
-- src/main/java/nayoung/cooknayoung/handler/BoardHandler.java 변경
+- src/main/java/nayoung/cooknayoung/handler/Command.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeAddCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeListCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeDetailCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeUpdateCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeDeleteCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/MemberAddCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/MemberListCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/MemberDetailCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/MemberUpdateCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/MemberDeleteCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/BoardAddCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/BoardListCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/BoardDetailCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/BoardUpdateCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/BoardDeleteCommand.java 추가
+- src/main/java/nayoung/cooknayoung/handler/LecipeHandler.java 삭제
+- src/main/java/nayoung/cooknayoung/handler/MemberHandler.java 삭제
+- src/main/java/nayoung/cooknayoung/handler/BoardHandler.java 삭제
 - src/main/java/nayoung/cooknayoung/App.java 변경
 
 ## 실습
 
-### 훈련1. ArrayList, LinkedList, Stack, Queue 클래스를 자바 컬렉션 API로 교체하라.
+### 훈련1. 메서드를 호출하는 쪽과 실행 쪽 사이의 규칙을 정의하라.
 
-- LessonHandler.java
-    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+- Command.java
+    - `App` 클래스와 명령을 처리하는 클래스 사이의 호출 규칙을 정의한다.
+
+### 훈련2. 명령을 처리하는 각 메서드를 객체로 분리하라.
+
+- LecipeHandler.java
+    - 레시피 CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
 - MemberHandler.java
-    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+    - 멤버CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
 - BoardHandler.java
-    - `List` 를 `java.util.List` 인터페이스로 교체한다.
+    - 게시판 CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
+- App.java (App.java.01)
+    - 명령어가 입력되면 `Command` 규칙에 따라 객체를 실행한다.
+    - `/board2/xxx` 명령 처리는 삭제한다.
+
+### 훈련 3: `Map`으로 `Command` 객체를 관리하라.
+
 - App.java
-    - 핸들러를 생성할 때 자바 컬렉션 API에서 제공하는 `java.util.List`의 구현체를 넘겨준다.
-    - 명령 내역을 저장할 때도 자바 컬렉션 API의 Stack과 Queue 구현체를 사용한다.
+    - 명령어를 `key`, `Command` 객체를 `value`로 하여 Map에 저장한다.
+    - 각 명령에 대해 조건문으로 분기하는 부분을 간략하게 변경한다.
