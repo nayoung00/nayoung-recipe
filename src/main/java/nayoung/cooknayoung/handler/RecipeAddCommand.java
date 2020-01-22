@@ -22,8 +22,8 @@ public class RecipeAddCommand implements Command {
     recipe.setCook(prompt.inputString("요리? "));
     recipe.setMaterial(prompt.inputString("재료? "));
     recipe.setMethod(prompt.inputString("방법? "));
-    recipe.setExpense(prompt.inputInt("비용? "));
-    recipe.setTime(prompt.inputInt("시간? "));
+    recipe.setExpense(prompt.inputInt("비용(원)? "));
+    recipe.setTime(prompt.inputInt("시간(분)? "));
 
     System.out.println();
     recipeList.add(recipe);

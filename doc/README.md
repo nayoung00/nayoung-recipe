@@ -1,49 +1,26 @@
-# 20 - `커맨드(Command)` 디자인 패턴을 적용하기
+# 21 - 예외가 발생했을 때 시스템을 멈추지 않게 하는 방법
 
-## 실습 소스 및 결과
 
-- src/main/java/nayoung/cooknayoung/handler/Command.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeAddCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeListCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeDetailCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeUpdateCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeDeleteCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/MemberAddCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/MemberListCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/MemberDetailCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/MemberUpdateCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/MemberDeleteCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/BoardAddCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/BoardListCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/BoardDetailCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/BoardUpdateCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/BoardDeleteCommand.java 추가
-- src/main/java/nayoung/cooknayoung/handler/LecipeHandler.java 삭제
-- src/main/java/nayoung/cooknayoung/handler/MemberHandler.java 삭제
-- src/main/java/nayoung/cooknayoung/handler/BoardHandler.java 삭제
+## 소스 및 결과
 - src/main/java/nayoung/cooknayoung/App.java 변경
 
-## 실습
 
-### 훈련1. 메서드를 호출하는 쪽과 실행 쪽 사이의 규칙을 정의하라.
-
-- Command.java
-    - `App` 클래스와 명령을 처리하는 클래스 사이의 호출 규칙을 정의한다.
-
-### 훈련2. 명령을 처리하는 각 메서드를 객체로 분리하라.
-
-- LecipeHandler.java
-    - 레시피 CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
-- MemberHandler.java
-    - 멤버CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
-- BoardHandler.java
-    - 게시판 CRUD 각 기능을 `Command` 규칙에 따라 객체로 분리한다.
-- App.java (App.java.01)
-    - 명령어가 입력되면 `Command` 규칙에 따라 객체를 실행한다.
-    - `/board2/xxx` 명령 처리는 삭제한다.
-
-### 훈련 3: `Map`으로 `Command` 객체를 관리하라.
+### 실습: 명령어 실행 중 오류가 발생하더라도 시스템이 멈추지 않고 계속 실행되게 하라.
 
 - App.java
-    - 명령어를 `key`, `Command` 객체를 `value`로 하여 Map에 저장한다.
-    - 각 명령에 대해 조건문으로 분기하는 부분을 간략하게 변경한다.
+    - 명령을 처리하는 코드를 try ~ catch ~ 블록으로 묶는다.
+
+#### 실행 결과
+
+다음과 같이 잘못된 형식으로 값을 입력하더라도 시스템을 멈추지 않고 계속 실행한다.
+```
+명령> /recipe/add
+번호? 1
+요리? 참치 김밥
+재료? 참치, 김, 밥, 등..
+방법? 김위에 밥과 각종 재료를 올리고 말아준다.
+비용(원)? 10000원
+명렁어 실행 중 오류 발생: For input string: "10000원"
+
+명령> 
+```
