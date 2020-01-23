@@ -1,18 +1,19 @@
 package nayoung.cooknayoung;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import com.google.gson.Gson;
 import nayoung.cooknayoung.domain.Board;
 import nayoung.cooknayoung.domain.Member;
 import nayoung.cooknayoung.domain.Recipe;
@@ -116,180 +117,73 @@ public class App {
   }
 
   private static void saveRecipeData() {
-    File file = new File("./recipe.csv");
+    File file = new File("./recipe.json");
 
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Recipe recipe : recipeList) {
-        out.write(recipe.toCsvString() + "\n");
-        count++;
-      }
-
-      System.out.printf("총 %d 개의 요리 데이터를 저장했습니다.", count);
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(recipeList));
+      System.out.printf("총 %d 개의 요리 데이터를 저장했습니다.", recipeList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
     }
   }
 
 
   private static void loadRecipeData() {
-    File file = new File("./recipe.csv");
+    File file = new File("./recipe.json");
 
-    FileReader in = null;
-    Scanner dataScan = null;
+    try (FileReader in = new FileReader(file)) {
+      recipeList.addAll(Arrays.asList(new Gson().fromJson(in, Recipe[].class)));
 
-    try {
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      int count = 0;
-      while (true) {
-        try {
-          recipeList.add(Recipe.valueOf(dataScan.nextLine()));
-          count++;
+      System.out.printf("총 %d 개의 요리 데이터를 로딩했습니다.\n", recipeList.size());
 
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 요리 데이터를 로딩했습니다.\n", count);
-
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void saveBoardData() {
-    File file = new File("./board.csv");
+    File file = new File("./board.json");
 
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Board board : boardList) {
-
-        out.write(board.toCsvString() + "\n");
-        count++;
-      }
-
-      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", count);
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(boardList));
+      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", boardList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
     }
   }
 
   private static void loadBoardData() {
-    File file = new File("./board.csv");
-
-    FileReader in = null;
+    File file = new File("./board.json");
     Scanner dataScan = null;
 
-    try {
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      int count = 0;
-      while (true) {
-        try {
-          boardList.add(Board.valueOf(dataScan.nextLine()));
-          count++;
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 게시글 데이터를 로딩했습니다.\n", count);
-    } catch (FileNotFoundException e) {
+    try (FileReader in = new FileReader(file)) {
+      boardList.addAll(Arrays.asList(new Gson().fromJson(in, Board[].class)));
+      System.out.printf("총 %d 개의 게시글 데이터를 로딩했습니다.\n", boardList.size());
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
   private static void saveMemberData() {
-    File file = new File("./member.csv");
+    File file = new File("./member.json");
 
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Member member : memberList) {
-
-        out.write(member.toCsvString() + "\n");
-        count++;
-      }
-      System.out.printf("총 %d 개의 회원 데이터를 저장했습니다.", count);
+    try (FileWriter out = new FileWriter(file)) {
+      out.write(new Gson().toJson(memberList));
+      System.out.printf("총 %d 개의 회원 데이터를 저장했습니다.", memberList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
     }
   }
 
   private static void loadMemberData() {
-    File file = new File("./member.csv");
+    File file = new File("./member.json");
 
-    FileReader in = null;
-    Scanner dataScan = null;
+    try (FileReader in = new FileReader(file);) {
+      memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
+      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", memberList.size());
 
-    try {
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
-      int count = 0;
-      while (true) {
-        try {
-          memberList.add(Member.valueOf(dataScan.nextLine()));
-          count++;
-        } catch (Exception e) {
-          break;
-        }
-      }
-      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", count);
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
-    } finally {
-      try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-      }
     }
   }
 
