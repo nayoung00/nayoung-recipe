@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -126,10 +125,7 @@ public class App {
       int count = 0;
 
       for (Recipe recipe : recipeList) {
-        String line = String.format("%d,%s,%s,%s,%d,%d\n", recipe.getNo(), recipe.getCook(),
-            recipe.getMaterial(), recipe.getMethod(), recipe.getExpense(), recipe.getTime());
-
-        out.write(line);
+        out.write(recipe.toCsvString() + "\n");
         count++;
       }
 
@@ -145,62 +141,6 @@ public class App {
   }
 
 
-  private static void saveBoardData() {
-    File file = new File("./board.csv");
-
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Board board : boardList) {
-        String line = String.format("%d,%s,%s,%d,%s\n", board.getNo(), board.getTitle(),
-            board.getDate(), board.getViewCount(), board.getWriter());
-
-        out.write(line);
-        count++;
-      }
-
-      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", count);
-    } catch (IOException e) {
-      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
-    }
-  }
-
-  private static void saveMemberData() {
-    File file = new File("./member.csv");
-
-    FileWriter out = null;
-
-    try {
-      out = new FileWriter(file);
-      int count = 0;
-
-      for (Member member : memberList) {
-        String line = String.format("%d,%s,%s,%s,%s,%s,%s\n", member.getNo(), member.getName(),
-            member.getEmail(), member.getPassword(), member.getPhoto(), member.getTel(),
-            member.getRegisteredDate());
-
-        out.write(line);
-        count++;
-      }
-      System.out.printf("총 %d 개의 회원 데이터를 저장했습니다.", count);
-    } catch (IOException e) {
-      System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
-    }
-  }
-
   private static void loadRecipeData() {
     File file = new File("./recipe.csv");
 
@@ -213,19 +153,9 @@ public class App {
       int count = 0;
       while (true) {
         try {
-          String line = dataScan.nextLine();
-          String[] data = line.split(",");
-
-          Recipe recipe = new Recipe();
-          recipe.setNo(Integer.parseInt(data[0]));
-          recipe.setCook(data[1]);
-          recipe.setMaterial(data[2]);
-          recipe.setMethod(data[3]);
-          recipe.setExpense(Integer.parseInt(data[4]));
-          recipe.setTime(Integer.parseInt(data[5]));
-
-          recipeList.add(recipe);
+          recipeList.add(Recipe.valueOf(dataScan.nextLine()));
           count++;
+
         } catch (Exception e) {
           break;
         }
@@ -246,48 +176,28 @@ public class App {
     }
   }
 
-  private static void loadMemberData() {
-    File file = new File("./member.csv");
+  private static void saveBoardData() {
+    File file = new File("./board.csv");
 
-    FileReader in = null;
-    Scanner dataScan = null;
+    FileWriter out = null;
 
     try {
-      in = new FileReader(file);
-      dataScan = new Scanner(in);
+      out = new FileWriter(file);
       int count = 0;
-      while (true) {
-        try {
-          String line = dataScan.nextLine();
-          String[] data = line.split(",");
 
-          Member member = new Member();
-          member.setNo(Integer.parseInt(data[0]));
-          member.setName(data[1]);
-          member.setEmail(data[2]);
-          member.setPassword(data[3]);
-          member.setPhoto(data[4]);
-          member.setTel(data[5]);
-          member.setRegisteredDate(Date.valueOf(data[6]));
+      for (Board board : boardList) {
 
-          memberList.add(member);
-          count++;
-        } catch (Exception e) {
-          break;
-        }
+        out.write(board.toCsvString() + "\n");
+        count++;
       }
-      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", count);
-    } catch (FileNotFoundException e) {
-      System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
+
+      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", count);
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
     } finally {
       try {
-        dataScan.close();
-      } catch (Exception e) {
-      }
-      try {
-        in.close();
-      } catch (Exception e) {
-
+        out.close();
+      } catch (IOException e) {
       }
     }
   }
@@ -304,23 +214,71 @@ public class App {
       int count = 0;
       while (true) {
         try {
-          String line = dataScan.nextLine();
-          String[] data = line.split(",");
-
-          Board board = new Board();
-          board.setNo(Integer.parseInt(data[0]));
-          board.setTitle(data[1]);
-          board.setDate(Date.valueOf(data[2]));
-          board.setViewCount(Integer.parseInt(data[3]));
-          board.setWriter(data[4]);
-
-          boardList.add(board);
+          boardList.add(Board.valueOf(dataScan.nextLine()));
           count++;
         } catch (Exception e) {
           break;
         }
       }
       System.out.printf("총 %d 개의 게시글 데이터를 로딩했습니다.\n", count);
+    } catch (FileNotFoundException e) {
+      System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
+    } finally {
+      try {
+        dataScan.close();
+      } catch (Exception e) {
+      }
+      try {
+        in.close();
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  private static void saveMemberData() {
+    File file = new File("./member.csv");
+
+    FileWriter out = null;
+
+    try {
+      out = new FileWriter(file);
+      int count = 0;
+
+      for (Member member : memberList) {
+
+        out.write(member.toCsvString() + "\n");
+        count++;
+      }
+      System.out.printf("총 %d 개의 회원 데이터를 저장했습니다.", count);
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
+    } finally {
+      try {
+        out.close();
+      } catch (IOException e) {
+      }
+    }
+  }
+
+  private static void loadMemberData() {
+    File file = new File("./member.csv");
+
+    FileReader in = null;
+    Scanner dataScan = null;
+
+    try {
+      in = new FileReader(file);
+      dataScan = new Scanner(in);
+      int count = 0;
+      while (true) {
+        try {
+          memberList.add(Member.valueOf(dataScan.nextLine()));
+          count++;
+        } catch (Exception e) {
+          break;
+        }
+      }
+      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", count);
     } catch (FileNotFoundException e) {
       System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
     } finally {

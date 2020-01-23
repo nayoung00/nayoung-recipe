@@ -1,101 +1,35 @@
-v22_1 - 파일 입출력 API의 활용
-
+v22_2 - CSV 문자열을 객체로 전환하는 기능을 도메인 객체로 이전.
 
 ## 실습 소스 및 결과
 
 - src/main/java/nayoung/cooknayoung/App.java 변경
+- src/main/java/nayoung/cooknayoung/domain/Board.java 변경
+- src/main/java/nayoung/cooknayoung/domain/Member.java 변경
+- src/main/java/nayoung/cooknayoung/domain/Recipe.java 변경
 
-### 훈련 1: 요리 데이터를 파일에 보관하라.
+### 훈련 1: 게시물 데이터를 CSV 문자열로 다루는 코드를 Board 클래스로 옮겨라.
 
+- Board.java
+  - CSV 문자열을 가지고 Board 객체를 생성하는 valueOf() 메서드를 추가한다.
+  - Board 객체를 가지고 CSV 문자열을 리턴하는 toCsvString() 메서드를 추가한다. 
 - App.java
-    - 애플리케이션을 실행했을 때 파일에서 요리 데이터를 읽어오는 `loadRecipeData()`를 정의한다.
-    - 애플리케이션을 종료할 때 수업 데이터를 파일에 저장하는 `saveRecipeData()`를 정의한다.
-    - 요리 데이터를 저장할 ArrayList 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
+  - loadBoardData() 를 변경한다.
+  - saveBoardData() 를 변경한다.
+  
+### 훈련 2: 회원 데이터를 CSV 문자열로 다루는 코드를 Member 클래스로 옮겨라.
 
-#### 실행 결과
-
-`App`을 실행한 후 요리 데이터를 입력한다.
-```
-명령> /recipe/add
-번호? 1
-요리? 참치김밥
-재료? 김과 밥 그리고 참치를 포함한 각종 재료.
-방법? 김 위에 밥과 각종 재료를 올리고 말아준다.
-비용(원)? 10000
-시간(분)? 10
-
-저장하였습니다.
-
-명령> quit
-안녕!
-```
-
-종료한 후에 다시 `App`을 실행하면 이전에 입력한 내용을 확인할 수 있다.
-```
-명령> /recipe/list
-  1, 참치김밥      ,10000,10
-```
-
-### 과제 2: 회원 데이터를 파일에 보관하라.
-
+- Member.java
+  - CSV 문자열을 가지고 Member 객체를 생성하는 valueOf() 메서드를 추가한다.
+  - Member 객체를 가지고 CSV 문자열을 리턴하는 toCsvString() 메서드를 추가한다. 
 - App.java
-    - 애플리케이션을 실행했을 때 파일에서 회원 데이터를 읽어오는 `loadMemberData()`를 정의한다.
-    - 애플리케이션을 종료할 때 회원 데이터를 파일에 저장하는 `saveMemberData()`를 정의한다.
-    - 회원 데이터를 저장할 LinkedList 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
+  - loadMemberData() 를 변경한다.
+  - saveMemberData() 를 변경한다.
+    
+### 훈련 3: 요리 데이터를 CSV 문자열로 다루는 코드를 Recipe 클래스로 옮겨라.
 
-#### 실행 결과
-
-`App`을 실행한 후 회원 데이터를 입력한다.
-```
-명령> /member/add
-번호? 1
-이름? 홍길동
-...
-
-명령> quit
-안녕!
-```
-
-종료한 후에 다시 `App`을 실행하면 이전에 입력한 내용을 확인할 수 있다.
-```
-명령> /member/list
-  1, 홍길동      , 2019-01-01 ~ 2019-05-05,  160
-```
-
-### 과제 3: 게시글 데이터를 파일에 보관하라.
-
+- Recipe.java
+  - CSV 문자열을 가지고 Recipe 객체를 생성하는 valueOf() 메서드를 추가한다.
+  - Recipe 객체를 가지고 CSV 문자열을 리턴하는 toCsvString() 메서드를 추가한다. 
 - App.java
-    - 애플리케이션을 실행했을 때 파일에서 게시글 데이터를 읽어오는 `loadBoardData()`를 정의한다.
-    - 애플리케이션을 종료할 때 게시글 데이터를 파일에 저장하는 `saveBoardData()`를 정의한다.
-    - 게시글 데이터를 저장할 ArrayList 객체는 위에서 만든 메서드에서 접근할 수 있도록 스태틱 필드로 전환한다.
-
-#### 실행 결과
-
-`App`을 실행한 후 회원 데이터를 입력한다.
-```
-명령> /board/add
-번호? 1
-내용? 안녕하세요.
-저장하였습니다.
-
-명령> /board/add
-번호? 2
-내용? 게시글을 올려주세요.
-저장하였습니다.
-
-명령> /board/list
-  1, 안녕하세요.              , 2019-01-01, 0
-  2, 게시글을 올려주세요.        , 2019-01-01, 0
-
-명령> quit
-안녕!
-```
-
-종료한 후에 다시 `App`을 실행하면 이전에 입력한 내용을 확인할 수 있다.
-```
-명령> /board/list
-  1, 안녕하세요.              , 2019-01-01, 0
-  2, 게시글을 올려주세요.        , 2019-01-01, 0
-
-명령> 
-```
+  - loadRecipeData() 를 변경한다.
+  - saveRecipeData() 를 변경한다.
