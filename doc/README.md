@@ -3,7 +3,7 @@ v22_3 - 파일 포맷으로 JSON 도입하기.
 ## 실습 소스 및 결과
 
 - build.gradle 변경
-- src/main/java/com/eomcs/lms/App.java 변경
+- src/main/java/nayoung/cooknayoung/App.java 변경
 
 ### 훈련 1: Gradle 스크립트 파일(build.gradle)에 Google JSON 라이브러리를 추가하라.
 
@@ -29,11 +29,11 @@ v22_3 - 파일 포맷으로 JSON 도입하기.
   - saveMemberData()를 변경한다.
   - loadMemberData()를 변경한다.
   
-### 훈련 4: 수업 데이터를 저장할 때 JSON 형식을 사용하라.
+### 훈련 4: 요리 데이터를 저장할 때 JSON 형식을 사용하라.
   
 - App.java
-  - saveLessonData()를 변경한다.
-  - loadLessonData()를 변경한다.
+  - saveRecipeData()를 변경한다.
+  - loadRecipeData()를 변경한다.
 
 ### 훈련 5: Arrays의 메서드를 활용하여 배열을 List 객체로 만들어라.
 
