@@ -1,4 +1,4 @@
-package nayoung.cooknayoung.util;
+package kny.cook.util;
 
 import java.sql.Date;
 import java.util.Scanner;

@@ -1,8 +1,8 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 import java.util.AbstractList;
 import java.util.Iterator;
-import nayoung.cooknayoung.domain.Recipe;
+import kny.cook.domain.Recipe;
 
 public class RecipeListCommand implements Command {
 

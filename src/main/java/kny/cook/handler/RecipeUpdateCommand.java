@@ -1,8 +1,8 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 import java.util.AbstractList;
-import nayoung.cooknayoung.domain.Recipe;
-import nayoung.cooknayoung.util.Prompt;
+import kny.cook.domain.Recipe;
+import kny.cook.util.Prompt;
 
 public class RecipeUpdateCommand implements Command {
 

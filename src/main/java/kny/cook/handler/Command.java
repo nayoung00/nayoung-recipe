@@ -1,4 +1,4 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 public interface Command {
   void execute();

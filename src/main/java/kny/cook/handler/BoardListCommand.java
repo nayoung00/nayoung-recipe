@@ -1,8 +1,8 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 import java.util.AbstractList;
 import java.util.Iterator;
-import nayoung.cooknayoung.domain.Board;
+import kny.cook.domain.Board;
 
 public class BoardListCommand implements Command {
 

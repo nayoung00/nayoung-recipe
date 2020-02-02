@@ -1,8 +1,8 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 import java.util.AbstractList;
-import nayoung.cooknayoung.domain.Member;
-import nayoung.cooknayoung.util.Prompt;
+import kny.cook.domain.Member;
+import kny.cook.util.Prompt;
 
 public class MemberDeleteCommand implements Command {
 

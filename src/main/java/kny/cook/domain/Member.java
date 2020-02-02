@@ -1,4 +1,4 @@
-package nayoung.cooknayoung.domain;
+package kny.cook.domain;
 
 import java.sql.Date;
 

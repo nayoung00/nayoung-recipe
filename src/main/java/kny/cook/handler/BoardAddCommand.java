@@ -1,9 +1,9 @@
-package nayoung.cooknayoung.handler;
+package kny.cook.handler;
 
 import java.sql.Date;
 import java.util.List;
-import nayoung.cooknayoung.domain.Board;
-import nayoung.cooknayoung.util.Prompt;
+import kny.cook.domain.Board;
+import kny.cook.util.Prompt;
 
 public class BoardAddCommand implements Command {
 

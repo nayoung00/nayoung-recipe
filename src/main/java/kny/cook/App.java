@@ -1,5 +1,7 @@
-package nayoung.cooknayoung;
+package kny.cook;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,26 +16,26 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import com.google.gson.Gson;
-import nayoung.cooknayoung.domain.Board;
-import nayoung.cooknayoung.domain.Member;
-import nayoung.cooknayoung.domain.Recipe;
-import nayoung.cooknayoung.handler.BoardAddCommand;
-import nayoung.cooknayoung.handler.BoardDeleteCommand;
-import nayoung.cooknayoung.handler.BoardDetailCommand;
-import nayoung.cooknayoung.handler.BoardListCommand;
-import nayoung.cooknayoung.handler.BoardUpdateCommand;
-import nayoung.cooknayoung.handler.Command;
-import nayoung.cooknayoung.handler.MemberAddCommand;
-import nayoung.cooknayoung.handler.MemberDeleteCommand;
-import nayoung.cooknayoung.handler.MemberDetailCommand;
-import nayoung.cooknayoung.handler.MemberListCommand;
-import nayoung.cooknayoung.handler.MemberUpdateCommand;
-import nayoung.cooknayoung.handler.RecipeAddCommand;
-import nayoung.cooknayoung.handler.RecipeDeleteCommand;
-import nayoung.cooknayoung.handler.RecipeDetailCommand;
-import nayoung.cooknayoung.handler.RecipeListCommand;
-import nayoung.cooknayoung.handler.RecipeUpdateCommand;
-import nayoung.cooknayoung.util.Prompt;
+import kny.cook.domain.Board;
+import kny.cook.domain.Member;
+import kny.cook.domain.Recipe;
+import kny.cook.handler.BoardAddCommand;
+import kny.cook.handler.BoardDeleteCommand;
+import kny.cook.handler.BoardDetailCommand;
+import kny.cook.handler.BoardListCommand;
+import kny.cook.handler.BoardUpdateCommand;
+import kny.cook.handler.Command;
+import kny.cook.handler.MemberAddCommand;
+import kny.cook.handler.MemberDeleteCommand;
+import kny.cook.handler.MemberDetailCommand;
+import kny.cook.handler.MemberListCommand;
+import kny.cook.handler.MemberUpdateCommand;
+import kny.cook.handler.RecipeAddCommand;
+import kny.cook.handler.RecipeDeleteCommand;
+import kny.cook.handler.RecipeDetailCommand;
+import kny.cook.handler.RecipeListCommand;
+import kny.cook.handler.RecipeUpdateCommand;
+import kny.cook.util.Prompt;
 
 
 public class App {
@@ -116,22 +118,11 @@ public class App {
     saveBoardData();
   }
 
-  private static void saveRecipeData() {
-    File file = new File("./recipe.json");
-
-    try (FileWriter out = new FileWriter(file)) {
-      out.write(new Gson().toJson(recipeList));
-      System.out.printf("총 %d 개의 요리 데이터를 저장했습니다.", recipeList.size());
-    } catch (IOException e) {
-      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
-    }
-  }
-
 
   private static void loadRecipeData() {
     File file = new File("./recipe.json");
 
-    try (FileReader in = new FileReader(file)) {
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
       recipeList.addAll(Arrays.asList(new Gson().fromJson(in, Recipe[].class)));
 
       System.out.printf("총 %d 개의 요리 데이터를 로딩했습니다.\n", recipeList.size());
@@ -141,12 +132,12 @@ public class App {
     }
   }
 
-  private static void saveBoardData() {
-    File file = new File("./board.json");
+  private static void saveRecipeData() {
+    File file = new File("./recipe.json");
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+      out.write(new Gson().toJson(recipeList));
 
-    try (FileWriter out = new FileWriter(file)) {
-      out.write(new Gson().toJson(boardList));
-      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", boardList.size());
+      System.out.printf("총 %d 개의 요리 데이터를 저장했습니다.", recipeList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
     }
@@ -156,9 +147,33 @@ public class App {
     File file = new File("./board.json");
     Scanner dataScan = null;
 
-    try (FileReader in = new FileReader(file)) {
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
       boardList.addAll(Arrays.asList(new Gson().fromJson(in, Board[].class)));
       System.out.printf("총 %d 개의 게시글 데이터를 로딩했습니다.\n", boardList.size());
+    } catch (IOException e) {
+      System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
+    }
+  }
+
+  private static void saveBoardData() {
+    File file = new File("./board.json");
+
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+      out.write(new Gson().toJson(boardList));
+      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", boardList.size());
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생! - " + e.getMessage());
+    }
+  }
+
+
+  private static void loadMemberData() {
+    File file = new File("./member.json");
+
+    try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+      memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
+      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", memberList.size());
+
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
     }
@@ -167,23 +182,11 @@ public class App {
   private static void saveMemberData() {
     File file = new File("./member.json");
 
-    try (FileWriter out = new FileWriter(file)) {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
       out.write(new Gson().toJson(memberList));
       System.out.printf("총 %d 개의 회원 데이터를 저장했습니다.", memberList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
-    }
-  }
-
-  private static void loadMemberData() {
-    File file = new File("./member.json");
-
-    try (FileReader in = new FileReader(file);) {
-      memberList.addAll(Arrays.asList(new Gson().fromJson(in, Member[].class)));
-      System.out.printf("총 %d 개의 회원 데이터를 로딩했습니다.\n", memberList.size());
-
-    } catch (IOException e) {
-      System.out.println("파일 읽기 중 오류 발생! -" + e.getMessage());
     }
   }
 
