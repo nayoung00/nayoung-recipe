@@ -12,11 +12,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+import kny.cook.context.ApplicationContextListener;
 import kny.cook.domain.Board;
 import kny.cook.domain.Member;
 import kny.cook.domain.Recipe;
@@ -40,16 +43,41 @@ import kny.cook.util.Prompt;
 
 public class App {
 
-  static Scanner keyboard = new Scanner(System.in);
+  Scanner keyboard = new Scanner(System.in);
 
-  static Deque<String> commandStack = new ArrayDeque<>();
-  static Queue<String> commandQueue = new LinkedList<>();
+  Deque<String> commandStack = new ArrayDeque<>();
+  Queue<String> commandQueue = new LinkedList<>();
 
-  static List<Recipe> recipeList = new ArrayList<>();
-  static List<Member> memberList = new ArrayList<>();
-  static List<Board> boardList = new ArrayList<>();
+  List<Recipe> recipeList = new ArrayList<>();
+  List<Member> memberList = new ArrayList<>();
+  List<Board> boardList = new ArrayList<>();
 
-  public static void main(String[] args) {
+  Set<ApplicationContextListener> listeners = new HashSet<>();
+
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
+
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
+
+
+  private void notifyApplicationInitialized() {
+    for (ApplicationContextListener listener : listeners)
+      listener.contextInitialized();
+  }
+
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener listener : listeners)
+      listener.contextDestroyed();
+  }
+
+
+  public void service() {
+
+    notifyApplicationInitialized();
+
 
     loadRecipeData();
     loadMemberData();
@@ -57,6 +85,7 @@ public class App {
 
     Prompt prompt = new Prompt(keyboard);
     HashMap<String, Command> commandMap = new HashMap<>();
+
 
     commandMap.put("/recipe/add", new RecipeAddCommand(prompt, recipeList));
     commandMap.put("/recipe/delete", new RecipeDeleteCommand(prompt, recipeList));
@@ -116,16 +145,18 @@ public class App {
     saveRecipeData();
     saveMemberData();
     saveBoardData();
+
+    notifyApplicationDestroyed();
   }
 
 
   @SuppressWarnings("unchecked")
-  private static void loadRecipeData() {
+  private void loadRecipeData() {
     File file = new File("./recipe.ser2");
 
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-      recipeList = (ArrayList<Recipe>) in.readObject();
+      recipeList = (List<Recipe>) in.readObject();
       System.out.printf("총 %d 개의 요리 데이터를 로딩했습니다.\n", recipeList.size());
 
     } catch (Exception e) {
@@ -133,7 +164,7 @@ public class App {
     }
   }
 
-  private static void saveRecipeData() {
+  private void saveRecipeData() {
     File file = new File("./recipe.ser2");
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
@@ -145,7 +176,7 @@ public class App {
   }
 
   @SuppressWarnings("unchecked")
-  private static void loadBoardData() {
+  private void loadBoardData() {
     File file = new File("./board.ser2");
 
     try (ObjectInputStream in =
@@ -158,7 +189,7 @@ public class App {
     }
   }
 
-  private static void saveBoardData() {
+  private void saveBoardData() {
     File file = new File("./board.ser2");
 
     try (ObjectOutputStream out =
@@ -175,7 +206,7 @@ public class App {
 
 
   @SuppressWarnings("unchecked")
-  private static void loadMemberData() {
+  private void loadMemberData() {
     File file = new File("./member.ser2");
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -187,8 +218,9 @@ public class App {
     }
   }
 
-  private static void saveMemberData() {
+  private void saveMemberData() {
     File file = new File("./member.ser2");
+
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
       out.writeObject(memberList);
@@ -198,7 +230,7 @@ public class App {
     }
   }
 
-  private static void printCommandHistory(Iterator<String> iterator) {
+  private void printCommandHistory(Iterator<String> iterator) {
     int count = 0;
     while (iterator.hasNext()) {
       System.out.println(iterator.next());
@@ -211,5 +243,10 @@ public class App {
         }
       }
     }
+  }
+
+  public static void main(String[] args) {
+    App app = new App();
+    app.service();
   }
 }
