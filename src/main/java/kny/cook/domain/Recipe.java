@@ -1,6 +1,11 @@
 package kny.cook.domain;
 
-public class Recipe {
+import java.io.Serializable;
+
+public class Recipe implements Serializable {
+
+  private static final long serialVersionUID = 20200203L;
+
 
   private int no;
   private String cook;

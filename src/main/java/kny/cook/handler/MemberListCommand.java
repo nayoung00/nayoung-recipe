@@ -1,15 +1,15 @@
 package kny.cook.handler;
 
-import java.util.AbstractList;
 import java.util.Iterator;
+import java.util.List;
 import kny.cook.domain.Member;
 
 public class MemberListCommand implements Command {
 
-  AbstractList<Member> memberList;
+  List<Member> memberList;
 
 
-  public MemberListCommand(AbstractList<Member> list) {
+  public MemberListCommand(List<Member> list) {
     this.memberList = list;
   }
 

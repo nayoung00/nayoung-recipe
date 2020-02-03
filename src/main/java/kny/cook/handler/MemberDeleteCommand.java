@@ -1,16 +1,16 @@
 package kny.cook.handler;
 
-import java.util.AbstractList;
+import java.util.List;
 import kny.cook.domain.Member;
 import kny.cook.util.Prompt;
 
 public class MemberDeleteCommand implements Command {
 
-  AbstractList<Member> memberList;
+  List<Member> memberList;
 
   Prompt prompt;
 
-  public MemberDeleteCommand(Prompt prompt, AbstractList<Member> list) {
+  public MemberDeleteCommand(Prompt prompt, List<Member> list) {
     this.prompt = prompt;
     this.memberList = list;
   }

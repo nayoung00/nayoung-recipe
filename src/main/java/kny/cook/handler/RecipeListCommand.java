@@ -1,15 +1,15 @@
 package kny.cook.handler;
 
-import java.util.AbstractList;
 import java.util.Iterator;
+import java.util.List;
 import kny.cook.domain.Recipe;
 
 public class RecipeListCommand implements Command {
 
-  AbstractList<Recipe> recipeList;
+  List<Recipe> recipeList;
 
 
-  public RecipeListCommand(AbstractList<Recipe> list) {
+  public RecipeListCommand(List<Recipe> list) {
     recipeList = list;
   }
 

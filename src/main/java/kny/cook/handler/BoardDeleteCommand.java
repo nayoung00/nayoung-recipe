@@ -1,16 +1,16 @@
 package kny.cook.handler;
 
-import java.util.AbstractList;
+import java.util.List;
 import kny.cook.domain.Board;
 import kny.cook.util.Prompt;
 
 public class BoardDeleteCommand implements Command {
 
-  AbstractList<Board> boardList;
+  List<Board> boardList;
 
   Prompt prompt;
 
-  public BoardDeleteCommand(Prompt prompt, AbstractList<Board> list) {
+  public BoardDeleteCommand(Prompt prompt, List<Board> list) {
     this.prompt = prompt;
     this.boardList = list;
   }

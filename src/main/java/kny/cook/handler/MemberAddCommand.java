@@ -1,17 +1,17 @@
 package kny.cook.handler;
 
 import java.sql.Date;
-import java.util.AbstractList;
+import java.util.List;
 import kny.cook.domain.Member;
 import kny.cook.util.Prompt;
 
 public class MemberAddCommand implements Command {
 
-  AbstractList<Member> memberList;
+  List<Member> memberList;
 
   Prompt prompt;
 
-  public MemberAddCommand(Prompt prompt, AbstractList<Member> list) {
+  public MemberAddCommand(Prompt prompt, List<Member> list) {
     this.prompt = prompt;
     this.memberList = list;
   }

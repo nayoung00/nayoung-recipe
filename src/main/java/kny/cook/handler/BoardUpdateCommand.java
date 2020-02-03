@@ -1,17 +1,17 @@
 package kny.cook.handler;
 
 import java.sql.Date;
-import java.util.AbstractList;
+import java.util.List;
 import kny.cook.domain.Board;
 import kny.cook.util.Prompt;
 
 public class BoardUpdateCommand implements Command {
 
-  AbstractList<Board> boardList;
+  List<Board> boardList;
 
   Prompt prompt;
 
-  public BoardUpdateCommand(Prompt prompt, AbstractList<Board> list) {
+  public BoardUpdateCommand(Prompt prompt, List<Board> list) {
     this.prompt = prompt;
     this.boardList = list;
   }
