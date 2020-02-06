@@ -3,30 +3,59 @@ package kny.cook;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import kny.cook.context.ApplicationContextListener;
+import kny.cook.domain.Board;
+import kny.cook.domain.Member;
+import kny.cook.domain.Recipe;
 
 public class ServerApp {
+
+  Set<ApplicationContextListener> listeners = new HashSet<>();
+  Map<String, Object> context = new HashMap<>();
+
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
+
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
+
+  private void notifyApplicationInitialized() {
+    for (ApplicationContextListener listener : listeners)
+      listener.contextInitialized(context);
+  }
+
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener listener : listeners)
+      listener.contextDestroyed(context);
+  }
+
+  @SuppressWarnings("unchecked")
+  public void service() {
+
+    notifyApplicationInitialized();
+
+    List<Board> boardList = (List<Board>) context.get("boardList");
+    List<Recipe> recipeList = (List<Recipe>) context.get("recipeList");
+    List<Member> memberList = (List<Member>) context.get("memberList");
+
+    notifyApplicationDestroyed();
+  }
+
   public static void main(String[] args) {
     System.out.println("서버 레시피 관리 시스템입니다.");
 
-    try (
-
-        ServerSocket serverSocket = new ServerSocket(9999)) {
-      System.out.println("클라이언트 연결 대기중...");
-
-      while (true) {
-        Socket socket = serverSocket.accept();
-        System.out.println("클라이언트와 연결되었음.");
-
-        processRequest(socket);
-        System.out.println("--------------------------");
-      }
-    } catch (IOException e) {
-      System.out.println("서버 준비 중 오류 발생!");
-      return;
-    }
+    ServerApp app = new ServerApp();
+    app.addApplicationContextListener(new DataLoaderListener());
+    app.service();
   }
 
   static void processRequest(Socket clientSocket) {
