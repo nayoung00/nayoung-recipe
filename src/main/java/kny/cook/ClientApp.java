@@ -1,58 +1,158 @@
 // LMS 클라이언트
 package kny.cook;
 
-import java.io.PrintStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
+import kny.cook.handler.BoardAddCommand;
+import kny.cook.handler.BoardDeleteCommand;
+import kny.cook.handler.BoardDetailCommand;
+import kny.cook.handler.BoardListCommand;
+import kny.cook.handler.BoardUpdateCommand;
+import kny.cook.handler.Command;
+import kny.cook.handler.MemberAddCommand;
+import kny.cook.handler.MemberDeleteCommand;
+import kny.cook.handler.MemberDetailCommand;
+import kny.cook.handler.MemberListCommand;
+import kny.cook.handler.MemberUpdateCommand;
+import kny.cook.handler.RecipeAddCommand;
+import kny.cook.handler.RecipeDeleteCommand;
+import kny.cook.handler.RecipeDetailCommand;
+import kny.cook.handler.RecipeListCommand;
+import kny.cook.handler.RecipeUpdateCommand;
+import kny.cook.util.Prompt;
 
 public class ClientApp {
-  public static void main(String[] args) throws Exception {
-    System.out.println("클라이언트 레시피 관리 시스템입니다.");
 
+  Scanner keyboard = new Scanner(System.in);
+  Prompt prompt = new Prompt(keyboard);
+
+  public void service() {
     String serverAddr = null;
     int port = 0;
-
-    Scanner keyScan = new Scanner(System.in);
-
     try {
-      System.out.print("서버?");
-      serverAddr = keyScan.nextLine();
-
-      System.out.print("포트?");
-      port = Integer.parseInt(keyScan.nextLine());
+      serverAddr = prompt.inputString("서버?");
+      port = prompt.inputInt("포트?");
 
     } catch (Exception e) {
       System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
-      keyScan.close();
+      keyboard.close();
       return;
     }
 
     try (Socket socket = new Socket(serverAddr, port);
-
-        PrintStream out = new PrintStream(socket.getOutputStream());
-        Scanner in = new Scanner(socket.getInputStream())) {
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
       System.out.println("서버와 연결되었음!");
 
-      System.out.print("서버에 보낼 메시지: ");
-      String sendMsg = keyScan.nextLine();
-
-      out.println(sendMsg);
-      System.out.println("서버에 메시지를 전송하였음!");
-
-      String message = in.nextLine();
-      System.out.println("서버로부터 메시지를 수신하였음!");
-
-      System.out.println("서버: " + message);
+      processCommand(out, in);
 
       System.out.println("서버와 연결을 끊었음!");
+
     } catch (Exception e) {
       System.out.println("예외 발생: ");
       e.printStackTrace();
     }
-
-    keyScan.close();
+    keyboard.close();
   }
 
-}
+  private void processCommand(ObjectOutputStream out, ObjectInputStream in) {
 
+    Deque<String> commandStack = new ArrayDeque<>();
+    Queue<String> commandQueue = new LinkedList<>();
+
+    HashMap<String, Command> commandMap = new HashMap<>();
+
+
+    commandMap.put("/recipe/list", new RecipeListCommand(out, in));
+    commandMap.put("/recipe/add", new RecipeAddCommand(out, in, prompt));
+    commandMap.put("/recipe/delete", new RecipeDeleteCommand(out, in, prompt));
+    commandMap.put("/recipe/detail", new RecipeDetailCommand(out, in, prompt));
+    commandMap.put("/recipe/update", new RecipeUpdateCommand(out, in, prompt));
+
+    commandMap.put("/member/list", new MemberListCommand(out, in));
+    commandMap.put("/member/add", new MemberAddCommand(out, in, prompt));
+    commandMap.put("/member/delete", new MemberDeleteCommand(out, in, prompt));
+    commandMap.put("/member/detail", new MemberDetailCommand(out, in, prompt));
+    commandMap.put("/member/update", new MemberUpdateCommand(out, in, prompt));
+
+    commandMap.put("/board/list", new BoardListCommand(out, in));
+    commandMap.put("/board/add", new BoardAddCommand(out, in, prompt));
+    commandMap.put("/board/delete", new BoardDeleteCommand(out, in, prompt));
+    commandMap.put("/board/detail", new BoardDetailCommand(out, in, prompt));
+    commandMap.put("/board/update", new BoardUpdateCommand(out, in, prompt));
+
+    try {
+      while (true) {
+        String command;
+        command = prompt.inputString("\n명령> ");
+
+        if (command.length() == 0)
+          continue;
+
+        if (command.equals("quit") || command.equals("/server/stop")) {
+          out.writeUTF(command);
+          out.flush();
+          System.out.println("서버: " + in.readUTF());
+          System.out.println("안녕!");
+          break;
+        } else if (command.equals("history")) {
+          printCommandHistory(commandStack.iterator());
+          continue;
+        } else if (command.equals("history2")) {
+          printCommandHistory(commandQueue.iterator());
+          continue;
+        }
+
+        commandStack.push(command);
+        commandQueue.offer(command);
+
+        Command commandHandler = commandMap.get(command);
+
+        if (commandHandler != null) {
+          try {
+            commandHandler.execute();
+          } catch (Exception e) {
+            e.printStackTrace();
+            System.out.printf("명렁어 실행 중 오류 발생: %s\n", e.getMessage());
+          }
+        } else {
+          System.out.println("실행할 수 없는 명령입니다.");
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("프로그램 실행 중 오류 발생!");
+    }
+    keyboard.close();
+  }
+
+
+  private void printCommandHistory(Iterator<String> iterator) {
+    int count = 0;
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
+
+      if ((++count % 5) == 0) {
+        String str = prompt.inputString(":");
+        if (str.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
+  }
+
+  public static void main(String[] args) throws Exception {
+    System.out.println("클라이언트 레시피 관리 시스템입니다.");
+
+    ClientApp app = new ClientApp();
+    app.service();
+  }
+}
