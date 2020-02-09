@@ -20,12 +20,17 @@ import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
 import kny.cook.servlet.BoardListServlet;
 import kny.cook.servlet.BoardUpdateServlet;
+import kny.cook.servlet.MemberAddServlet;
+import kny.cook.servlet.MemberDeleteServlet;
+import kny.cook.servlet.MemberDetailServlet;
+import kny.cook.servlet.MemberListServlet;
+import kny.cook.servlet.MemberUpdateServlet;
 import kny.cook.servlet.RecipeAddServlet;
 import kny.cook.servlet.RecipeDeleteServlet;
 import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
+import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
-import kny.cook.servlets.RecipeUpdateServlet;
 
 public class ServerApp {
 
@@ -64,23 +69,21 @@ public class ServerApp {
     recipes = (List<Recipe>) context.get("recipeList");
     members = (List<Member>) context.get("memberList");
 
-
     servletMap.put("/recipe/list", new RecipeListServlet(recipes));
-    servletMap.put("/recipe/add", new RecipeAddServlet(recipes)));
+    servletMap.put("/recipe/add", new RecipeAddServlet(recipes));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipes));
     servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipes));
     servletMap.put("/recipe/update", new RecipeUpdateServlet(recipes));
     servletMap.put("/member/list", new MemberListServlet(members));
-    servletMap.put("/member/add", new MemberAddServlet(members)));
+    servletMap.put("/member/add", new MemberAddServlet(members));
     servletMap.put("/member/detail", new MemberDetailServlet(members));
-    servletMap.put("/member/delete", new RecipeDeleteServlet(members));
-    servletMap.put("/member/update",new MemberUpdateServlet(members));
+    servletMap.put("/member/delete", new MemberDeleteServlet(members));
+    servletMap.put("/member/update", new MemberUpdateServlet(members));
     servletMap.put("/board/list", new BoardListServlet(boards));
     servletMap.put("/board/add", new BoardAddServlet(boards));
     servletMap.put("/board/detail", new BoardDetailServlet(boards));
     servletMap.put("/board/delete", new BoardDeleteServlet(boards));
     servletMap.put("/board/update", new BoardUpdateServlet(boards));
-
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
@@ -122,22 +125,30 @@ public class ServerApp {
             return 9;
         }
 
+        Servlet servlet = servletMap.get(request);
 
+        if (servlet != null) {
+          try {
+            servlet.service(in, out);
+          } catch (Exception e) {
+            out.writeUTF("FAIL");
+            out.writeUTF(e.getMessage());
 
-
-            notFound(out);
+            System.out.println("클라이언트 요청 처리 중 오류 발생:");
+            e.printStackTrace();
+          }
+        } else {
+          notFound(out);
         }
         out.flush();
         System.out.println("클라이언트에게 응답하였음!");
+        System.out.println("---------------------------------");
       }
-    }catch(
-
-  Exception e)
-  {
-    System.out.println("예외 발생: ");
-    e.printStackTrace();
-    return -1;
-  }
+    } catch (Exception e) {
+      System.out.println("예외 발생: ");
+      e.printStackTrace();
+      return -1;
+    }
   }
 
   private void notFound(ObjectOutputStream out) throws IOException {
@@ -149,180 +160,6 @@ public class ServerApp {
     out.writeUTF("OK");
     out.flush();
   }
-
-  private void updateMember(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      Member member = (Member) in.readObject();
-
-      int index = -1;
-      for (int i = 0; i < members.size(); i++) {
-        if (members.get(i).getNo() == member.getNo()) {
-          index = i;
-          break;
-        }
-      }
-      if (index != -1) {
-        members.set(index, member);
-        out.writeUTF("OK");
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 회원이 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void detailMember(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      int no = in.readInt();
-
-      Member member = null;
-      for (Member m : members) {
-        if (m.getNo() == no) {
-          member = m;
-          break;
-        }
-      }
-      if (member != null) {
-        out.writeUTF("OK");
-        out.writeObject(member);
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 회원이 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void deleteMember(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      int no = in.readInt();
-
-      int index = -1;
-      for (int i = 0; i < members.size(); i++) {
-        if (members.get(i).getNo() == no) {
-          index = i;
-          break;
-        }
-      }
-      if (index != -1) {
-        members.remove(index);
-        out.writeUTF("OK");
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 회원이 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void addMember(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      Member member = (Member) in.readObject();
-
-      int i = 0;
-      for (; i < members.size(); i++) {
-        if (members.get(i).getNo() == member.getNo()) {
-          break;
-        }
-      }
-      if (i == members.size()) {
-        members.add(member);
-        out.writeUTF("OK");
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("같은 번호의 회원이 있습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void listMember(ObjectOutputStream out) throws IOException {
-    out.writeUTF("OK");
-    out.reset();
-    out.writeObject(members);
-  }
-
-  private void updateRecipe(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      Recipe recipe = (Recipe) in.readObject();
-
-      int index = -1;
-      for (int i = 0; i < recipes.size(); i++) {
-        if (recipes.get(i).getNo() == recipe.getNo()) {
-          index = i;
-          break;
-        }
-      }
-      if (index != -1) {
-        recipes.set(index, recipe);
-        out.writeUTF("OK");
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 레시피가 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void detailRecipe(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      int no = in.readInt();
-
-      Recipe recipe = null;
-      for (Recipe r : recipes) {
-        if (r.getNo() == no) {
-          recipe = r;
-          break;
-        }
-      }
-      if (recipe != null) {
-        out.writeUTF("OK");
-        out.writeObject(recipe);
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 레시피가 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
-  private void deleteRecipe(ObjectInputStream in, ObjectOutputStream out) throws IOException {
-    try {
-      int no = in.readInt();
-
-      int index = -1;
-      for (int i = 0; i < recipes.size(); i++) {
-        if (recipes.get(i).getNo() == no) {
-          index = i;
-          break;
-        }
-      }
-      if (index != -1) {
-        recipes.remove(index);
-        out.writeUTF("OK");
-      } else {
-        out.writeUTF("FAIL");
-        out.writeUTF("해당 번호의 레시피가 없습니다.");
-      }
-    } catch (Exception e) {
-      out.writeUTF("FAIL");
-      out.writeUTF(e.getMessage());
-    }
-  }
-
 
   public static void main(String[] args) {
     System.out.println("서버 레시피 관리 시스템입니다.");

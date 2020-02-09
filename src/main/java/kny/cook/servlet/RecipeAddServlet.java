@@ -15,7 +15,7 @@ public class RecipeAddServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
+  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     Recipe recipe = (Recipe) in.readObject();
 
     int i = 0;

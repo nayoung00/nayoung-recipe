@@ -14,7 +14,7 @@ public class RecipeListServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
+  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     out.writeUTF("OK");
     out.reset();
     out.writeObject(recipes);
