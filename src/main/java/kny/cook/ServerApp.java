@@ -8,16 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardObjectFileDao;
 import kny.cook.dao.MemberObjectFileDao;
 import kny.cook.dao.RecipeObjectFileDao;
-import kny.cook.domain.Board;
-import kny.cook.domain.Member;
-import kny.cook.domain.Recipe;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
@@ -41,9 +37,6 @@ public class ServerApp {
   Map<String, Object> context = new HashMap<>();
 
   Map<String, Servlet> servletMap = new HashMap<>();
-  List<Board> boards;
-  List<Member> members;
-  List<Recipe> recipes;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);

@@ -23,6 +23,7 @@ public class MemberObjectFileDao {
 
   }
 
+  @SuppressWarnings("unchecked")
   private void loadData() {
     File file = new File(filename);
 
@@ -58,7 +59,7 @@ public class MemberObjectFileDao {
 
     list.add(member);
     saveData();
-    return -1;
+    return 1;
   }
 
   public List<Member> findAll() throws Exception {

@@ -2,7 +2,6 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import kny.cook.dao.BoardObjectFileDao;
 
 public class BoardListServlet implements Servlet {
@@ -17,6 +16,6 @@ public class BoardListServlet implements Servlet {
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     out.writeUTF("OK");
     out.reset();
-    out.writeObject(boardDao);
+    out.writeObject(boardDao.findAll());
   }
 }

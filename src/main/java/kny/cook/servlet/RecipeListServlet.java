@@ -16,6 +16,6 @@ public class RecipeListServlet implements Servlet {
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     out.writeUTF("OK");
     out.reset();
-    out.writeObject(recipeDao);
+    out.writeObject(recipeDao.findAll());
   }
 }

@@ -22,6 +22,7 @@ public class RecipeObjectFileDao {
     loadData();
   }
 
+  @SuppressWarnings("unchecked")
   private void loadData() {
     File file = new File(filename);
 
@@ -57,7 +58,7 @@ public class RecipeObjectFileDao {
 
     list.add(recipe);
     saveData();
-    return -1;
+    return 1;
   }
 
   public List<Recipe> findAll() throws Exception {
