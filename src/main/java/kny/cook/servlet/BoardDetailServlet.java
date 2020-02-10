@@ -2,7 +2,6 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import kny.cook.dao.BoardObjectFileDao;
 import kny.cook.domain.Board;
 
@@ -18,8 +17,12 @@ public class BoardDetailServlet implements Servlet {
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     int no = in.readInt();
 
-    if (boardDao.delete(no) > 0 ) {
+    Board board = boardDao.findByNo(no);
+
+    if (board != null) {
       out.writeUTF("OK");
+      out.writeObject(board);
+
     } else {
       out.writeUTF("FAIL");
       out.writeUTF("해당 번호의 게시물이 없습니다.");

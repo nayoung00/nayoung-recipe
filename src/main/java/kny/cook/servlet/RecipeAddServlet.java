@@ -2,15 +2,15 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
+import kny.cook.dao.RecipeObjectFileDao;
 import kny.cook.domain.Recipe;
 
 public class RecipeAddServlet implements Servlet {
 
-  List<Recipe> recipes;
+  RecipeObjectFileDao recipeDao;
 
-  public RecipeAddServlet(List<Recipe> recipes) {
-    this.recipes = recipes;
+  public RecipeAddServlet(RecipeObjectFileDao recipeDao) {
+    this.recipeDao = recipeDao;
 
   }
 
@@ -18,14 +18,7 @@ public class RecipeAddServlet implements Servlet {
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     Recipe recipe = (Recipe) in.readObject();
 
-    int i = 0;
-    for (; i < recipes.size(); i++) {
-      if (recipes.get(i).getNo() == recipe.getNo()) {
-        break;
-      }
-    }
-    if (i == recipes.size()) {
-      recipes.add(recipe);
+    if (recipeDao.insert(recipe) > 0) {
       out.writeUTF("OK");
     } else {
       out.writeUTF("FAIL");

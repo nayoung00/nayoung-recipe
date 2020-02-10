@@ -2,30 +2,24 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
+import kny.cook.dao.RecipeObjectFileDao;
 import kny.cook.domain.Recipe;
 
 public class RecipeDetailServlet implements Servlet {
 
-  List<Recipe> recipes;
+  RecipeObjectFileDao recipeDao;
 
-  public RecipeDetailServlet(List<Recipe> recipes) {
-    this.recipes = recipes;
+  public RecipeDetailServlet(RecipeObjectFileDao recipeDao) {
+    this.recipeDao = recipeDao;
 
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-
     int no = in.readInt();
 
-    Recipe recipe = null;
-    for (Recipe r : recipes) {
-      if (r.getNo() == no) {
-        recipe = r;
-        break;
-      }
-    }
+    Recipe recipe = recipeDao.findByNo(no);
+
     if (recipe != null) {
       out.writeUTF("OK");
       out.writeObject(recipe);

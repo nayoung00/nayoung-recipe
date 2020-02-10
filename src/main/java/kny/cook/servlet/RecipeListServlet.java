@@ -2,21 +2,20 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import kny.cook.domain.Recipe;
+import kny.cook.dao.RecipeObjectFileDao;
 
 public class RecipeListServlet implements Servlet {
 
-  List<Recipe> recipes;
+  RecipeObjectFileDao recipeDao;
 
-  public RecipeListServlet(List<Recipe> recipes) {
-    this.recipes = recipes;
+  public RecipeListServlet(RecipeObjectFileDao recipeDao) {
+    this.recipeDao = recipeDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     out.writeUTF("OK");
     out.reset();
-    out.writeObject(recipes);
+    out.writeObject(recipeDao);
   }
 }

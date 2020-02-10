@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardObjectFileDao;
 import kny.cook.dao.MemberObjectFileDao;
@@ -64,26 +63,25 @@ public class ServerApp {
       listener.contextDestroyed(context);
   }
 
-  @SuppressWarnings("unchecked")
   public void service() {
 
     notifyApplicationInitialized();
 
-    
+
     BoardObjectFileDao boardDao = (BoardObjectFileDao) context.get("boardDao");
     RecipeObjectFileDao recipeDao = (RecipeObjectFileDao) context.get("recipeDao");
     MemberObjectFileDao memberDao = (MemberObjectFileDao) context.get("memberDao");
 
-    servletMap.put("/recipe/list", new RecipeListServlet(recipes));
-    servletMap.put("/recipe/add", new RecipeAddServlet(recipes));
-    servletMap.put("/recipe/detail", new RecipeDetailServlet(recipes));
-    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipes));
-    servletMap.put("/recipe/update", new RecipeUpdateServlet(recipes));
-    servletMap.put("/member/list", new MemberListServlet(members));
-    servletMap.put("/member/add", new MemberAddServlet(members));
-    servletMap.put("/member/detail", new MemberDetailServlet(members));
-    servletMap.put("/member/delete", new MemberDeleteServlet(members));
-    servletMap.put("/member/update", new MemberUpdateServlet(members));
+    servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
+    servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
+    servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
+    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeDao));
+    servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeDao));
+    servletMap.put("/member/list", new MemberListServlet(memberDao));
+    servletMap.put("/member/add", new MemberAddServlet(memberDao));
+    servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
+    servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
+    servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
     servletMap.put("/board/list", new BoardListServlet(boardDao));
     servletMap.put("/board/add", new BoardAddServlet(boardDao));
     servletMap.put("/board/detail", new BoardDetailServlet(boardDao));
