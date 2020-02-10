@@ -11,7 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import kny.cook.context.ApplicationContextListener;
+import kny.cook.dao.BoardObjectFileDao;
+import kny.cook.dao.MemberObjectFileDao;
+import kny.cook.dao.RecipeObjectFileDao;
 import kny.cook.domain.Board;
 import kny.cook.domain.Member;
 import kny.cook.domain.Recipe;
@@ -65,9 +69,10 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    boards = (List<Board>) context.get("boardList");
-    recipes = (List<Recipe>) context.get("recipeList");
-    members = (List<Member>) context.get("memberList");
+    
+    BoardObjectFileDao boardDao = (BoardObjectFileDao) context.get("boardDao");
+    RecipeObjectFileDao recipeDao = (RecipeObjectFileDao) context.get("recipeDao");
+    MemberObjectFileDao memberDao = (MemberObjectFileDao) context.get("memberDao");
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipes));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipes));
@@ -79,11 +84,11 @@ public class ServerApp {
     servletMap.put("/member/detail", new MemberDetailServlet(members));
     servletMap.put("/member/delete", new MemberDeleteServlet(members));
     servletMap.put("/member/update", new MemberUpdateServlet(members));
-    servletMap.put("/board/list", new BoardListServlet(boards));
-    servletMap.put("/board/add", new BoardAddServlet(boards));
-    servletMap.put("/board/detail", new BoardDetailServlet(boards));
-    servletMap.put("/board/delete", new BoardDeleteServlet(boards));
-    servletMap.put("/board/update", new BoardUpdateServlet(boards));
+    servletMap.put("/board/list", new BoardListServlet(boardDao));
+    servletMap.put("/board/add", new BoardAddServlet(boardDao));
+    servletMap.put("/board/detail", new BoardDetailServlet(boardDao));
+    servletMap.put("/board/delete", new BoardDeleteServlet(boardDao));
+    servletMap.put("/board/update", new BoardUpdateServlet(boardDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
