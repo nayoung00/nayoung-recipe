@@ -18,7 +18,7 @@
 - src/main/java/kny/cook/ServerApp.java 변경
 
 
-### 작업 1: 게시물 데이터를 처리하는 DAO 클래스 정의하기.
+### 작업 1: 게시물 데이터를 처리하는 DAO 클래스 정의하기. 
 
 - kny.cook.dao 패키지를 생성한다.
 - kny.cook.BoardObjectFileDao 클래스를 정의한다.
