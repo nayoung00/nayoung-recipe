@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.dao.BoardObjectFileDao;
-import kny.cook.dao.MemberObjectFileDao;
-import kny.cook.dao.RecipeObjectFileDao;
+import kny.cook.dao.json.BoardJsonFileDao;
+import kny.cook.dao.json.MemberJsonFileDao;
+import kny.cook.dao.json.RecipeJsonFileDao;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
@@ -61,9 +61,9 @@ public class ServerApp {
     notifyApplicationInitialized();
 
 
-    BoardObjectFileDao boardDao = (BoardObjectFileDao) context.get("boardDao");
-    RecipeObjectFileDao recipeDao = (RecipeObjectFileDao) context.get("recipeDao");
-    MemberObjectFileDao memberDao = (MemberObjectFileDao) context.get("memberDao");
+    BoardJsonFileDao boardDao = (BoardJsonFileDao) context.get("boardDao");
+    RecipeJsonFileDao recipeDao = (RecipeJsonFileDao) context.get("recipeDao");
+    MemberJsonFileDao memberDao = (MemberJsonFileDao) context.get("memberDao");
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));

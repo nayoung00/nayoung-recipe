@@ -2,14 +2,13 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import kny.cook.dao.BoardObjectFileDao;
+import kny.cook.dao.json.BoardJsonFileDao;
 
 public class BoardDeleteServlet implements Servlet {
 
-	BoardObjectFileDao boardDao;
-	
-  public BoardDeleteServlet(BoardObjectFileDao boardDao) {
+  BoardJsonFileDao boardDao;
+
+  public BoardDeleteServlet(BoardJsonFileDao boardDao) {
     this.boardDao = boardDao;
   }
 

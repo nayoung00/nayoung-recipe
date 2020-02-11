@@ -2,24 +2,22 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-
-import kny.cook.dao.BoardObjectFileDao;
+import kny.cook.dao.json.BoardJsonFileDao;
 import kny.cook.domain.Board;
 
 public class BoardAddServlet implements Servlet {
 
-  BoardObjectFileDao boardDao;
-  
+  BoardJsonFileDao boardDao;
 
-  public BoardAddServlet(BoardObjectFileDao boardDao) {
+
+  public BoardAddServlet(BoardJsonFileDao boardDao) {
     this.boardDao = boardDao;
   }
 
   @Override
   public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
     Board board = (Board) in.readObject();
-    
+
     if (boardDao.insert(board) > 0) {
       out.writeUTF("OK");
     } else {

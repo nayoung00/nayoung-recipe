@@ -2,18 +2,18 @@ package kny.cook;
 
 import java.util.Map;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.dao.BoardObjectFileDao;
-import kny.cook.dao.MemberObjectFileDao;
-import kny.cook.dao.RecipeObjectFileDao;
+import kny.cook.dao.json.BoardJsonFileDao;
+import kny.cook.dao.json.MemberJsonFileDao;
+import kny.cook.dao.json.RecipeJsonFileDao;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
     System.out.println("데이터를 로딩합니다.");
-    BoardObjectFileDao boardDao = new BoardObjectFileDao("./board.ser2");
-    RecipeObjectFileDao recipeDao = new RecipeObjectFileDao("./recipe.ser2");
-    MemberObjectFileDao memberDao = new MemberObjectFileDao("./member.ser2");
+    BoardJsonFileDao boardDao = new BoardJsonFileDao("./board.json");
+    RecipeJsonFileDao recipeDao = new RecipeJsonFileDao("./recipe.json");
+    MemberJsonFileDao memberDao = new MemberJsonFileDao("./member.json");
 
 
     context.put("boardDao", boardDao);

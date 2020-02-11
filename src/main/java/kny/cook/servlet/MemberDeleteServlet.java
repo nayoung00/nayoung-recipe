@@ -2,13 +2,13 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import kny.cook.dao.MemberObjectFileDao;
+import kny.cook.dao.json.MemberJsonFileDao;
 
 public class MemberDeleteServlet implements Servlet {
 
-  MemberObjectFileDao memberDao;
+  MemberJsonFileDao memberDao;
 
-  public MemberDeleteServlet(MemberObjectFileDao memberDao) {
+  public MemberDeleteServlet(MemberJsonFileDao memberDao) {
 
     this.memberDao = memberDao;
   }
