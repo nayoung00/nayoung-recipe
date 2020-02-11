@@ -54,9 +54,10 @@ public class RecipeObjectFileDao extends AbstractObjectFileDao<Recipe> {
 
   }
 
-  private int indexOf(int no) {
+  @Override
+  protected <k> int indexOf(k key) {
     for (int i = 0; i < list.size(); i++) {
-      if (list.get(i).getNo() == no)
+      if (list.get(i).getNo() == (int) key)
         return i;
     }
     return -1;

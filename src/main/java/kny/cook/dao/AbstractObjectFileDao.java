@@ -49,4 +49,7 @@ public abstract class AbstractObjectFileDao<T> {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
     }
   }
+
+
+  protected abstract <k> int indexOf(k key);
 }
