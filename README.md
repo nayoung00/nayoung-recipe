@@ -15,7 +15,6 @@
 - src/main/java/kny/cook/dao/RecipeObjectFileDao.java 변경
 - src/main/java/kny/cook/dao/MemberObjectFileDao.java 변경
 
-## 실습  
 
 ### 작업 1: DAO의 공통점을 뽑아 수퍼 클래스로 정의하기.
 
