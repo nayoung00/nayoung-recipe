@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.dao.json.BoardJsonFileDao;
-import kny.cook.dao.json.MemberJsonFileDao;
-import kny.cook.dao.json.RecipeJsonFileDao;
+import kny.cook.dao.BoardDao;
+import kny.cook.dao.MemberDao;
+import kny.cook.dao.RecipeDao;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
@@ -61,20 +61,22 @@ public class ServerApp {
     notifyApplicationInitialized();
 
 
-    BoardJsonFileDao boardDao = (BoardJsonFileDao) context.get("boardDao");
-    RecipeJsonFileDao recipeDao = (RecipeJsonFileDao) context.get("recipeDao");
-    MemberJsonFileDao memberDao = (MemberJsonFileDao) context.get("memberDao");
+    BoardDao boardDao = (BoardDao) context.get("boardDao");
+    RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
+    MemberDao memberDao = (MemberDao) context.get("memberDao");
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
     servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeDao));
     servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeDao));
+
     servletMap.put("/member/list", new MemberListServlet(memberDao));
     servletMap.put("/member/add", new MemberAddServlet(memberDao));
     servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
     servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
     servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
+
     servletMap.put("/board/list", new BoardListServlet(boardDao));
     servletMap.put("/board/add", new BoardAddServlet(boardDao));
     servletMap.put("/board/detail", new BoardDetailServlet(boardDao));

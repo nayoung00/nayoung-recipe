@@ -2,14 +2,14 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import kny.cook.dao.json.MemberJsonFileDao;
+import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
 
 public class MemberUpdateServlet implements Servlet {
 
-  MemberJsonFileDao memberDao;
+  MemberDao memberDao;
 
-  public MemberUpdateServlet(MemberJsonFileDao memberDao) {
+  public MemberUpdateServlet(MemberDao memberDao) {
     this.memberDao = memberDao;
   }
 

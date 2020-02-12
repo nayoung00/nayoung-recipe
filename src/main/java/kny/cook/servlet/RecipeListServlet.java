@@ -2,13 +2,13 @@ package kny.cook.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import kny.cook.dao.json.RecipeJsonFileDao;
+import kny.cook.dao.RecipeDao;
 
 public class RecipeListServlet implements Servlet {
 
-  RecipeJsonFileDao recipeDao;
+  RecipeDao recipeDao;
 
-  public RecipeListServlet(RecipeJsonFileDao recipeDao) {
+  public RecipeListServlet(RecipeDao recipeDao) {
     this.recipeDao = recipeDao;
   }
 
