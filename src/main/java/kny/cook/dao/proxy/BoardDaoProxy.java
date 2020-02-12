@@ -80,7 +80,4 @@ public class BoardDaoProxy implements BoardDao {
     }
     return 1;
   }
-
-
-
 }

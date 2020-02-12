@@ -60,7 +60,6 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");

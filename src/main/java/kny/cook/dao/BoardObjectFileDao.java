@@ -52,7 +52,6 @@ public class BoardObjectFileDao extends AbstractObjectFileDao<Board> {
     list.remove(index);
     saveData();
     return 1;
-
   }
 
 
