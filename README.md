@@ -26,7 +26,6 @@
 - src/main/java/kny/cook/DataLoaderListener.java 변경
 - src/main/java/kny/cook/ServerApp.java 변경
 
-## 실습  
 
 ### 작업 1: BoardXxxServlet이 사용할 DAO 호출 규칙을 정의하고 구현하라.
 
@@ -38,7 +37,7 @@
 - kny.cook.servlet.BoardXxxServlet 클래스를 변경한다.
   - DAO 레퍼런스 타입을 BoardDao 인터페이스로 변경한다.
 - kny.cook.DataLoaderListener 변경한다.
-- com.eocms.lms.ServerApp 변경한다.
+- kny.cook.ServerApp 변경한다.
  
 ### 작업 2: RecipeXxxServlet이 사용할 DAO 호출 규칙을 정의하고 구현하라.
 
@@ -50,7 +49,7 @@
 - kny.cook.servlet.RecipeXxxServlet 클래스를 변경한다.
   - DAO 레퍼런스 타입을 RecipeDao 인터페이스로 변경한다.
 - kny.cook.DataLoaderListener 변경한다.
-- com.eocms.lms.ServerApp 변경한다.
+- kny.cook.ServerApp 변경한다.
 
 ### 작업 3: MemberXxxServlet이 사용할 DAO 호출 규칙을 정의하고 구현하라.
 
@@ -62,4 +61,4 @@
 - kny.cook.servlet.MemberXxxServlet 클래스를 변경한다.
   - DAO 레퍼런스 타입을 MemberDao 인터페이스로 변경한다.
 - kny.cook.DataLoaderListener 변경한다.
-- com.eocms.lms.ServerApp 변경한다.
+- kny.cook.ServerApp 변경한다.
