@@ -1,18 +1,16 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 import kny.cook.util.Prompt;
 
 public class RecipeAddCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  RecipeDao recipeDao;
   Prompt prompt;
 
-  public RecipeAddCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public RecipeAddCommand(RecipeDao recipeDao, Prompt prompt) {
+
+    this.recipeDao = recipeDao;
     this.prompt = prompt;
   }
 
@@ -28,18 +26,10 @@ public class RecipeAddCommand implements Command {
     recipe.setTime(prompt.inputInt("시간(분)? "));
 
     try {
-      out.writeUTF("/recipe/add");
-      out.writeObject(recipe);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
+      recipeDao.insert(recipe);
       System.out.println("저장하였습니다.");
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("등록 실패!");
     }
   }
 }

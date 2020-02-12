@@ -1,39 +1,27 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
 import kny.cook.util.Prompt;
 
 public class MemberDetailCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  MemberDao memberDao;
   Prompt prompt;
 
 
-  public MemberDetailCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public MemberDetailCommand(MemberDao memberDao, Prompt prompt) {
+    this.memberDao = memberDao;
     this.prompt = prompt;
   }
 
   @Override
   public void execute() {
-    int no = prompt.inputInt("번호? ");
 
     try {
-      out.writeUTF("/member/detail");
-      out.writeInt(no);
-      out.flush();
+      int no = prompt.inputInt("번호? ");
 
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-
-      Member member = (Member) in.readObject();
+      Member member = memberDao.findByNo(no);
 
       System.out.printf("번호: %d\n", member.getNo());
       System.out.printf("이름: %s\n", member.getName());
@@ -43,7 +31,7 @@ public class MemberDetailCommand implements Command {
       System.out.printf("전화: %s\n", member.getTel());
 
     } catch (Exception e) {
-      System.out.println(" 통신 중 오류 발생!");
+      System.out.println("조회 실패!");
     }
   }
 }

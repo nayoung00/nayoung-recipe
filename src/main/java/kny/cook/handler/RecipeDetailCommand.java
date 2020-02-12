@@ -1,19 +1,16 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 import kny.cook.util.Prompt;
 
 public class RecipeDetailCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  RecipeDao recipeDao;
   Prompt prompt;
 
 
-  public RecipeDetailCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public RecipeDetailCommand(RecipeDao recipeDao, Prompt prompt) {
+    this.recipeDao = recipeDao;
     this.prompt = prompt;
   }
 
@@ -22,17 +19,8 @@ public class RecipeDetailCommand implements Command {
 
     try {
       int no = prompt.inputInt("번호?");
-      out.writeUTF("/recipe/detail");
-      out.writeInt(no);
-      out.flush();
 
-      String response = in.readUTF();
-
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      Recipe recipe = (Recipe) in.readObject();
+      Recipe recipe = recipeDao.findByNo(no);
 
       System.out.printf("번호? %d\n", recipe.getNo());
       System.out.printf("요리: %s\n", recipe.getCook());
@@ -41,7 +29,7 @@ public class RecipeDetailCommand implements Command {
       System.out.printf("비용: %d\n", recipe.getExpense());
       System.out.printf("시간: %d\n", recipe.getTime());
     } catch (Exception e) {
-      System.out.println("명령 실행 중 오류!");
+      System.out.println("조회 실패!");
     }
   }
 }

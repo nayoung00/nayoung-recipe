@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import kny.cook.dao.proxy.BoardDaoProxy;
+import kny.cook.dao.proxy.MemberDaoProxy;
+import kny.cook.dao.proxy.RecipeDaoProxy;
 import kny.cook.handler.BoardAddCommand;
 import kny.cook.handler.BoardDeleteCommand;
 import kny.cook.handler.BoardDetailCommand;
@@ -35,8 +38,10 @@ public class ClientApp {
   Prompt prompt = new Prompt(keyboard);
 
   public void service() {
+
     String serverAddr = null;
     int port = 0;
+
     try {
       serverAddr = prompt.inputString("서버?");
       port = prompt.inputInt("포트?");
@@ -61,6 +66,7 @@ public class ClientApp {
       System.out.println("예외 발생: ");
       e.printStackTrace();
     }
+
     keyboard.close();
   }
 
@@ -69,26 +75,30 @@ public class ClientApp {
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
 
+    BoardDaoProxy BoardDao = new BoardDaoProxy(in, out);
+    RecipeDaoProxy RecipeDao = new RecipeDaoProxy(in, out);
+    MemberDaoProxy MemberDao = new MemberDaoProxy(in, out);
+
+
     HashMap<String, Command> commandMap = new HashMap<>();
 
+    commandMap.put("/recipe/list", new RecipeListCommand(RecipeDao));
+    commandMap.put("/recipe/add", new RecipeAddCommand(RecipeDao, prompt));
+    commandMap.put("/recipe/delete", new RecipeDeleteCommand(RecipeDao, prompt));
+    commandMap.put("/recipe/detail", new RecipeDetailCommand(RecipeDao, prompt));
+    commandMap.put("/recipe/update", new RecipeUpdateCommand(RecipeDao, prompt));
 
-    commandMap.put("/recipe/list", new RecipeListCommand(out, in));
-    commandMap.put("/recipe/add", new RecipeAddCommand(out, in, prompt));
-    commandMap.put("/recipe/delete", new RecipeDeleteCommand(out, in, prompt));
-    commandMap.put("/recipe/detail", new RecipeDetailCommand(out, in, prompt));
-    commandMap.put("/recipe/update", new RecipeUpdateCommand(out, in, prompt));
+    commandMap.put("/member/list", new MemberListCommand(MemberDao));
+    commandMap.put("/member/add", new MemberAddCommand(MemberDao, prompt));
+    commandMap.put("/member/delete", new MemberDeleteCommand(MemberDao, prompt));
+    commandMap.put("/member/detail", new MemberDetailCommand(MemberDao, prompt));
+    commandMap.put("/member/update", new MemberUpdateCommand(MemberDao, prompt));
 
-    commandMap.put("/member/list", new MemberListCommand(out, in));
-    commandMap.put("/member/add", new MemberAddCommand(out, in, prompt));
-    commandMap.put("/member/delete", new MemberDeleteCommand(out, in, prompt));
-    commandMap.put("/member/detail", new MemberDetailCommand(out, in, prompt));
-    commandMap.put("/member/update", new MemberUpdateCommand(out, in, prompt));
-
-    commandMap.put("/board/list", new BoardListCommand(out, in));
-    commandMap.put("/board/add", new BoardAddCommand(out, in, prompt));
-    commandMap.put("/board/delete", new BoardDeleteCommand(out, in, prompt));
-    commandMap.put("/board/detail", new BoardDetailCommand(out, in, prompt));
-    commandMap.put("/board/update", new BoardUpdateCommand(out, in, prompt));
+    commandMap.put("/board/list", new BoardListCommand(BoardDao));
+    commandMap.put("/board/add", new BoardAddCommand(BoardDao, prompt));
+    commandMap.put("/board/delete", new BoardDeleteCommand(BoardDao, prompt));
+    commandMap.put("/board/detail", new BoardDetailCommand(BoardDao, prompt));
+    commandMap.put("/board/update", new BoardUpdateCommand(BoardDao, prompt));
 
     try {
       while (true) {

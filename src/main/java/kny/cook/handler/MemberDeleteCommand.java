@@ -1,41 +1,28 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import kny.cook.dao.MemberDao;
 import kny.cook.util.Prompt;
 
 public class MemberDeleteCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  MemberDao memberDao;
   Prompt prompt;
 
 
-  public MemberDeleteCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public MemberDeleteCommand(MemberDao memberDao, Prompt prompt) {
+    this.memberDao = memberDao;
     this.prompt = prompt;
   }
 
   @Override
   public void execute() {
-    int no = prompt.inputInt("번호? ");
 
     try {
-
-      out.writeUTF("/member/delete");
-      out.writeInt(no);
-      out.flush();
-
-      String response = in.readUTF();
-
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
+      int no = prompt.inputInt("번호? ");
+      memberDao.delete(no);
       System.out.println("회원을 삭제했습니다.");
     } catch (Exception e) {
-      System.out.println("통신 중 오류 발생!");
+      System.out.println("삭제 실패!");
     }
   }
 }

@@ -1,65 +1,44 @@
-# 26_4 - 서버에 게시물 데이터를 요청하는 기능 추가
+# 26_11 - 서버에서 제공한 프록시 객체 사용하여 데이터 처리
 
-## 실습 소스 및 결과
+## 작업 소스 및 결과
 
+- src/main/java/kny/cook/dao/BoardDao.java 추가
+- src/main/java/kny/cook/dao/proxy/XxxDaoProxy.java 추가
+- src/main/java/kny/cook/handler/XxxCommand.java 변경
 - src/main/java/kny/cook/ClientApp.java 변경
 
-## 실습  
 
-### 작업 1: 31번 프로젝트에서 Board 클래스 가져오기.
+### 작업 1: 서버 프로젝트(32_11)에서 DAO 프록시 클래스를 가져오라.
 
-- kny.cook.domain 패키지 생성한다.
-- Board.java 가져온다.
+- kny.cook.dao.XxxDao 인터페이스를 가져온다.
+- kny.cook.dao.proxy 패키지와 그 하위 클래스를 모두 가져온다.
 
-### 작업 2: 31번 프로젝트에서 게시물 관리를 처리하는 Command 객체 가져오기.
+### 작업 2: BoardXxxCommand 객체가 BoardDaoProxy 객체를 사용하여 데이터를 처리하게 하라.
 
-- kny.cook.handler 패키지 생성한다.
-- BoardXxxCommand.java 클래스 가져온다. 
+- kny.cook.handler.BoardXxxCommand 클래스를 변경한다.
+  - 입출력 스트림 필드를 제거한다.
+  - 생성자에서 프록시 객체를 받는다.
+  - 프록시 객체를 사용하여 데이터를 처리한다.
+- kny.cook.ClientApp 변경한다.
+  - BoardDaoProxy 객체를 생성한다.
+  - BoardXxxCommand 객체에 주입한다.
 
-### 작업 3: Command 객체가 서버와 통신할 수 있도록 입출력 도구를 제공하기.
+### 작업 3: RecipeXxxCommand 객체가 RecipeDaoProxy 객체를 사용하여 데이터를 처리하게 하라.
 
-- ClientApp.java 변경
-  - 서버와 연결하는 코드를 적용한다.
-  - 서버와 통신할 수 있는 입출력 도구를 BoardXxxCommand 객체에 제공한다.
+- kny.cook.handler.RecipeXxxCommand 클래스를 변경한다.
+  - 입출력 스트림 필드를 제거한다.
+  - 생성자에서 프록시 객체를 받는다.
+  - 프록시 객체를 사용하여 데이터를 처리한다.
+- kny.cook.ClientApp 변경한다.
+  - RecipeDaoProxy 객체를 생성한다.
+  - RecipeXxxCommand 객체에 주입한다.
   
-### 작업 4: BoardListCommand 가 작업할 때 서버와 통신하도록 처리하기.
+### 작업 4: MemberXxxCommand 객체가 MemberDaoProxy 객체를 사용하여 데이터를 처리하게 하라.
 
-- BoardListCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-
-### 훈련 5: BoardAddCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- BoardAddCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-
-### 훈련 6: BoardDetailCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- BoardDetailCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-  
-### 훈련 7: BoardUpdateCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- BoardUpdateCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-  
-### 훈련 8: BoardDeleteCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- BoardDeleteCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-
-### 훈련 9: RecipeXxxCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- RecipeXxxCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
-  
-### 훈련 10: MemberXxxCommand 가 작업할 때 서버와 통신하도록 처리하기.
-
-- MemberXxxCommand.java 변경
-  - 서버의 입출력 도구를 받을 수 있도록 생성자를 변경한다.
-  - 데이터를 읽고 쓸 때 서버에 요청하도록 execute()를 변경한다.
+- kny.cook.handler.MemberXxxCommand 클래스를 변경한다.
+  - 입출력 스트림 필드를 제거한다.
+  - 생성자에서 프록시 객체를 받는다.
+  - 프록시 객체를 사용하여 데이터를 처리한다.
+- kny.cook.ClientApp 변경한다.
+  - MemberDaoProxy 객체를 생성한다.
+  - MemberXxxCommand 객체에 주입한다.

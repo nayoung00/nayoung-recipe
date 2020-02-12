@@ -1,47 +1,35 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
 import kny.cook.util.Prompt;
 
 public class MemberAddCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  MemberDao memberDao;
   Prompt prompt;
 
-  public MemberAddCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public MemberAddCommand(MemberDao memberDao, Prompt prompt) {
+    this.memberDao = memberDao;
     this.prompt = prompt;
   }
 
   @Override
   public void execute() {
     Member member = new Member();
+    member.setNo(prompt.inputInt("번호? "));
+    member.setName(prompt.inputString("이름? "));
+    member.setEmail(prompt.inputString("이메일? "));
+    member.setPassword(prompt.inputString("암호? "));
+    member.setPhoto(prompt.inputString("사진? "));
+    member.setTel(prompt.inputString("전화? "));
+    member.setRegisteredDate(new Date(System.currentTimeMillis()));
+
     try {
-      member.setNo(prompt.inputInt("번호? "));
-      member.setName(prompt.inputString("이름? "));
-      member.setEmail(prompt.inputString("이메일? "));
-      member.setPassword(prompt.inputString("암호? "));
-      member.setPhoto(prompt.inputString("사진? "));
-      member.setTel(prompt.inputString("전화? "));
-      member.setRegisteredDate(new Date(System.currentTimeMillis()));
-
-      out.writeUTF("/member/add");
-      out.writeObject(member);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-
+      memberDao.insert(member);
       System.out.println("저장하였습니다.");
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("등록 실패!");
     }
   }
 }

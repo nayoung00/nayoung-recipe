@@ -1,21 +1,18 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 import kny.cook.util.Prompt;
 
 public class BoardAddCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  BoardDao boardDao;
   Prompt prompt;
 
 
-  public BoardAddCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public BoardAddCommand(BoardDao boardDao, Prompt prompt) {
+    this.boardDao = boardDao;
     this.prompt = prompt;
   }
 
@@ -29,19 +26,11 @@ public class BoardAddCommand implements Command {
 
 
     try {
-      out.writeUTF("/board/add");
-      out.writeObject(board);
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-
+      boardDao.insert(board);
       System.out.println("저장하였습니다.");
+
     } catch (Exception e) {
-      System.out.println("통신 오류 발생!");
+      System.out.println("등록 실패!");
     }
   }
 }

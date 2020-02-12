@@ -1,19 +1,16 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 import kny.cook.util.Prompt;
 
 public class RecipeUpdateCommand implements Command {
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  RecipeDao recipeDao;
   Prompt prompt;
 
 
-  public RecipeUpdateCommand(ObjectOutputStream out, ObjectInputStream in, Prompt prompt) {
-    this.out = out;
-    this.in = in;
+  public RecipeUpdateCommand(RecipeDao recipeDao, Prompt prompt) {
+    this.recipeDao = recipeDao;
     this.prompt = prompt;
   }
 
@@ -21,20 +18,16 @@ public class RecipeUpdateCommand implements Command {
   public void execute() {
     try {
       int no = prompt.inputInt("번호? ");
-      out.writeUTF("/recipe/update");
-      out.writeInt(no);
-      out.flush();
 
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
+      Recipe oldRecipe = null;
+      try {
+        oldRecipe = recipeDao.findByNo(no);
+      } catch (Exception e) {
+        System.out.println("해당 번호의 요리가 없습니다.");
         return;
       }
 
-      Recipe oldRecipe = (Recipe) in.readObject();
       Recipe newRecipe = new Recipe();
-
-      newRecipe.setNo(oldRecipe.getNo());
 
       newRecipe.setCook(
           prompt.inputString(String.format("요리(%s)?", oldRecipe.getCook(), oldRecipe.getCook())));
@@ -57,17 +50,7 @@ public class RecipeUpdateCommand implements Command {
         System.out.println("레시피 변경을 취소하였습니다.");
         return;
       }
-
-      out.writeUTF("/recipe/update");
-      out.writeObject(newRecipe);
-      out.flush();
-
-      response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-
+      recipeDao.update(newRecipe);
       System.out.println("요리를 변경했습니다.");
     } catch (Exception e) {
       System.out.println("명령 중 실행 오류!");

@@ -1,35 +1,22 @@
 package kny.cook.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
+import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 
 public class BoardListCommand implements Command {
 
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  BoardDao boardDao;
 
-
-  public BoardListCommand(ObjectOutputStream out, ObjectInputStream in) {
-    this.out = out;
-    this.in = in;
+  public BoardListCommand(BoardDao boardDao) {
+    this.boardDao = boardDao;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     try {
-      out.writeUTF("/board/list");
-      out.flush();
-
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-
-      List<Board> boards = (List<Board>) in.readObject();
+      List<Board> boards = boardDao.findAll();
       for (Board b : boards) {
         System.out.printf("%d, %s, %s, %d\n", b.getNo(), b.getTitle(), b.getDate(),
             b.getViewCount());
