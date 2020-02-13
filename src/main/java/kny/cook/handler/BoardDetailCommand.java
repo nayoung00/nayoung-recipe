@@ -20,8 +20,8 @@ public class BoardDetailCommand implements Command {
 
     try {
       int no = prompt.inputInt("번호? ");
-      Board board = boardDao.findByNo(no);
 
+      Board board = boardDao.findByNo(no);
       System.out.printf("번호: %d\n", board.getNo());
       System.out.printf("제목: %s\n", board.getTitle());
       System.out.printf("등록일: %s\n", board.getDate());

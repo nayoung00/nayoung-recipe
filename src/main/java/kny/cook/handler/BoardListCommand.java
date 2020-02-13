@@ -12,7 +12,6 @@ public class BoardListCommand implements Command {
     this.boardDao = boardDao;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     try {
