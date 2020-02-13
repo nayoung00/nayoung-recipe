@@ -40,6 +40,7 @@ public abstract class AbstractObjectFileDao<T> {
 
     try (ObjectOutputStream out =
         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.reset();
       out.writeObject(list);
 
       System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", list.size());

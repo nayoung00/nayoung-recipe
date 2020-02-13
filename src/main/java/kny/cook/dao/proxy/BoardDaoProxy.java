@@ -34,7 +34,6 @@ public class BoardDaoProxy implements BoardDao {
   public List<Board> findAll() throws Exception {
     out.writeUTF("/board/list");
     out.flush();
-
     String response = in.readUTF();
     if (response.equals("FAIL")) {
       throw new Exception(in.readUTF());

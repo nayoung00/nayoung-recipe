@@ -1,9 +1,10 @@
 package kny.cook.dao.json;
 
 import java.util.List;
+import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
 
-public class MemberJsonFileDao extends AbstractJsonFileDao<Member> {
+public class MemberJsonFileDao extends AbstractJsonFileDao<Member> implements MemberDao {
 
   public MemberJsonFileDao(String filename) {
     super(filename);

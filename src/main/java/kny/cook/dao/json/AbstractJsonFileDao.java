@@ -1,11 +1,11 @@
 package kny.cook.dao.json;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.ObjectOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -45,7 +45,7 @@ public abstract class AbstractJsonFileDao<T> {
       System.out.println(itemType);
 
 
-      T[] arr = (T[]) Array.newInstance((Class) itemType, 0);
+      T[] arr = (T[]) Array.newInstance((Class<?>) itemType, 0);
 
 
       T[] dataArr = (T[]) new Gson().fromJson(in, arr.getClass());
@@ -57,20 +57,20 @@ public abstract class AbstractJsonFileDao<T> {
 
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
+      e.printStackTrace();
     }
   }
 
   protected void saveData() {
     File file = new File(filename);
 
-    try (ObjectOutputStream out =
-        new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-      out.writeObject(list);
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+      out.write(new Gson().toJson(list));
 
       System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", list.size());
 
 
-    } catch (Exception e) {
+    } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
     }
   }

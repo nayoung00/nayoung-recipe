@@ -1,9 +1,10 @@
 package kny.cook.dao.json;
 
 import java.util.List;
+import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 
-public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> {
+public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> implements RecipeDao {
 
 
   public RecipeJsonFileDao(String filename) {
@@ -62,6 +63,4 @@ public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> {
     }
     return -1;
   }
-
-
 }

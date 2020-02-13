@@ -1,15 +1,14 @@
 package kny.cook.dao.json;
 
 import java.util.List;
+import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 
-public class BoardJsonFileDao extends AbstractJsonFileDao<Board> {
-
+public class BoardJsonFileDao extends AbstractJsonFileDao<Board> implements BoardDao {
 
   public BoardJsonFileDao(String filename) {
     super(filename);
   }
-
 
   public int insert(Board board) throws Exception {
     if (indexOf(board.getNo()) > -1) {
@@ -52,9 +51,7 @@ public class BoardJsonFileDao extends AbstractJsonFileDao<Board> {
     list.remove(index);
     saveData();
     return 1;
-
   }
-
 
   @Override
   protected <k> int indexOf(k key) {
