@@ -10,7 +10,6 @@ public class BoardAddCommand implements Command {
   BoardDao boardDao;
   Prompt prompt;
 
-
   public BoardAddCommand(BoardDao boardDao, Prompt prompt) {
     this.boardDao = boardDao;
     this.prompt = prompt;
