@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public abstract class AbstractObjectFileDao<T> {
     try (ObjectInputStream in =
         new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
       list = (List<T>) in.readObject();
-      System.out.printf("총 %d 개의 게시물 데이터를 로딩했습니다.\n", list.size());
+      System.out.printf("총 %d 개의 객체를 로딩했습니다.\n", list.size());
 
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
@@ -43,10 +44,9 @@ public abstract class AbstractObjectFileDao<T> {
       out.reset();
       out.writeObject(list);
 
-      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", list.size());
+      System.out.printf("총 %d 개의 객체를 저장했습니다.", list.size());
 
-
-    } catch (Exception e) {
+    } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());
     }
   }

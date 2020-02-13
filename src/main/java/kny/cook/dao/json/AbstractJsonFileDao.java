@@ -53,7 +53,7 @@ public abstract class AbstractJsonFileDao<T> {
         list.add(b);
       }
 
-      System.out.printf("총 %d 개의 게시물 데이터를 로딩했습니다.\n", list.size());
+      System.out.printf("총 %d 개의 객체를 로딩했습니다.\n", list.size());
 
     } catch (Exception e) {
       System.out.println("파일 읽기 중 오류 발생! - " + e.getMessage());
@@ -66,9 +66,7 @@ public abstract class AbstractJsonFileDao<T> {
 
     try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
       out.write(new Gson().toJson(list));
-
-      System.out.printf("총 %d 개의 게시글 데이터를 저장했습니다.", list.size());
-
+      System.out.printf("총 %d 개의 객체를 저장했습니다.", list.size());
 
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생! -" + e.getMessage());

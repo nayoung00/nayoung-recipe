@@ -6,11 +6,11 @@ import kny.cook.domain.Recipe;
 
 public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> implements RecipeDao {
 
-
   public RecipeJsonFileDao(String filename) {
     super(filename);
   }
 
+  @Override
   public int insert(Recipe recipe) throws Exception {
     if (indexOf(recipe.getNo()) > -1) {
       return 0;
@@ -21,10 +21,12 @@ public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> implements Re
     return 1;
   }
 
+  @Override
   public List<Recipe> findAll() throws Exception {
     return list;
   }
 
+  @Override
   public Recipe findByNo(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {
@@ -33,6 +35,7 @@ public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> implements Re
     return list.get(index);
   }
 
+  @Override
   public int update(Recipe recipe) throws Exception {
     int index = indexOf(recipe.getNo());
     if (index == -1) {
@@ -43,6 +46,7 @@ public class RecipeJsonFileDao extends AbstractJsonFileDao<Recipe> implements Re
     return 1;
   }
 
+  @Override
   public int delete(int no) throws Exception {
     int index = indexOf(no);
     if (index == -1) {

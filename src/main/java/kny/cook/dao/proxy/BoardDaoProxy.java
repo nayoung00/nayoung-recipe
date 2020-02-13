@@ -18,7 +18,7 @@ public class BoardDaoProxy implements BoardDao {
 
   @Override
   public int insert(Board board) throws Exception {
-    out.writeUTF("/baord/add");
+    out.writeUTF("/board/add");
     out.writeObject(board);
     out.flush();
 
@@ -69,7 +69,7 @@ public class BoardDaoProxy implements BoardDao {
 
   @Override
   public int delete(int no) throws Exception {
-    out.writeUTF("/baord/delete");
+    out.writeUTF("/board/delete");
     out.writeInt(no);
     out.flush();
 
