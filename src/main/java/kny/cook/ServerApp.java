@@ -58,6 +58,21 @@ public class ServerApp {
 
   public void service() {
 
+    class RequestProcessor implements Runnable {
+      Socket socekt;
+
+      public RequestProcessor(Socket socket) {
+        this.socekt = socket;
+      }
+
+      @Override
+      public void run() {
+        processRequest(socekt);
+        System.out.println("---------------------------------");
+      }
+
+    }
+
     notifyApplicationInitialized();
 
     BoardDao boardDao = (BoardDao) context.get("boardDao");
@@ -89,9 +104,11 @@ public class ServerApp {
         Socket socket = serverSocket.accept();
         System.out.println("클라이언트와 연결 되었음!");
 
-        if (processRequest(socket) == 9) {
-          break;
-        }
+
+        new Thread(() -> {
+          processRequest(socket);
+          System.out.println("---------------------------------");
+        }).start();
       }
 
     } catch (Exception e) {
@@ -99,6 +116,7 @@ public class ServerApp {
     }
 
     notifyApplicationDestroyed();
+
   }
 
   int processRequest(Socket clientSocket) {
