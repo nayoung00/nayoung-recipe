@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import kny.cook.dao.proxy.BoardDaoProxy;
+import kny.cook.dao.proxy.DaoProxyHelper;
 import kny.cook.dao.proxy.MemberDaoProxy;
 import kny.cook.dao.proxy.RecipeDaoProxy;
 import kny.cook.handler.BoardAddCommand;
@@ -59,10 +60,11 @@ public class ClientApp {
       keyboard.close();
       return;
     }
+    DaoProxyHelper daoProxyHelper = new DaoProxyHelper(host, port);
 
-    BoardDaoProxy BoardDao = new BoardDaoProxy(host, port);
-    RecipeDaoProxy RecipeDao = new RecipeDaoProxy(host, port);
-    MemberDaoProxy MemberDao = new MemberDaoProxy(host, port);
+    BoardDaoProxy BoardDao = new BoardDaoProxy(daoProxyHelper);
+    RecipeDaoProxy RecipeDao = new RecipeDaoProxy(daoProxyHelper);
+    MemberDaoProxy MemberDao = new MemberDaoProxy(daoProxyHelper);
 
     commandMap.put("/recipe/list", new RecipeListCommand(RecipeDao));
     commandMap.put("/recipe/add", new RecipeAddCommand(RecipeDao, prompt));
