@@ -1,8 +1,10 @@
 package kny.cook.handler;
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import kny.cook.dao.BoardDao;
-import kny.cook.domain.Board;
 
 public class BoardListCommand implements Command {
 
@@ -15,13 +17,27 @@ public class BoardListCommand implements Command {
   @Override
   public void execute() {
     try {
-      List<Board> boards = boardDao.findAll();
-      for (Board b : boards) {
-        System.out.printf("%d, %s, %s, %d\n", b.getNo(), b.getTitle(), b.getDate(),
-            b.getViewCount());
+      // List<Board> boards = boardDao.findAll();
+
+      Class.forName("org.mariadb.jdbc.Driver");
+
+      Connection con =
+          DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
+
+
+      Statement stmt = con.createStatement();
+
+      ResultSet rs = stmt.executeQuery("select board_id, conts, cdt, vw_cnt from rms_board");
+
+      while (rs.next()) {
+        System.out.printf("%d, %s, %s, %d\n", rs.getInt("board_id"), rs.getString("conts"),
+            rs.getDate("cdt"), rs.getInt("vw_cnt"));
       }
+      rs.close();
+      stmt.close();
+      con.close();
     } catch (Exception e) {
-      System.out.println("명령 실행 중 오류 발생!");
+      System.out.println("목록 조회 실패!");
     }
   }
 }

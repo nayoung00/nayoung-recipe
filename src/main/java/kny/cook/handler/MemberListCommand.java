@@ -1,9 +1,11 @@
 package kny.cook.handler;
 
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import kny.cook.dao.MemberDao;
-import kny.cook.domain.Member;
 
 public class MemberListCommand implements Command {
 
@@ -15,15 +17,24 @@ public class MemberListCommand implements Command {
 
   @Override
   public void execute() {
-
     try {
-      List<Member> members = memberDao.findAll();
-      for (Member m : members) {
-        System.out.printf("%d, %s, %s, %s, %s\n", m.getNo(), m.getName(), m.getEmail(), m.getTel(),
-            m.getRegisteredDate());
+      Class.forName("org.mariadb.jdbc.Driver");
+
+      Connection con =
+          DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
+
+      Statement stmt = con.createStatement();
+
+      ResultSet rs =
+          stmt.executeQuery("select member_id, name, email, pwd, cdt, tel, photo from rms_member");
+
+      while (rs.next()) {
+        System.out.printf("%d, %s, %s, %s, %s, %d, %s\n", rs.getInt("member_id"),
+            rs.getString("name"), rs.getString("email"), rs.getString("pwd"), rs.getDate("cdt"),
+            rs.getInt("tel"), rs.getString("photo"));
       }
     } catch (Exception e) {
-      System.out.println("통신 중 오류 발생!");
+      System.out.println("목록 조회 실패!");
     }
   }
 }
