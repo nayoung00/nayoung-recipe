@@ -1,20 +1,19 @@
 // LMS 클라이언트
 package kny.cook;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner; 
-import kny.cook.dao.proxy.BoardDaoProxy;
-import kny.cook.dao.proxy.DaoProxyHelper;
-import kny.cook.dao.proxy.MemberDaoProxy;
-import kny.cook.dao.proxy.RecipeDaoProxy;
+import java.util.Scanner;
+import kny.cook.dao.BoardDao;
+import kny.cook.dao.MemberDao;
+import kny.cook.dao.RecipeDao;
+import kny.cook.dao.mariadb.BoardDaoImpl;
+import kny.cook.dao.mariadb.MemberDaoImpl;
+import kny.cook.dao.mariadb.RecipeDaoImpl;
 import kny.cook.handler.BoardAddCommand;
 import kny.cook.handler.BoardDeleteCommand;
 import kny.cook.handler.BoardDetailCommand;
@@ -41,9 +40,6 @@ public class ClientApp {
   Deque<String> commandStack;
   Queue<String> commandQueue;
 
-  String host;
-  int port;
-
   HashMap<String, Command> commandMap = new HashMap<>();
 
   public ClientApp() {
@@ -51,58 +47,30 @@ public class ClientApp {
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    try {
-      host = prompt.inputString("서버?");
-      port = prompt.inputInt("포트?");
+    BoardDao boardDao = new BoardDaoImpl();
+    MemberDao memberDao = new MemberDaoImpl();
+    RecipeDao recipeDao = new RecipeDaoImpl();
 
-    } catch (Exception e) {
-      System.out.println("서버 주소 또는 포트 번호가 유효하지 않습니다.");
-      keyboard.close();
-      return;
-    }
-    DaoProxyHelper daoProxyHelper = new DaoProxyHelper(host, port);
+    commandMap.put("/recipe/list", new RecipeListCommand(recipeDao));
+    commandMap.put("/recipe/add", new RecipeAddCommand(recipeDao, prompt));
+    commandMap.put("/recipe/delete", new RecipeDeleteCommand(recipeDao, prompt));
+    commandMap.put("/recipe/detail", new RecipeDetailCommand(recipeDao, prompt));
+    commandMap.put("/recipe/update", new RecipeUpdateCommand(recipeDao, prompt));
 
-    BoardDaoProxy BoardDao = new BoardDaoProxy(daoProxyHelper);
-    RecipeDaoProxy RecipeDao = new RecipeDaoProxy(daoProxyHelper);
-    MemberDaoProxy MemberDao = new MemberDaoProxy(daoProxyHelper);
+    commandMap.put("/member/list", new MemberListCommand(memberDao));
+    commandMap.put("/member/add", new MemberAddCommand(memberDao, prompt));
+    commandMap.put("/member/delete", new MemberDeleteCommand(memberDao, prompt));
+    commandMap.put("/member/detail", new MemberDetailCommand(memberDao, prompt));
+    commandMap.put("/member/update", new MemberUpdateCommand(memberDao, prompt));
 
-    commandMap.put("/recipe/list", new RecipeListCommand(RecipeDao));
-    commandMap.put("/recipe/add", new RecipeAddCommand(RecipeDao, prompt));
-    commandMap.put("/recipe/delete", new RecipeDeleteCommand(RecipeDao, prompt));
-    commandMap.put("/recipe/detail", new RecipeDetailCommand(RecipeDao, prompt));
-    commandMap.put("/recipe/update", new RecipeUpdateCommand(RecipeDao, prompt));
-
-    commandMap.put("/member/list", new MemberListCommand(MemberDao));
-    commandMap.put("/member/add", new MemberAddCommand(MemberDao, prompt));
-    commandMap.put("/member/delete", new MemberDeleteCommand(MemberDao, prompt));
-    commandMap.put("/member/detail", new MemberDetailCommand(MemberDao, prompt));
-    commandMap.put("/member/update", new MemberUpdateCommand(MemberDao, prompt));
-
-    commandMap.put("/board/list", new BoardListCommand(BoardDao));
-    commandMap.put("/board/add", new BoardAddCommand(BoardDao, prompt));
-    commandMap.put("/board/delete", new BoardDeleteCommand(BoardDao, prompt));
-    commandMap.put("/board/detail", new BoardDetailCommand(BoardDao, prompt));
-    commandMap.put("/board/update", new BoardUpdateCommand(BoardDao, prompt));
-
-    commandMap.put("/server/stop", () -> {
-      try {
-        try (Socket socket = new Socket(host, port);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-
-          out.writeUTF("/server/stop");
-          out.flush();
-          System.out.println("서버: " + in.readUTF());
-          System.out.println("안녕!");
-        }
-      } catch (Exception e) {
-      }
-    });
+    commandMap.put("/board/list", new BoardListCommand(boardDao));
+    commandMap.put("/board/add", new BoardAddCommand(boardDao, prompt));
+    commandMap.put("/board/delete", new BoardDeleteCommand(boardDao, prompt));
+    commandMap.put("/board/detail", new BoardDetailCommand(boardDao, prompt));
+    commandMap.put("/board/update", new BoardUpdateCommand(boardDao, prompt));
   }
 
   public void service() {
-
-
     while (true) {
       String command;
       command = prompt.inputString("\n명령> ");
