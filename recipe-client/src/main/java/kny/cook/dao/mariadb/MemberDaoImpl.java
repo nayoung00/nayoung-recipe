@@ -45,6 +45,8 @@ public class MemberDaoImpl implements MemberDao {
         member.setRegisteredDate(rs.getDate("cdt"));
         member.setTel(rs.getString("tel"));
         member.setPhoto(rs.getString("photo"));
+
+        list.add(member);
       }
       return list;
     }
@@ -56,9 +58,7 @@ public class MemberDaoImpl implements MemberDao {
         ResultSet rs = stmt.executeQuery(
             "select member_id, name, email, pwd, cdt, tel, photo from rms_member where member_id="
                 + no)) {
-
       if (rs.next()) {
-
         Member member = new Member();
 
         member.setNo(rs.getInt("member_id"));
