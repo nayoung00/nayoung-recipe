@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 node_modules/
 .vscode/
 .gradle/
@@ -21,9 +22,14 @@ package-lock.json
 *.ear
 hs_err_pid*
 =======
+=======
+>>>>>>> recipe-server/master
 # Ignore Gradle project-specific cache directory
 .gradle
 
 # Ignore Gradle build output directory
 build
+<<<<<<< HEAD
 >>>>>>> recipe-client/master
+=======
+>>>>>>> recipe-server/master
