@@ -1,7 +1,6 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -10,15 +9,15 @@ import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 
 public class BoardDaoImpl implements BoardDao {
+  Connection con;
+
+  public BoardDaoImpl(Connection con) {
+    this.con = con;
+  }
 
   @Override
   public int insert(Board board) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       con.setAutoCommit(true);
 
@@ -31,13 +30,7 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public List<Board> findAll() throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-        Statement stmt = con.createStatement();
+    try (Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery("select board_id, conts, cdt, vw_cnt from rms_board")) {
 
@@ -59,13 +52,8 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public Board findByNo(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-        Statement stmt = con.createStatement();
+    try (Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
             "select board_id, conts, cdt, vw_cnt from rms_board where board_id=" + no)) {
@@ -87,13 +75,8 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int update(Board board) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("update rms_board set conts='" + board.getTitle()
           + "' where board_id = " + board.getNo());
@@ -105,10 +88,7 @@ public class BoardDaoImpl implements BoardDao {
   public int delete(int no) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_board where board_id = " + no);
       return result;

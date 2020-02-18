@@ -1,6 +1,8 @@
 // LMS 클라이언트
 package kny.cook;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -40,16 +42,22 @@ public class ClientApp {
   Deque<String> commandStack;
   Queue<String> commandQueue;
 
+  Connection con;
+
   HashMap<String, Command> commandMap = new HashMap<>();
 
-  public ClientApp() {
+  public ClientApp() throws Exception {
 
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    BoardDao boardDao = new BoardDaoImpl();
-    MemberDao memberDao = new MemberDaoImpl();
-    RecipeDao recipeDao = new RecipeDaoImpl();
+    Class.forName("org.mariadb.jdbc.Driver");
+    con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
+
+
+    BoardDao boardDao = new BoardDaoImpl(con);
+    MemberDao memberDao = new MemberDaoImpl(con);
+    RecipeDao recipeDao = new RecipeDaoImpl(con);
 
     commandMap.put("/recipe/list", new RecipeListCommand(recipeDao));
     commandMap.put("/recipe/add", new RecipeAddCommand(recipeDao, prompt));
@@ -90,7 +98,11 @@ public class ClientApp {
       commandQueue.offer(command);
 
       processCommand(command);
-
+    }
+    keyboard.close();
+    try {
+      con.close();
+    } catch (Exception e) {
     }
   }
 

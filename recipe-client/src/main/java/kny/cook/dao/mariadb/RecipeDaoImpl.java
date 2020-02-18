@@ -1,7 +1,6 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -11,14 +10,16 @@ import kny.cook.domain.Recipe;
 
 public class RecipeDaoImpl implements RecipeDao {
 
+  Connection con;
+
+  public RecipeDaoImpl(Connection con) {
+    this.con = con;
+  }
+
   @Override
   public int insert(Recipe recipe) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
 
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       con.setAutoCommit(true);
 
@@ -32,12 +33,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public List<Recipe> findAll() throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-        Statement stmt = con.createStatement();
+    try (Statement stmt = con.createStatement();
         ResultSet rs = stmt
             .executeQuery("select recipe_id, cook, material, met, expense, time from rms_recipe")) {
 
@@ -58,12 +54,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public Recipe findByNo(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-        Statement stmt = con.createStatement();
+    try (Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
             "select recipe_id, cook, material, met, expense, time from rms_recipe where recipe_id="
@@ -89,12 +80,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int update(Recipe recipe) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate(
           "update rms_recipe set cook= '" + recipe.getCook() + "', material='" + recipe.getMethod()
@@ -107,12 +93,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int delete(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-        Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);
       return result;
