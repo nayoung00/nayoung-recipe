@@ -18,7 +18,6 @@ public class RecipeAddCommand implements Command {
   public void execute() {
     Recipe recipe = new Recipe();
 
-    recipe.setNo(prompt.inputInt("번호? "));
     recipe.setCook(prompt.inputString("요리? "));
     recipe.setMaterial(prompt.inputString("재료? "));
     recipe.setMethod(prompt.inputString("방법? "));

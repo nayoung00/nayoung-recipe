@@ -17,12 +17,12 @@ public class RecipeDaoImpl implements RecipeDao {
 
     try (
         Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
         Statement stmt = con.createStatement()) {
 
       con.setAutoCommit(true);
 
-      int result = stmt.executeUpdate("insert into lms_recipe(cook,material,met,expense,time)"
+      int result = stmt.executeUpdate("insert into rms_recipe(cook,material,met,expense,time)"
           + " values('" + recipe.getCook() + "','" + recipe.getMaterial() + "','"
           + recipe.getMethod() + "', '" + recipe.getExpense() + "','" + recipe.getTime() + "')");
 
@@ -61,12 +61,12 @@ public class RecipeDaoImpl implements RecipeDao {
     Class.forName("org.mariadb.jdbc.Driver");
     try (
         Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
 
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
-            "select recipe_id, cook, material, met, expense, time from lms_recipe where recipe_id="
+            "select recipe_id, cook, material, met, expense, time from rms_recipe where recipe_id="
                 + no)) {
 
       if (rs.next()) {
@@ -92,12 +92,12 @@ public class RecipeDaoImpl implements RecipeDao {
     Class.forName("org.mariadb.jdbc.Driver");
     try (
         Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
 
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate(
-          "update lms_recipe set cook= '" + recipe.getCook() + "', material='" + recipe.getMethod()
+          "update rms_recipe set cook= '" + recipe.getCook() + "', material='" + recipe.getMethod()
               + "', met='" + recipe.getMethod() + "', expense='" + recipe.getExpense() + "', time='"
               + recipe.getTime() + "' where recipe_id=" + recipe.getNo());
 
@@ -111,10 +111,10 @@ public class RecipeDaoImpl implements RecipeDao {
 
     try (
         Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
         Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate("delete from lms_recipe where recipe_id = " + no);
+      int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);
       return result;
     }
   }

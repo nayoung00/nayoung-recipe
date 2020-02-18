@@ -1,6 +1,5 @@
 package kny.cook.handler;
 
-import java.sql.Date;
 import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 import kny.cook.util.Prompt;
@@ -18,11 +17,7 @@ public class BoardAddCommand implements Command {
   @Override
   public void execute() {
     Board board = new Board();
-    board.setNo(prompt.inputInt("번호? "));
     board.setTitle(prompt.inputString("내용? "));
-    board.setDate(new Date(System.currentTimeMillis()));
-    board.setViewCount(0);
-
 
     try {
       boardDao.insert(board);

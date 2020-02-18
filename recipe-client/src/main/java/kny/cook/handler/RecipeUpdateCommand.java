@@ -28,6 +28,7 @@ public class RecipeUpdateCommand implements Command {
       }
 
       Recipe newRecipe = new Recipe();
+      newRecipe.setNo(oldRecipe.getNo());
 
       newRecipe.setCook(
           prompt.inputString(String.format("요리(%s)?", oldRecipe.getCook(), oldRecipe.getCook())));
@@ -45,15 +46,10 @@ public class RecipeUpdateCommand implements Command {
       newRecipe.setTime(
           prompt.inputInt(String.format("시간(%d)?", oldRecipe.getTime()), oldRecipe.getTime()));
 
-
-      if (oldRecipe.equals(newRecipe)) {
-        System.out.println("레시피 변경을 취소하였습니다.");
-        return;
-      }
       recipeDao.update(newRecipe);
       System.out.println("요리를 변경했습니다.");
     } catch (Exception e) {
-      System.out.println("명령 중 실행 오류!");
+      System.out.println("변경 실패!");
     }
   }
 }
