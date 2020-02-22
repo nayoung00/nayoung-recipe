@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardDao;
 import kny.cook.dao.MemberDao;
@@ -37,6 +39,8 @@ public class ServerApp {
   Map<String, Object> context = new HashMap<>();
 
   Map<String, Servlet> servletMap = new HashMap<>();
+
+  ExecutorService executorService = Executors.newCachedThreadPool();
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -105,10 +109,10 @@ public class ServerApp {
         System.out.println("클라이언트와 연결 되었음!");
 
 
-        new Thread(() -> {
+        executorService.submit(() -> {
           processRequest(socket);
           System.out.println("---------------------------------");
-        }).start();
+        });
       }
 
     } catch (Exception e) {
@@ -116,6 +120,8 @@ public class ServerApp {
     }
 
     notifyApplicationDestroyed();
+
+    executorService.shutdown();
 
   }
 
