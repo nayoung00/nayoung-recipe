@@ -4,14 +4,17 @@ package kny.cook;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardDao;
 import kny.cook.dao.MemberDao;
@@ -128,14 +131,19 @@ public class ServerApp {
   int processRequest(Socket clientSocket) {
 
     try (Socket socket = clientSocket;
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+       Scanner in = new Scanner(socket.getInputStream());
+        PrintStream out = new PrintStream(socket.getOutputStream())) {
 
       System.out.println("통신을 위한 입출력 스트림을 준비하였음!");
 
-      String request = in.readUTF();
-      System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
+      String request = in.nextLine();
+      System.out.printf("=> %s/n", request);
 
+      out.println("[나영]안녕하세요!");
+      out.println("[나영]반가워요!");
+      out.println("!end!");
+      
+      /*
       if (request.equalsIgnoreCase("/server/stop")) {
         quit(out);
         return 9;
@@ -156,6 +164,7 @@ public class ServerApp {
       } else {
         notFound(out);
       }
+      */
       out.flush();
       System.out.println("클라이언트에게 응답하였음!");
 
