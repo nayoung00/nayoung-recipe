@@ -19,8 +19,12 @@ public class RecipeDeleteCommand implements Command {
   public void execute() {
     try {
       int no = prompt.inputInt("번호? ");
-      recipeDao.delete(no);
-      System.out.println("레시피를 삭제했습니다.");
+
+      if (recipeDao.delete(no) > 0) {
+        System.out.println("레시피를 삭제했습니다.");
+      } else {
+        System.out.println("레시피를 찾을 수 없습니다.");
+      }
     } catch (Exception e) {
       System.out.println("삭제 실패!");
     }
