@@ -24,7 +24,7 @@ public abstract class AbstractJsonFileDao<T> {
   }
 
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   protected void loadData() {
     File file = new File(filename);
 
@@ -32,7 +32,6 @@ public abstract class AbstractJsonFileDao<T> {
 
       Class<?> currType = this.getClass();
       System.out.println(currType);
-
 
       Type parentType = currType.getGenericSuperclass();
       System.out.println(parentType);
@@ -45,7 +44,7 @@ public abstract class AbstractJsonFileDao<T> {
       System.out.println(itemType);
 
 
-      T[] arr = (T[]) Array.newInstance((Class<?>) itemType, 0);
+      T[] arr = (T[]) Array.newInstance((Class) itemType, 0);
 
 
       T[] dataArr = (T[]) new Gson().fromJson(in, arr.getClass());
