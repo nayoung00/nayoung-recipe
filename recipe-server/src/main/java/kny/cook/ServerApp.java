@@ -133,7 +133,7 @@ public class ServerApp {
         PrintStream out = new PrintStream(socket.getOutputStream())) {
 
       String request = in.nextLine();
-      System.out.printf("=> %s/n", request);
+      System.out.printf("=> %s\n", request);
 
       out.println("[나영]안녕하세요!");
       out.println("[나영]반가워요!");
