@@ -1,37 +1,14 @@
 // LMS 클라이언트
 package kny.cook;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import kny.cook.dao.BoardDao;
-import kny.cook.dao.MemberDao;
-import kny.cook.dao.RecipeDao;
-import kny.cook.dao.mariadb.BoardDaoImpl;
-import kny.cook.dao.mariadb.MemberDaoImpl;
-import kny.cook.dao.mariadb.RecipeDaoImpl;
-import kny.cook.handler.BoardAddCommand;
-import kny.cook.handler.BoardDeleteCommand;
-import kny.cook.handler.BoardDetailCommand;
-import kny.cook.handler.BoardListCommand;
-import kny.cook.handler.BoardUpdateCommand;
-import kny.cook.handler.Command;
-import kny.cook.handler.MemberAddCommand;
-import kny.cook.handler.MemberDeleteCommand;
-import kny.cook.handler.MemberDetailCommand;
-import kny.cook.handler.MemberListCommand;
-import kny.cook.handler.MemberUpdateCommand;
-import kny.cook.handler.RecipeAddCommand;
-import kny.cook.handler.RecipeDeleteCommand;
-import kny.cook.handler.RecipeDetailCommand;
-import kny.cook.handler.RecipeListCommand;
-import kny.cook.handler.RecipeUpdateCommand;
 import kny.cook.util.Prompt;
 
 public class ClientApp {
@@ -42,49 +19,22 @@ public class ClientApp {
   Deque<String> commandStack;
   Queue<String> commandQueue;
 
-  Connection con;
-
-  HashMap<String, Command> commandMap = new HashMap<>();
-
   public ClientApp() throws Exception {
 
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
 
-    Class.forName("org.mariadb.jdbc.Driver");
-    con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
-
-
-    BoardDao boardDao = new BoardDaoImpl(con);
-    MemberDao memberDao = new MemberDaoImpl(con);
-    RecipeDao recipeDao = new RecipeDaoImpl(con);
-
-    commandMap.put("/recipe/list", new RecipeListCommand(recipeDao));
-    commandMap.put("/recipe/add", new RecipeAddCommand(recipeDao, prompt));
-    commandMap.put("/recipe/delete", new RecipeDeleteCommand(recipeDao, prompt));
-    commandMap.put("/recipe/detail", new RecipeDetailCommand(recipeDao, prompt));
-    commandMap.put("/recipe/update", new RecipeUpdateCommand(recipeDao, prompt));
-
-    commandMap.put("/member/list", new MemberListCommand(memberDao));
-    commandMap.put("/member/add", new MemberAddCommand(memberDao, prompt));
-    commandMap.put("/member/delete", new MemberDeleteCommand(memberDao, prompt));
-    commandMap.put("/member/detail", new MemberDetailCommand(memberDao, prompt));
-    commandMap.put("/member/update", new MemberUpdateCommand(memberDao, prompt));
-
-    commandMap.put("/board/list", new BoardListCommand(boardDao));
-    commandMap.put("/board/add", new BoardAddCommand(boardDao, prompt));
-    commandMap.put("/board/delete", new BoardDeleteCommand(boardDao, prompt));
-    commandMap.put("/board/detail", new BoardDetailCommand(boardDao, prompt));
-    commandMap.put("/board/update", new BoardUpdateCommand(boardDao, prompt));
   }
 
   public void service() {
+
     while (true) {
       String command;
       command = prompt.inputString("\n명령> ");
 
       if (command.length() == 0)
         continue;
+
       if (command.equals("history")) {
         printCommandHistory(commandStack.iterator());
         continue;
@@ -94,25 +44,58 @@ public class ClientApp {
       } else if (command.equals("quit")) {
         break;
       }
+
       commandStack.push(command);
       commandQueue.offer(command);
 
       processCommand(command);
     }
     keyboard.close();
-    try {
-      con.close();
-    } catch (Exception e) {
-    }
   }
 
   private void processCommand(String command) {
-    Command commandHandler = commandMap.get(command);
-    if (commandHandler == null) {
-      System.out.println("실행할 수 없는 명령입니다.");
+
+    String host = null;
+    int port = 9999;
+    String servletPath = null;
+
+    try {
+      if (!command.startsWith("bitcamp://")) {
+        throw new Exception("명령어 형식이 옳지 않습니다.!");
+      }
+
+      String url = command.substring(10);
+
+      int index = url.indexOf('/');
+      String[] str = url.substring(0, index).split(":");
+      host = str[0];
+      if (str.length == 2) {
+        port = Integer.parseInt(str[1]);
+      }
+      servletPath = url.substring(index);
+      System.out.printf("=> %s\n", servletPath);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
       return;
     }
-    commandHandler.execute();
+
+    try (Socket socket = new Socket(host, port);
+        PrintStream out = new PrintStream(socket.getOutputStream());
+        Scanner in = new Scanner(socket.getInputStream());) {
+
+      out.println(servletPath);
+      out.flush();
+
+      while (true) {
+        String response = in.nextLine();
+        if (response.equals("!end!")) {
+          break;
+        }
+        System.out.println(response);
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private void printCommandHistory(Iterator<String> iterator) {
