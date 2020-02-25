@@ -1,7 +1,7 @@
 package kny.cook.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import kny.cook.dao.BoardDao;
 
 public class BoardDeleteServlet implements Servlet {
@@ -13,14 +13,17 @@ public class BoardDeleteServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    int no = in.readInt();
+  public void service(Scanner in, PrintStream out) throws Exception {
+
+    out.println("번호? \n!{}!");
+    out.flush();
+
+    int no = Integer.parseInt(in.nextLine());
 
     if (boardDao.delete(no) > 0) {
-      out.writeUTF("OK");
+      out.println("게시글을 삭제했습니다.");
     } else {
-      out.writeUTF("FAIL");
-      out.writeUTF("해당 번호의 게시물이 없습니다.");
+      out.println("해당 번호의 게시물이 없습니다.");
     }
   }
 }

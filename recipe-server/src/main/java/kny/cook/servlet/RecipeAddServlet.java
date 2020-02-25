@@ -1,7 +1,7 @@
 package kny.cook.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 
@@ -15,14 +15,26 @@ public class RecipeAddServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
-    Recipe recipe = (Recipe) in.readObject();
+  public void service(Scanner in, PrintStream out) throws Exception {
+    Recipe recipe = new Recipe();
+
+    out.println("요리? \n!{}!");
+    recipe.setCook(in.nextLine());
+    out.println("재료? \n!{}!");
+    recipe.setMaterial(in.nextLine());
+    out.println("방법? \n!{}!");
+    recipe.setMethod(in.nextLine());
+    out.println("비용? \n!{}!");
+    recipe.setExpense(in.nextInt());
+    out.println("시간? \n!{}!");
+    recipe.setTime(in.nextInt());
+
+    out.flush();
 
     if (recipeDao.insert(recipe) > 0) {
-      out.writeUTF("OK");
+      out.println("새 레시피를 등록했습니다.");
     } else {
-      out.writeUTF("FAIL");
-      out.writeUTF("같은 번호의 레시피가 있습니다.");
+      out.println("레시피 등록에 실패했습니다.");
     }
   }
 

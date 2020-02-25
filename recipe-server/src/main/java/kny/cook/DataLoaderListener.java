@@ -19,7 +19,6 @@ public class DataLoaderListener implements ApplicationContextListener {
       Class.forName("org.mariadb.jdbc.Driver");
       con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
 
-
       context.put("boardDao", new BoardDaoImpl(con));
       context.put("recipeDao", new RecipeDaoImpl(con));
       context.put("memberDao", new MemberDaoImpl(con));
