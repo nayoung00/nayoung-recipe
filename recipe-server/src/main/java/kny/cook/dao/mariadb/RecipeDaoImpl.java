@@ -47,6 +47,8 @@ public class RecipeDaoImpl implements RecipeDao {
         recipe.setMethod(rs.getString("met"));
         recipe.setExpense(rs.getInt("expense"));
         recipe.setTime(rs.getInt("time"));
+
+        list.add(recipe);
       }
       return list;
     }

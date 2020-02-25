@@ -16,6 +16,7 @@ public class RecipeListServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
+
     List<Recipe> recipes = recipeDao.findAll();
 
     for (Recipe recipe : recipes) {
