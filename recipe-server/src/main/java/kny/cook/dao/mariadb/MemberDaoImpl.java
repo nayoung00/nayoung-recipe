@@ -100,4 +100,30 @@ public class MemberDaoImpl implements MemberDao {
       return result;
     }
   }
+
+  @Override
+  public List<Member> findByKeWord(String keyword) throws Exception {
+
+    try (Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("select member_id, name, email, tel, cdt"
+            + " from rms_member" + " where name like '%" + keyword + "%' or email like '%" + keyword
+            + "%' or tel like '%" + keyword + "%'")) {
+
+      ArrayList<Member> list = new ArrayList<>();
+
+      while (rs.next()) {
+        Member member = new Member();
+
+        member.setNo(rs.getInt("member_id"));
+        member.setName(rs.getString("name"));
+        member.setEmail(rs.getString("email"));
+        member.setTel(rs.getString("tel"));
+        member.setRegisteredDate(rs.getDate("cdt"));
+
+        list.add(member);
+
+      }
+      return list;
+    }
+  }
 }

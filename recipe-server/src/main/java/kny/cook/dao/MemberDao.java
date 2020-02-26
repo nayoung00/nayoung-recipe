@@ -5,7 +5,6 @@ import kny.cook.domain.Member;
 
 public interface MemberDao {
 
-
   public int insert(Member member) throws Exception;
 
   public List<Member> findAll() throws Exception;
@@ -16,4 +15,7 @@ public interface MemberDao {
 
   public int delete(int no) throws Exception;
 
+  default List<Member> findByKeWord(String keyWord) throws Exception {
+    return null;
+  }
 }

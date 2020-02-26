@@ -26,6 +26,7 @@ import kny.cook.servlet.MemberAddServlet;
 import kny.cook.servlet.MemberDeleteServlet;
 import kny.cook.servlet.MemberDetailServlet;
 import kny.cook.servlet.MemberListServlet;
+import kny.cook.servlet.MemberSearchServlet;
 import kny.cook.servlet.MemberUpdateServlet;
 import kny.cook.servlet.RecipeAddServlet;
 import kny.cook.servlet.RecipeDeleteServlet;
@@ -93,6 +94,7 @@ public class ServerApp {
     servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
     servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
     servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
+    servletMap.put("/member/search", new MemberSearchServlet(memberDao));
 
     servletMap.put("/board/list", new BoardListServlet(boardDao));
     servletMap.put("/board/add", new BoardAddServlet(boardDao));
