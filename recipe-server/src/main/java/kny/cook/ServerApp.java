@@ -2,7 +2,6 @@
 package kny.cook;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -43,6 +42,8 @@ public class ServerApp {
 
   ExecutorService executorService = Executors.newCachedThreadPool();
 
+  boolean serverStop = false;
+
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
   }
@@ -63,6 +64,7 @@ public class ServerApp {
 
   public void service() {
 
+    @SuppressWarnings("unused")
     class RequestProcessor implements Runnable {
       Socket socekt;
 
@@ -76,7 +78,6 @@ public class ServerApp {
         System.out.println("---------------------------------");
       }
     }
-
     notifyApplicationInitialized();
 
     BoardDao boardDao = (BoardDao) context.get("boardDao");
@@ -113,15 +114,33 @@ public class ServerApp {
           processRequest(socket);
           System.out.println("---------------------------------");
         });
+
+        if (serverStop) {
+          break;
+        }
       }
     } catch (Exception e) {
       System.out.println("서버 준비 중 오류 발생!");
     }
-    notifyApplicationDestroyed();
     executorService.shutdown();
+
+
+    while (true) {
+      if (executorService.isTerminated()) {
+        break;
+      }
+      try {
+        Thread.sleep(500);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+    notifyApplicationDestroyed();
+    System.out.println("서버 종료!");
   }
 
-  int processRequest(Socket clientSocket) {
+  void processRequest(Socket clientSocket) {
 
     try (Socket socket = clientSocket;
         Scanner in = new Scanner(socket.getInputStream());
@@ -130,9 +149,10 @@ public class ServerApp {
       String request = in.nextLine();
       System.out.printf("=> %s\n", request);
 
-      // if (request.equalsIgnoreCase("/server/stop")) {
-      // return 9;
-      // }
+      if (request.equalsIgnoreCase("/server/stop")) {
+        quit(out);
+        return;
+      }
 
       Servlet servlet = servletMap.get(request);
 
@@ -153,11 +173,9 @@ public class ServerApp {
       out.flush();
       System.out.println("클라이언트에게 응답하였음!");
 
-      return 0;
     } catch (Exception e) {
       System.out.println("예외 발생: ");
       e.printStackTrace();
-      return -1;
     }
   }
 
@@ -165,8 +183,10 @@ public class ServerApp {
     out.println("요청한 명령을 처리할 수 없습니다.");
   }
 
-  private void quit(ObjectOutputStream out) throws IOException {
-    out.writeUTF("OK");
+  private void quit(PrintStream out) throws IOException {
+    serverStop = true;
+    out.println("OK");
+    out.println("!end!");
     out.flush();
   }
 
