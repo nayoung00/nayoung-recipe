@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardDao;
 import kny.cook.dao.MemberDao;
+import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.RecipeDao;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
@@ -27,6 +28,11 @@ import kny.cook.servlet.MemberDetailServlet;
 import kny.cook.servlet.MemberListServlet;
 import kny.cook.servlet.MemberSearchServlet;
 import kny.cook.servlet.MemberUpdateServlet;
+import kny.cook.servlet.PhotoBoardAddServlet;
+import kny.cook.servlet.PhotoBoardDeleteServlet;
+import kny.cook.servlet.PhotoBoardDetailServlet;
+import kny.cook.servlet.PhotoBoardListServlet;
+import kny.cook.servlet.PhotoBoardUpdateServlet;
 import kny.cook.servlet.RecipeAddServlet;
 import kny.cook.servlet.RecipeDeleteServlet;
 import kny.cook.servlet.RecipeDetailServlet;
@@ -83,6 +89,7 @@ public class ServerApp {
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
+    PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
@@ -102,6 +109,12 @@ public class ServerApp {
     servletMap.put("/board/detail", new BoardDetailServlet(boardDao));
     servletMap.put("/board/delete", new BoardDeleteServlet(boardDao));
     servletMap.put("/board/update", new BoardUpdateServlet(boardDao));
+
+    servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
+    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardDao));
+    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao));
+    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardDao));
+    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
