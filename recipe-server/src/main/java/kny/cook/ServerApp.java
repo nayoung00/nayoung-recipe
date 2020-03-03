@@ -1,4 +1,3 @@
-// LMS 서버
 package kny.cook;
 
 import java.io.IOException;
