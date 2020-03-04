@@ -1,4 +1,3 @@
-// LMS 클라이언트
 package kny.cook;
 
 import java.io.PrintStream;
@@ -49,6 +48,11 @@ public class ClientApp {
       commandQueue.offer(command);
 
       processCommand(command);
+      
+      if (command.endsWith("/server/stop")) {
+    	  
+    	  processCommand(command);
+      }
     }
     keyboard.close();
   }
@@ -90,8 +94,12 @@ public class ClientApp {
         String response = in.nextLine();
         if (response.equals("!end!")) {
           break;
-        }
+        } else if(response.equals("!{}!")) {
+        	String input = prompt.inputString("");
+        	out.println(input);
+        } else {
         System.out.println(response);
+       }
       }
     } catch (Exception e) {
       System.out.println(e.getMessage());
