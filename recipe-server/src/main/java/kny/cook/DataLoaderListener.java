@@ -7,6 +7,7 @@ import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.mariadb.BoardDaoImpl;
 import kny.cook.dao.mariadb.MemberDaoImpl;
 import kny.cook.dao.mariadb.PhotoBoardDaoImpl;
+import kny.cook.dao.mariadb.PhotoFileDaoImpl;
 import kny.cook.dao.mariadb.RecipeDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
@@ -24,7 +25,8 @@ public class DataLoaderListener implements ApplicationContextListener {
       context.put("recipeDao", new RecipeDaoImpl(con));
       context.put("memberDao", new MemberDaoImpl(con));
       context.put("photoBoardDao", new PhotoBoardDaoImpl(con));
-
+      context.put("photoFileDao", new PhotoFileDaoImpl(con));
+      
     } catch (Exception e) {
       e.printStackTrace();
     }

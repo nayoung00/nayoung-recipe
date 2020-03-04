@@ -15,6 +15,7 @@ import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardDao;
 import kny.cook.dao.MemberDao;
 import kny.cook.dao.PhotoBoardDao;
+import kny.cook.dao.PhotoFileDao;
 import kny.cook.dao.RecipeDao;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
@@ -69,27 +70,14 @@ public class ServerApp {
 
   public void service() {
 
-    @SuppressWarnings("unused")
-    class RequestProcessor implements Runnable {
-      Socket socekt;
-
-      public RequestProcessor(Socket socket) {
-        this.socekt = socket;
-      }
-
-      @Override
-      public void run() {
-        processRequest(socekt);
-        System.out.println("---------------------------------");
-      }
-    }
     notifyApplicationInitialized();
 
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
     PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
-
+    PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
+    
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
@@ -110,10 +98,10 @@ public class ServerApp {
     servletMap.put("/board/update", new BoardUpdateServlet(boardDao));
 
     servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
-    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardDao));
-    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao));
-    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardDao));
-    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardDao));
+    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardDao, recipeDao, photoFileDao));
+    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
+    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardDao, photoFileDao));
+    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardDao, photoFileDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");

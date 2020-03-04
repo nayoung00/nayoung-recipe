@@ -33,7 +33,7 @@ public class PhotoBoardListServlet implements Servlet {
       return;
     }
 
-    out.printf("수업명: %s\n", recipe.getCook());
+    out.printf("요리명: %s\n", recipe.getCook());
     out.println("------------------------------------------------------");
 
     List<PhotoBoard> photoBoards = photoBoardDao.findAllByRecipeNo(recipeNo);

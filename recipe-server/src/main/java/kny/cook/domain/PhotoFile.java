@@ -19,6 +19,11 @@ public class PhotoFile implements Serializable {
 		this.boardNo = boardNo;
 	}
 	
+	public PhotoFile(int no, String filepath, int boardNo) {
+		this(filepath, boardNo);
+		this.no = no;
+	}
+	
 	@Override
 	public String toString() {
 		return "PhotoFile [no=" + no + ", filepath=" + filepath + ", boardNo=" + boardNo + "]";
@@ -28,24 +33,27 @@ public class PhotoFile implements Serializable {
 		return no;
 	}
 	
-	public void setNo(int no) {
+	public PhotoFile setNo(int no) {
 		this.no = no;
+		return this;
 	}
 	
 	public String getFilepath() {
 		return filepath;
 	}
 	
-	public void setFilepath(String filepath) {
+	public PhotoFile setFilepath(String filepath) {
 		this.filepath = filepath;
+		return this;
 	}
 	
 	public int getBoardNo() {
 		return boardNo;
 	}
 	
-	public void setBoardNo(int boardNo) {
+	public PhotoFile setBoardNo(int boardNo) {
 		this.boardNo = boardNo;
+		return this;
 	}
 	
 	

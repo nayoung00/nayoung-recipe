@@ -17,12 +17,20 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   }
 
   @Override
-  public int insert(PhotoBoard photoboard) throws Exception {
+  public int insert(PhotoBoard photoBoard) throws Exception {
     try (Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("insert into rms_photo(titl,recipe_id) values('"
-          + photoboard.getTitle() + "', " + photoboard.getRecipe().getNo() + ")");
-
+          + photoBoard.getTitle() + "', " + photoBoard.getRecipe().getNo() + ")",
+          Statement.RETURN_GENERATED_KEYS
+    		  );
+      
+      
+      try(ResultSet generatedKeySet = stmt.getGeneratedKeys()){
+    	  generatedKeySet.next();
+    	 
+    	  photoBoard.setNo(generatedKeySet.getInt(1));
+      }
       return result;
     }
   }
