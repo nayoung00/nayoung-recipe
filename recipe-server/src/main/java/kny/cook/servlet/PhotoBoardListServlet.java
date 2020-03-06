@@ -7,6 +7,7 @@ import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.Recipe;
+import kny.cook.util.Prompt;
 
 public class PhotoBoardListServlet implements Servlet {
 
@@ -20,11 +21,8 @@ public class PhotoBoardListServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-    out.println("레시피 번호?\n!{}!");
-    out.flush();
 
-
-    int recipeNo = Integer.parseInt(in.nextLine());
+    int recipeNo = Prompt.getInt(in, out, "레시피 번호? ");
 
     Recipe recipe = recipeDao.findByNo(recipeNo);
 

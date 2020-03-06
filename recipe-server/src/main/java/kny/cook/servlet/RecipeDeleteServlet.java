@@ -3,6 +3,7 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.dao.RecipeDao;
+import kny.cook.util.Prompt;
 
 public class RecipeDeleteServlet implements Servlet {
 
@@ -15,9 +16,7 @@ public class RecipeDeleteServlet implements Servlet {
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 
-    out.println("번호? \n!{}!");
-    out.flush();
-    int no = Integer.parseInt(in.nextLine());
+    int no = Prompt.getInt(in, out, "번호? ");
 
     if (recipeDao.delete(no) > 0) {
       out.println("레시피를 삭제했습니다.");

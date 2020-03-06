@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.util.Prompt;
 
 public class MemberAddServlet implements Servlet {
 
@@ -17,16 +18,11 @@ public class MemberAddServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     Member member = new Member();
 
-    out.println("회원? \n!{}!");
-    member.setName(in.nextLine());
-    out.println("이메일? \n!{}!");
-    member.setEmail(in.nextLine());
-    out.println("암호? \n!{}!");
-    member.setPassword(in.nextLine());
-    out.println("사진? \n!{}!");
-    member.setPhoto(in.nextLine());
-    out.println("전화? \n!{}!");
-    member.setTel(in.nextLine());
+    member.setName(Prompt.getString(in, out, "이름? "));
+    member.setEmail(Prompt.getString(in, out, "이메일? "));
+    member.setPassword(Prompt.getString(in, out, "암호? "));
+    member.setPhoto(Prompt.getString(in, out, "사진? "));
+    member.setTel(Prompt.getString(in, out, "전화? "));
 
     out.flush();
     if (memberDao.insert(member) > 0) {

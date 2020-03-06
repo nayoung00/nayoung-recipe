@@ -97,7 +97,7 @@ public class RecipeDaoImpl implements RecipeDao {
   public int delete(int no) throws Exception {
     try (Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);
+      int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " +no);
       return result;
     }
   }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.util.Prompt;
 
 public class MemberSearchServlet implements Servlet {
   MemberDao memberDao;
@@ -16,12 +17,8 @@ public class MemberSearchServlet implements Servlet {
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 
-    out.println("검색어? ");
-    out.println("!{}!");
-    out.flush();
-
-    String keyword = in.nextLine();
-
+    String keyword = Prompt.getString(in, out, "검색어? ");
+    
     List<Member> members = memberDao.findByKeWord(keyword);
     for (Member member : members) {
       out.printf("%d, %s, %s, %s, %s\n", member.getNo(), member.getName(), member.getEmail(),

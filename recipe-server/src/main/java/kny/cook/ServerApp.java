@@ -50,7 +50,7 @@ public class ServerApp {
 
   boolean serverStop = false;
 
-  public void addApplicationContextListener(ApplicationContextListener listener) {
+  public void addApplicationContextListener(ApplicationContextListener listener) { 
     listeners.add(listener);
   }
 
@@ -58,7 +58,7 @@ public class ServerApp {
     listeners.remove(listener);
   }
 
-  private void notifyApplicationInitialized() {
+  private void notifyApplicationInitialized() { 
     for (ApplicationContextListener listener : listeners)
       listener.contextInitialized(context);
   }

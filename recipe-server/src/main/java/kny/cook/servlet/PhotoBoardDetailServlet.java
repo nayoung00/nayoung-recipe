@@ -7,6 +7,7 @@ import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
+import kny.cook.util.Prompt;
 
 public class PhotoBoardDetailServlet implements Servlet {
 
@@ -21,9 +22,7 @@ public class PhotoBoardDetailServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-    out.println("번호? \n!{}!");
-    out.flush();
-    int no = Integer.parseInt(in.nextLine());
+    int no = Prompt.getInt(in, out, "번호? ");
 
     PhotoBoard photoBoard = photoBoardDao.findByNo(no);
 

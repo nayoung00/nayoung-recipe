@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.util.Prompt;
 
 public class RecipeUpdateServlet implements Servlet {
 
@@ -15,9 +16,7 @@ public class RecipeUpdateServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-    out.println("번호? \n!{}!");
-    out.flush();
-    int no = Integer.parseInt(in.nextLine());
+    int no = Prompt.getInt(in, out, "번호? ");
 
     Recipe old = recipeDao.findByNo(no);
 
@@ -26,20 +25,15 @@ public class RecipeUpdateServlet implements Servlet {
       return;
     }
     Recipe recipe = new Recipe();
+    
     recipe.setNo(no);
+    recipe.setCook(Prompt.getString(in, out, String.format("요리(%s)?", old.getCook(),old.getCook())));
+    recipe.setMaterial(Prompt.getString(in, out, String.format("재료(%s)?", old.getMaterial(), old.getMaterial())));   
+    recipe.setMethod(Prompt.getString(in, out, String.format("방법(%s)?", old.getMethod(), old.getMethod())));
+    recipe.setExpense(Prompt.getInt(in, out, String.format("비용(%d)?", old.getExpense(), old.getExpense())));
+    recipe.setTime(Prompt.getInt(in, out, String.format("시간(%d)?", old.getTime(), old.getTime())));
+    
 
-    out.printf("요리(%s)? \n!{}!\n", old.getCook());
-    recipe.setCook(in.nextLine());
-    out.printf("재료(%s)? \n!{}!\n", old.getMaterial());
-    recipe.setMaterial(in.nextLine());
-    out.printf("방법(%s)? \n!{}!\n", old.getMethod());
-    recipe.setMethod(in.nextLine());
-    out.printf("비용(%d)? \n!{}!\n", old.getExpense());
-    recipe.setExpense(in.nextInt());
-    out.printf("시간(%d)? \n!{}!\n", old.getTime());
-    recipe.setTime(in.nextInt());
-
-    out.flush();
 
     if (recipeDao.update(recipe) > 0) {
       out.println("레시피를 변경했습니다.");

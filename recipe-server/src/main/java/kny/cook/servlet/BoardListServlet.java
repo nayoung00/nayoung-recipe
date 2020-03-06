@@ -18,7 +18,7 @@ public class BoardListServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     List<Board> boards = boardDao.findAll();
     for (Board board : boards) {
-      out.printf("%d, %s, %s, %d\n", board.getNo(), board.getTitle(), board.getDate(),
+      out.printf("=> %d, %s, %s, %d\n", board.getNo(), board.getTitle(), board.getDate(),
           board.getViewCount());
     }
   }

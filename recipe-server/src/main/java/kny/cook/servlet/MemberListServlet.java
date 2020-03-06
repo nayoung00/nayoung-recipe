@@ -19,8 +19,8 @@ public class MemberListServlet implements Servlet {
     List<Member> members = memberDao.findAll();
 
     for (Member member : members) {
-      out.printf("%d, %s, %s, %s, %s, %s, %s\n", member.getNo(), member.getName(),
-          member.getEmail(), member.getPassword(), member.getRegisteredDate(), member.getTel(),
+      out.printf("%d, %s, %s, %s, %s, %s\n", member.getNo(), member.getName(),
+          member.getEmail(), member.getRegisteredDate(), member.getTel(),
           member.getPhoto());
     }
   }

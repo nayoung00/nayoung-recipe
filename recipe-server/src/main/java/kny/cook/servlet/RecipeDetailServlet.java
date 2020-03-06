@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.util.Prompt;
 
 public class RecipeDetailServlet implements Servlet {
 
@@ -16,10 +17,7 @@ public class RecipeDetailServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-
-    out.println("번호? \n!{}!");
-    out.flush();
-    int no = Integer.parseInt(in.nextLine());
+    int no = Prompt.getInt(in, out, "번호? ");
 
     Recipe recipe = recipeDao.findByNo(no);
 

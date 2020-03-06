@@ -3,6 +3,7 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.dao.BoardDao;
+import kny.cook.util.Prompt;
 
 public class BoardDeleteServlet implements Servlet {
 
@@ -15,11 +16,8 @@ public class BoardDeleteServlet implements Servlet {
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 
-    out.println("번호? \n!{}!");
-    out.flush();
-
-    int no = Integer.parseInt(in.nextLine());
-
+    int no = Prompt.getInt(in, out, "번호?");
+        
     if (boardDao.delete(no) > 0) {
       out.println("게시글을 삭제했습니다.");
     } else {
