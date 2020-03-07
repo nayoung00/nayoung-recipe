@@ -12,7 +12,7 @@ import kny.cook.dao.mariadb.RecipeDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
-  Connection con;
+  public static Connection con;
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
@@ -26,7 +26,7 @@ public class DataLoaderListener implements ApplicationContextListener {
       context.put("memberDao", new MemberDaoImpl(con));
       context.put("photoBoardDao", new PhotoBoardDaoImpl(con));
       context.put("photoFileDao", new PhotoFileDaoImpl(con));
-      
+
     } catch (Exception e) {
       e.printStackTrace();
     }

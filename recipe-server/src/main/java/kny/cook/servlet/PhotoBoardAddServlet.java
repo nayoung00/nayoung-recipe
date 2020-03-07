@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import kny.cook.DataLoaderListener;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.dao.RecipeDao;
@@ -23,13 +24,11 @@ public class PhotoBoardAddServlet implements Servlet {
     this.photoBoardDao = photoBoardDao;
     this.recipeDao = recipeDao;
     this.photoFileDao = photoFileDao;	
-    
   }
-
-  
   
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
+
     PhotoBoard photoBoard = new PhotoBoard();
     photoBoard.setTitle(Prompt.getString(in, out, "제목? "));
 
@@ -43,14 +42,26 @@ public class PhotoBoardAddServlet implements Servlet {
     
     photoBoard.setRecipe(recipe);
     
-    if (photoBoardDao.insert(photoBoard) > 0) {
     
+    DataLoaderListener.con.setAutoCommit(false);
+    
+    
+    try {
+    if (photoBoardDao.insert(photoBoard) == 0) {
+        throw new Exception("사진 게시글 등록에 실패했습니다.");
+    }
       List<PhotoFile> photoFiles = inputPhotoFiles(in,out);
       for(PhotoFile photoFile : photoFiles) {
         photoFileDao.insert(photoFile);
-      } out.println("새 사진 게시글을 등록했습니다.");
-    } else {
-      out.println("사진 게시글 등록에 실패했습니다.");
+        photoFileDao.insert(photoFile);
+      } 
+      DataLoaderListener.con.commit();
+      out.println("새 사진 게시글을 등록했습니다.");
+    } catch (Exception e) {
+      DataLoaderListener.con.rollback();
+      out.println(e.getMessage());
+    } finally {
+      DataLoaderListener.con.setAutoCommit(true);
     }
   }      
     private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
