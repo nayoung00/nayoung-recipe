@@ -1,30 +1,26 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.util.ConnectionFactory;
 
 public class RecipeDaoImpl implements RecipeDao {
 
-  String jdbcUrl;
-  String username;
-  String password;
+ ConnectionFactory conFactory;
 
-  public RecipeDaoImpl(String jdbcUrl, String username, String password) {
-    this.jdbcUrl = jdbcUrl;
-    this.username = username;
-    this.password = password;
+  public RecipeDaoImpl(ConnectionFactory conFactory) {
+    this.conFactory = conFactory;
   }
 
   @Override
   public int insert(Recipe recipe) throws Exception {
 
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       con.setAutoCommit(true);
@@ -39,7 +35,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public List<Recipe> findAll() throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
             .executeQuery("select recipe_id, cook, material, met, expense, time from rms_recipe")) {
@@ -63,7 +59,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public Recipe findByNo(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
@@ -90,7 +86,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int update(Recipe recipe) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate(
@@ -104,7 +100,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);

@@ -1,17 +1,45 @@
-# 31_1 - Connection 개별화하기: 메서드 호출마다 DBMS와 연결하기
+# 31_2 - Connection 개별화하기: 커넥션 객체 생성에 Factory Method 패턴 적용하기
+
+
+### Factory Method 디자인 패턴
+
+- 객체 생성 과정이 복잡할 경우에 사용하는 설계 기법이다.
+- new 연산자를 이용하여 직접 객체를 생성하는 대신에 메서드를 통해 리턴 받는다.
+
 
 ## 작업 소스 및 결과
 
-- src/main/java/kny/cook/dao/mariadb/XxxDaoImpl.java 변경
+- src/main/java/kny/cook/util/ConnectionFactory.java 추가
 - src/main/java/kny/cook/DataLoaderListener.java 변경
+- src/main/java/kny/cook/dao/mariadb/XxxDaoImpl.java 변경
 
+## 작업  
 
-### 작업1: 각 메서드를 호출할 때 DBMS와 연결하라.
+### 작업1: 커넥션을 생성할 때 팩토리 메서드를 사용하라.
 
-- kny.cook.dao.mariadb.XxxDaoImpl 변경
-  - 생성자에서 파라미터로 Connection 객체를 받는 대신에 DB 연결 정보를 받는다. 
-  - 각 메서드에서 JDBC URL과 username, password를 사용하여 DBMS에 연결한다.
+Connection 객체는 DriverManager를 통해 생성하지만, 
+생성 방법이 바뀔 수 있다.
+문제는 Connection 객체 생성 방법이 바뀌면, 
+DAO 구현체를 모두 변경해야 한다.
+이런 문제를 해결하기 위해 커넥션 객체 생성을 별도의 클래스에 맡긴다.
+그리고 메서드를 통해 커넥션 객체를 얻는다.
+
+- kny.cook.util.ConnectionFactory 추가
+  - Connection 객체를 생성하는 메서드를 추가한다.
 - kny.cook.DataLoaderListener 변경
-  - Connection 객체를 생성하지 않는다.
-  - 대신 DBMS 연결 정보를 준비하여 DAO 구현체를 생성할 때 넘겨준다.
+  - ConnectionFactory 객체를 준비한다.
+  - DAO 구현체에 ConnectionFactory 객체를 주입한다.
+- kny.cook.dao.mariadb.XxxDaoImpl 변경
+  - 생성자에서 ConnectionFactory 객체를 받는다.
+  - 직접 Connection 객체를 생성하는 대신에 
+  ConnectionFactory 객체를 통해 Connection 얻는다.
 
+
+### 메서드 마다 커넥션을 구분하는 방식의 문제점
+
+- 메서드 마다 별도의 커넥션을 사용한다.
+- 따라서 PhotoBoardDao의 insert()와 PhotoFileDao의 insert()를 
+  한 단위 작업으로 묶을 수 없다.
+- 즉 사진 게시글 입력과 첨부 파일 입력을 한 단위의 작업으로 다룰 수 없다.
+- 트랜잭션을 구현할 수 없다. 
+  

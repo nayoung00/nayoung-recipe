@@ -8,22 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoFile;
+import kny.cook.util.ConnectionFactory;
 
 public class PhotoFileDaoImpl implements PhotoFileDao {
 
-  String jdbcUrl;
-  String username;
-  String password;
+  ConnectionFactory conFactory;
 
-  public PhotoFileDaoImpl(String jdbcUrl, String username, String password) {
-    this.jdbcUrl = jdbcUrl;
-    this.username = username;
-    this.password = password;
+  public PhotoFileDaoImpl(ConnectionFactory conFactory) {
+    this.conFactory = conFactory;
   }
 
   @Override
   public int insert(PhotoFile photoFile) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       String query =
@@ -36,7 +33,7 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
   @Override
   public List<PhotoFile> findAll(int boardNo) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs =
             stmt.executeQuery("select photo_file_id, photo_id, file_path" + " from rms_photo_file"
@@ -55,7 +52,7 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
   @Override
   public int deleteAll(int boardNo) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate( //
           "delete from rms_photo_file" //

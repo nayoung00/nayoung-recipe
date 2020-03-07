@@ -8,23 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.util.ConnectionFactory;
 
 public class MemberDaoImpl implements MemberDao {
 
-  String jdbcUrl;
-  String username;
-  String password;
+  ConnectionFactory conFactory;
 
-  public MemberDaoImpl(String jdbcUrl, String username, String password) {
-    this.jdbcUrl = jdbcUrl;
-    this.username = username;
-    this.password = password;
+  public MemberDaoImpl(ConnectionFactory conFactory) {
+    this.conFactory = conFactory;
   }
 
   @Override
   public int insert(Member member) throws Exception {
 
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("insert into rms_member(name ,email, pwd, tel, photo)"
@@ -36,7 +33,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public List<Member> findAll() throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
             .executeQuery("select member_id, name, email, pwd, cdt, tel, photo from rms_member")) {
@@ -60,7 +57,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public Member findByNo(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(
             "select member_id, name, email, pwd, cdt, tel, photo from rms_member where member_id="
@@ -86,7 +83,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       int result =
@@ -99,7 +96,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_member where member_id = " + no);
@@ -110,7 +107,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public List<Member> findByKeWord(String keyword) throws Exception {
 
-    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select member_id, name, email, tel, cdt"
             + " from rms_member" + " where name like '%" + keyword + "%' or email like '%" + keyword

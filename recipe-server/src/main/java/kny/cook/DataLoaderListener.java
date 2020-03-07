@@ -7,6 +7,7 @@ import kny.cook.dao.mariadb.MemberDaoImpl;
 import kny.cook.dao.mariadb.PhotoBoardDaoImpl;
 import kny.cook.dao.mariadb.PhotoFileDaoImpl;
 import kny.cook.dao.mariadb.RecipeDaoImpl;
+import kny.cook.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
@@ -19,11 +20,13 @@ public class DataLoaderListener implements ApplicationContextListener {
       String username = "study";
       String password = "1111";
 
-      context.put("boardDao", new BoardDaoImpl(jdbcUrl, username, password));
-      context.put("recipeDao", new RecipeDaoImpl(jdbcUrl, username, password));
-      context.put("memberDao", new MemberDaoImpl(jdbcUrl, username, password));
-      context.put("photoBoardDao", new PhotoBoardDaoImpl(jdbcUrl, username, password));
-      context.put("photoFileDao", new PhotoFileDaoImpl(jdbcUrl, username, password));
+      ConnectionFactory conFactory = new ConnectionFactory(jdbcUrl, username, password);
+
+      context.put("boardDao", new BoardDaoImpl(conFactory));
+      context.put("recipeDao", new RecipeDaoImpl(conFactory));
+      context.put("memberDao", new MemberDaoImpl(conFactory));
+      context.put("photoBoardDao", new PhotoBoardDaoImpl(conFactory));
+      context.put("photoFileDao", new PhotoFileDaoImpl(conFactory));
 
     } catch (Exception e) {
       e.printStackTrace();
