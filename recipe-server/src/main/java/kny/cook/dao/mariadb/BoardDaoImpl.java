@@ -1,6 +1,7 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -9,17 +10,21 @@ import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 
 public class BoardDaoImpl implements BoardDao {
-  Connection con;
 
-  public BoardDaoImpl(Connection con) {
-    this.con = con;
+  String jdbcUrl;
+  String username;
+  String password;
+
+  public BoardDaoImpl(String jdbcUrl, String username, String password) {
+    this.jdbcUrl = jdbcUrl;
+    this.username = username;
+    this.password = password;
   }
 
   @Override
   public int insert(Board board) throws Exception {
-    try (Statement stmt = con.createStatement()) {
-
-      con.setAutoCommit(true);
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement()) {
 
       int result =
           stmt.executeUpdate("insert into rms_board(conts) values('" + board.getTitle() + "')");
@@ -30,8 +35,8 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public List<Board> findAll() throws Exception {
-    try (Statement stmt = con.createStatement();
-
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select board_id, conts, cdt, vw_cnt from rms_board")) {
 
       ArrayList<Board> list = new ArrayList<>();
@@ -53,8 +58,8 @@ public class BoardDaoImpl implements BoardDao {
   @Override
   public Board findByNo(int no) throws Exception {
 
-    try (Statement stmt = con.createStatement();
-
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(
             "select board_id, conts, cdt, vw_cnt from rms_board where board_id=" + no)) {
 
@@ -76,7 +81,8 @@ public class BoardDaoImpl implements BoardDao {
   @Override
   public int update(Board board) throws Exception {
 
-    try (Statement stmt = con.createStatement()) {
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("update rms_board set conts='" + board.getTitle()
           + "' where board_id = " + board.getNo());
@@ -88,7 +94,8 @@ public class BoardDaoImpl implements BoardDao {
   public int delete(int no) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
 
-    try (Statement stmt = con.createStatement()) {
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_board where board_id = " + no);
       return result;

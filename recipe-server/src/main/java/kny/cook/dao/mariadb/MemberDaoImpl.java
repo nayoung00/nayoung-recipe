@@ -11,16 +11,21 @@ import kny.cook.domain.Member;
 
 public class MemberDaoImpl implements MemberDao {
 
-  Connection con;
+  String jdbcUrl;
+  String username;
+  String password;
 
-  public MemberDaoImpl(Connection con) {
-    this.con = con;
+  public MemberDaoImpl(String jdbcUrl, String username, String password) {
+    this.jdbcUrl = jdbcUrl;
+    this.username = username;
+    this.password = password;
   }
 
   @Override
   public int insert(Member member) throws Exception {
 
-    try (Statement stmt = con.createStatement()) {
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("insert into rms_member(name ,email, pwd, tel, photo)"
           + " values('" + member.getName() + "','" + member.getEmail() + "','"
@@ -31,7 +36,8 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public List<Member> findAll() throws Exception {
-    try (Statement stmt = con.createStatement();
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt
             .executeQuery("select member_id, name, email, pwd, cdt, tel, photo from rms_member")) {
       ArrayList<Member> list = new ArrayList<>();
@@ -54,7 +60,8 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public Member findByNo(int no) throws Exception {
-    try (Statement stmt = con.createStatement();
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(
             "select member_id, name, email, pwd, cdt, tel, photo from rms_member where member_id="
                 + no)) {
@@ -79,9 +86,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
-    try (
-        Connection con =
-            DriverManager.getConnection("jdbc:mariadb://localhost:3306/recipedb", "study", "1111");
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
         Statement stmt = con.createStatement()) {
 
       int result =
@@ -94,7 +99,8 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Statement stmt = con.createStatement()) {
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_member where member_id = " + no);
       return result;
@@ -104,7 +110,8 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public List<Member> findByKeWord(String keyword) throws Exception {
 
-    try (Statement stmt = con.createStatement();
+    try (Connection con = DriverManager.getConnection(jdbcUrl, username, password);
+        Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select member_id, name, email, tel, cdt"
             + " from rms_member" + " where name like '%" + keyword + "%' or email like '%" + keyword
             + "%' or tel like '%" + keyword + "%'")) {
