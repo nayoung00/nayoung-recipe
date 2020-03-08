@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,18 +8,18 @@ import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
-import kny.cook.util.ConnectionFactory;
+import kny.cook.sql.PlatformTransactionManager;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
-  ConnectionFactory conFactory;
+  PlatformTransactionManager txManager;
   PhotoBoardDao photoBoardDao;
   PhotoFileDao photoFileDao;
 
-  public PhotoBoardUpdateServlet(ConnectionFactory conFactory, PhotoBoardDao photoBoardDao,
+  public PhotoBoardUpdateServlet(PlatformTransactionManager txManager, PhotoBoardDao photoBoardDao,
       PhotoFileDao photoFileDao) {
-    this.conFactory = conFactory;
+    this.txManager = txManager;
     this.photoBoardDao = photoBoardDao;
     this.photoFileDao = photoFileDao;
   }
@@ -41,9 +40,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
         Prompt.getString(in, out, String.format("제목(%s)? \n", old.getTitle(), old.getTitle())));
     photoBoard.setNo(no);
 
-    Connection con = conFactory.getConnection();
-
-    con.setAutoCommit(false);
+    txManager.beginTransaction();
 
     try {
       if (photoBoardDao.update(photoBoard) == 0) {
@@ -69,15 +66,12 @@ public class PhotoBoardUpdateServlet implements Servlet {
           photoFileDao.insert(photoFile);
         }
       }
-      con.commit();
+      txManager.commit();
       out.println("사진 게시글을 변경했습니다.");
 
     } catch (Exception e) {
-      con.rollback();
+      txManager.rollback();
       out.println(e.getMessage());
-
-    } finally {
-      con.setAutoCommit(true);
     }
   }
 

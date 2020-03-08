@@ -1,58 +1,53 @@
-# 32_3 - Connection을 스레드에 보관하기: 트랜잭션 적용하기
+# 32_4 - Connection을 스레드에 보관하기: 트랜잭션 관리자 도입하기
 
-- 여러 개의 데이터 변경(insert/update/delete) 작업을 한 단위(트랜잭션)로 
-  다루려면 그 작업을 수행할 때 같은 Connection을 사용해야 한다.
-- 클라이언트 요청이 들어오면 스레드가 그 요청 처리를 담당한다.
-- 따라서 스레드가 실행되는 동안 수행하는 데이터 변경 작업을 
-  같은 트랜잭션으로 묶고 싶다면, 같은 Connection을 사용해야 한다.
-- 이런 이유로 스레드에 Connection 객체를 보관하는 것이다.
-
-다르게 표현해 보면,
-- 스레드에 Connection을 보관하면,
-- 스레드가 실행하는 동안 같은 DAO는 같은 Connection을 사용하게 할 수 있다.
-- 같은 Connection을 사용하여 데이터 변경 작업을 수행하면,
-- 한 단위의 작업(트랜잭션)으로 묶어 제어할 수 있다.
-- 즉 모든 작업이 성공했을 때 테이블에 그 결과를 적용하고,
-- 단 한 개의 작업이라도 실패하면 이전에 했던 작업을 모두 취소하는 것이 가능하다.  
-
-
-### 메서드 별로 커넥션을 개별화 한 상태에서 트랜잭션을 적용하기 
-
-- 31, 32 단계로 가면서 커넥션을 메서드에서 준비하여 사용하였다.
-- 이런 관계로 PhotoBoardAddServlet/PhotoBoardUpdateServlet/PhotoBoardDeleteServlet에 
-  있었던 트랜잭션 처리 코드를 제거하였다.
-- 이제 다시 현 상태에서 트랜잭션 제어 코드를 추가해 보자.
 
 ## 작업 소스 및 결과
 
+- src/main/java/kny/cook/sql/PlatformTransactionManager.java 추가
 - src/main/java/kny/cook/servlet/PhotoBoardAddServlet.java 변경
 - src/main/java/kny/cook/servlet/PhotoBoardUpdateServlet.java 변경
 - src/main/java/kny/cook/servlet/PhotoBoardDeleteServlet.java 변경
+- src/main/java/kny/cook/DataLoaderListener.java 변경
 - src/main/java/kny/cook/ServerApp.java 변경
 
 
-### 작업1: PhotoBoardAddServlet에 트랜잭션을 적용하라.
+### 작업1: 트랜잭션 제어 코드를 캡슐화 하라.
+
+- kny.cook.sql.PlatformTransactionManager 추가
+  - 트랜잭션을 시작시키고, 커밋/롤백하는 메서드를 정의한다.
+  
+  
+### 작업2: PhotoBoardAddServlet에 트랜잭션 관리자를 적용하라.
 
 - kny.cook.servlet.PhotoBoardAddServlet 변경
-  - ConnectionFactory를 주입 받는다.
-  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
-
-### 작업2: PhotoBoardUpdateServlet에 트랜잭션을 적용하라.
+  - PlatformTransactionManager를 주입 받는다.
+  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
+  
+  
+### 작업3: PhotoBoardUpdateServlet에 트랜잭션 관리자를 적용하라.
 
 - kny.cook.servlet.PhotoBoardUpdateServlet 변경
-  - ConnectionFactory를 주입 받는다.
-  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
+  - PlatformTransactionManager를 주입 받는다.
+  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
+
   
-### 작업3: PhotoBoardDeleteServlet에 트랜잭션을 적용하라.
+### 작업4: PhotoBoardDeleteServlet에 트랜잭션 관리자를 적용하라.
 
 - kny.cook.servlet.PhotoBoardDeleteServlet 변경
-  - ConnectionFactory를 주입 받는다.
-  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
+  - PlatformTransactionManager를 주입 받는다.
+  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
 
-### 작업4: 트랜잭션을 다뤄야 하는 서블릿 객체에 ConnectionFactory를 주입하라.
+
+### 작업5: DataLoaderListener에서 트랜잭션 관리자를 준비하라.
+
+- kny.cook.DataLoaderListener 변경
+  - PlatformTransactionManager 객체를 준비한다.
+
+
+### 작업6: 트랜잭션 관리자를 서블릿에 주입하라.
 
 - kny.cook.ServerApp 변경
-  - PhotoBoardAddServlet, PhotoBoardUpdateServlet, PhotoBoardDeleteServlet 객체에
-    ConectionFactory를 주입한다.
+  - 맵에서 PlatformTransactionManager 객체를 꺼내 서블릿 객체에 주입한다.
 
-### 작업5: /photoboard/add, /photoboard/update, /photoboard/delete을 테스트 해 보라.
+  
+### 작업7: /photoboard/add, /photoboard/update, /photoboard/delete을 테스트를 해봐라.

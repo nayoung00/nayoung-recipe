@@ -40,6 +40,7 @@ import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
 import kny.cook.sql.ConnectionProxy;
+import kny.cook.sql.PlatformTransactionManager;
 import kny.cook.util.ConnectionFactory;
 
 public class ServerApp {
@@ -82,6 +83,9 @@ public class ServerApp {
     PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
     PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
 
+    PlatformTransactionManager txManager =
+        (PlatformTransactionManager) context.get("transactionManager");
+
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
@@ -103,12 +107,12 @@ public class ServerApp {
 
     servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
     servletMap.put("/photoboard/add",
-        new PhotoBoardAddServlet(conFactory, photoBoardDao, recipeDao, photoFileDao));
+        new PhotoBoardAddServlet(txManager, photoBoardDao, recipeDao, photoFileDao));
     servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
     servletMap.put("/photoboard/delete",
-        new PhotoBoardDeleteServlet(conFactory, photoBoardDao, photoFileDao));
+        new PhotoBoardDeleteServlet(txManager, photoBoardDao, photoFileDao));
     servletMap.put("/photoboard/update",
-        new PhotoBoardUpdateServlet(conFactory, photoBoardDao, photoFileDao));
+        new PhotoBoardUpdateServlet(txManager, photoBoardDao, photoFileDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
