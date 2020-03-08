@@ -1,22 +1,26 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.DataLoaderListener;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
+import kny.cook.util.ConnectionFactory;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
+  ConnectionFactory conFactory;
   PhotoBoardDao photoBoardDao;
   PhotoFileDao photoFileDao;
 
-  public PhotoBoardUpdateServlet(PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao) {
+  public PhotoBoardUpdateServlet(ConnectionFactory conFactory, PhotoBoardDao photoBoardDao,
+      PhotoFileDao photoFileDao) {
+    this.conFactory = conFactory;
     this.photoBoardDao = photoBoardDao;
     this.photoFileDao = photoFileDao;
   }
@@ -33,15 +37,18 @@ public class PhotoBoardUpdateServlet implements Servlet {
     }
 
     PhotoBoard photoBoard = new PhotoBoard();
-    photoBoard.setTitle(Prompt.getString(in, out,
-        String.format("제목(%s)? \n", old.getTitle(), old.getTitle())));
+    photoBoard.setTitle(
+        Prompt.getString(in, out, String.format("제목(%s)? \n", old.getTitle(), old.getTitle())));
     photoBoard.setNo(no);
 
-   
+    Connection con = conFactory.getConnection();
+
+    con.setAutoCommit(false);
+
     try {
       if (photoBoardDao.update(photoBoard) == 0) {
-      throw new Exception("사진 게시글 변경에 실패했습니다.");
-    }
+        throw new Exception("사진 게시글 변경에 실패했습니다.");
+      }
 
       printPhotoFiles(out, no);
 
@@ -62,10 +69,15 @@ public class PhotoBoardUpdateServlet implements Servlet {
           photoFileDao.insert(photoFile);
         }
       }
+      con.commit();
       out.println("사진 게시글을 변경했습니다.");
-      
+
     } catch (Exception e) {
+      con.rollback();
       out.println(e.getMessage());
+
+    } finally {
+      con.setAutoCommit(true);
     }
   }
 
@@ -97,6 +109,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
       }
       photoFiles.add(new PhotoFile().setFilepath(filepath));
     }
+
     return photoFiles;
   }
 }

@@ -1,27 +1,30 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.DataLoaderListener;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.domain.Recipe;
+import kny.cook.util.ConnectionFactory;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
 
+  ConnectionFactory conFactory;
   PhotoBoardDao photoBoardDao;
   RecipeDao recipeDao;
   PhotoFileDao photoFileDao;
 
-  public PhotoBoardAddServlet(PhotoBoardDao photoBoardDao, RecipeDao recipeDao,
-      PhotoFileDao photoFileDao) {
+  public PhotoBoardAddServlet(ConnectionFactory conFactory, PhotoBoardDao photoBoardDao,
+      RecipeDao recipeDao, PhotoFileDao photoFileDao) {
 
+    this.conFactory = conFactory;
     this.photoBoardDao = photoBoardDao;
     this.recipeDao = recipeDao;
     this.photoFileDao = photoFileDao;
@@ -43,6 +46,10 @@ public class PhotoBoardAddServlet implements Servlet {
 
     photoBoard.setRecipe(recipe);
 
+    Connection con = conFactory.getConnection();
+
+    con.setAutoCommit(false);
+
     try {
       if (photoBoardDao.insert(photoBoard) == 0) {
         throw new Exception("사진 게시글 등록에 실패했습니다.");
@@ -51,17 +58,21 @@ public class PhotoBoardAddServlet implements Servlet {
       for (PhotoFile photoFile : photoFiles) {
         photoFile.setBoardNo(photoBoard.getNo());
         photoFileDao.insert(photoFile);
-        
       }
+      con.commit();
       out.println("새 사진 게시글을 등록했습니다.");
-      
+
     } catch (Exception e) {
+      con.rollback();
       out.println(e.getMessage());
-  
+
+    } finally {
+      con.setAutoCommit(true);
     }
   }
 
   private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
+
     out.println("최소 한 개의 사진 파일을 등록해야 합니다.");
     out.println("파일명 입력 없이 그냥 엔터를 치면 파일을 추가를 마칩니다.");
 
@@ -80,7 +91,6 @@ public class PhotoBoardAddServlet implements Servlet {
       }
       photoFiles.add(new PhotoFile().setFilepath(filepath));
     }
-
     return photoFiles;
   }
 }

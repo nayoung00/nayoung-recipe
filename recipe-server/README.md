@@ -1,66 +1,58 @@
-# 32_2 - Connection을 스레드에 보관하기: 한 스레드에서 Connection 을 여러 번 사용할 때 발생하는 문제점 해결하기
+# 32_3 - Connection을 스레드에 보관하기: 트랜잭션 적용하기
+
+- 여러 개의 데이터 변경(insert/update/delete) 작업을 한 단위(트랜잭션)로 
+  다루려면 그 작업을 수행할 때 같은 Connection을 사용해야 한다.
+- 클라이언트 요청이 들어오면 스레드가 그 요청 처리를 담당한다.
+- 따라서 스레드가 실행되는 동안 수행하는 데이터 변경 작업을 
+  같은 트랜잭션으로 묶고 싶다면, 같은 Connection을 사용해야 한다.
+- 이런 이유로 스레드에 Connection 객체를 보관하는 것이다.
+
+다르게 표현해 보면,
+- 스레드에 Connection을 보관하면,
+- 스레드가 실행하는 동안 같은 DAO는 같은 Connection을 사용하게 할 수 있다.
+- 같은 Connection을 사용하여 데이터 변경 작업을 수행하면,
+- 한 단위의 작업(트랜잭션)으로 묶어 제어할 수 있다.
+- 즉 모든 작업이 성공했을 때 테이블에 그 결과를 적용하고,
+- 단 한 개의 작업이라도 실패하면 이전에 했던 작업을 모두 취소하는 것이 가능하다.  
 
 
-### 변경하기 전의 문제점 및 테스트
+### 메서드 별로 커넥션을 개별화 한 상태에서 트랜잭션을 적용하기 
 
-- DAO가 작업을 수행(예: findAll(), insert() 호출되는 것)한 후에는
-  try-with-resource 문장에 의해 Connection 객체의 close()가 자동 호출된다.
-- 따라서 스레드에 보관된 Connection 객체는 더이상 사용할 수 없다.
-- 테스트:
-  - "/photoboard/list" 명령을 실행해 보라.
-  - LessonDao.findByNo()가 실행된 후에 커넥션이 닫히기 때문에,
-    PhotoBoardDao.findAllByLessonNo()를 실행하면 오류가 발생할 것이다.  
-  - 이렇게 같은 스레드에서 커넥션을 여러 번 사용할 경우에 오류가 발생한다.
+- 31, 32 단계로 가면서 커넥션을 메서드에서 준비하여 사용하였다.
+- 이런 관계로 PhotoBoardAddServlet/PhotoBoardUpdateServlet/PhotoBoardDeleteServlet에 
+  있었던 트랜잭션 처리 코드를 제거하였다.
+- 이제 다시 현 상태에서 트랜잭션 제어 코드를 추가해 보자.
 
-### 해결책
+## 작업 소스 및 결과
 
-- Connection을 사용하고 난 후에 닫지 않게 한다.
-- 방법1: 
-  - try-with-resources 블럭 밖에 Connection 변수를 둔다.
-  - 그래서 Connection 객체가 자동으로 닫히지 않게 한다.
-  - 문제: 
-    - 기존의 표준 코딩 방식에 어긋난다.
-    - 즉 자원을 사용했으면 닫도록 코딩하는 게 일반적이다.
-    - 이렇게 스레드에서 커넥션을 여러 번 사용하는 경우라고 해서 
-      특별하게 코딩한다면 유지보수 하기가 어렵다.
-- 방법2:
-  - Connection 객체를 커스터마이징 한다.
-  - close()가 호출될 때 진짜로 닫지는 않는다.
-  - 기존 표준 코딩에 어긋나지 않는다.
-  - 즉 자원을 사용했으면 닫도록 코딩하는 규칙을 준수하고 있다.
-  - 다만 중간에서 '조작질'을 할 뿐이다.
+- src/main/java/kny/cook/servlet/PhotoBoardAddServlet.java 변경
+- src/main/java/kny/cook/servlet/PhotoBoardUpdateServlet.java 변경
+- src/main/java/kny/cook/servlet/PhotoBoardDeleteServlet.java 변경
+- src/main/java/kny/cook/ServerApp.java 변경
 
-## 실습 소스 및 결과
 
-- src/main/java/kny/cook/sql/ConnectionProxy.java 추가
-- src/main/java/kny/cook/util/ConnectionFactory.java 변경
-- src/main/java/kny/cook/ServletApp.java 변경
+### 작업1: PhotoBoardAddServlet에 트랜잭션을 적용하라.
 
-## 실습  
+- kny.cook.servlet.PhotoBoardAddServlet 변경
+  - ConnectionFactory를 주입 받는다.
+  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
 
-### 훈련1: Connection의 일을 대행할 프록시를 정의하라.
+### 작업2: PhotoBoardUpdateServlet에 트랜잭션을 적용하라.
 
-- kny.cook.sql.ConnectionProxy 추가
-  - close()를 구현한다.
-    - 호출되면 아무런 일을 하지 않게 한다.
-    - 즉 커넥션을 닫지 않는다.
-  - realClose() 추가한다.
-    - 실제 커넥션을 닫는 일을 한다.
-  - 나머지 메서드는 원래 Connection 객체에 위임한다.
-    - eclipse / 소스창의 컨텍스트 메뉴 / source /generate delegate methods... 실행 
-    
-### 훈련2: ConnectionFactory가 ConnectionProxy 객체를 리턴하게 하라.
-
-- kny.cook.util.ConnectionFactory 변경
-  - getConnection() 변경
-  - 원래의 Connection 객체 대신에 ConnectionProxy를 리턴한다.
+- kny.cook.servlet.PhotoBoardUpdateServlet 변경
+  - ConnectionFactory를 주입 받는다.
+  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
   
-### 훈련3: 스레드에서 Connection을 제거하기 전에 서버와의 연결을 끊어라.
+### 작업3: PhotoBoardDeleteServlet에 트랜잭션을 적용하라.
 
-- kny.cook.util.ConnectionFactory 변경
-  - removeConnection()이 스레드에서 제거한 Connection을 리턴하게 변경한다.
+- kny.cook.servlet.PhotoBoardDeleteServlet 변경
+  - ConnectionFactory를 주입 받는다.
+  - ConnectionFactory를 통해 Connection을 얻은 후에 트랜잭션을 제어한다.
+
+### 작업4: 트랜잭션을 다뤄야 하는 서블릿 객체에 ConnectionFactory를 주입하라.
+
 - kny.cook.ServerApp 변경
-  - ConnectionFactory에서 리턴 받은 Connection 객체에 대해 
-    realClose()를 호출한다.
-    
-  
+  - PhotoBoardAddServlet, PhotoBoardUpdateServlet, PhotoBoardDeleteServlet 객체에
+    ConectionFactory를 주입한다.
+
+### 작업5: /photoboard/add, /photoboard/update, /photoboard/delete을 테스트 해 보라.

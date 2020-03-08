@@ -103,10 +103,12 @@ public class ServerApp {
 
     servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
     servletMap.put("/photoboard/add",
-        new PhotoBoardAddServlet(photoBoardDao, recipeDao, photoFileDao));
+        new PhotoBoardAddServlet(conFactory, photoBoardDao, recipeDao, photoFileDao));
     servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
-    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardDao, photoFileDao));
-    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardDao, photoFileDao));
+    servletMap.put("/photoboard/delete",
+        new PhotoBoardDeleteServlet(conFactory, photoBoardDao, photoFileDao));
+    servletMap.put("/photoboard/update",
+        new PhotoBoardUpdateServlet(conFactory, photoBoardDao, photoFileDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
