@@ -39,9 +39,8 @@ import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
-import kny.cook.sql.ConnectionProxy;
+import kny.cook.sql.DataSource;
 import kny.cook.sql.PlatformTransactionManager;
-import kny.cook.util.ConnectionFactory;
 
 public class ServerApp {
 
@@ -75,7 +74,7 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    ConnectionFactory conFactory = (ConnectionFactory) context.get("connectionFactory");
+    DataSource dataSource = (DataSource) context.get("dataSource");
 
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
@@ -124,14 +123,7 @@ public class ServerApp {
         executorService.submit(() -> {
           processRequest(socket);
 
-          ConnectionProxy con = (ConnectionProxy) conFactory.removeConnection();
-          if (con != null) {
-            try {
-              con.realClose();
-            } catch (Exception e) {
-
-            }
-          }
+          dataSource.removeConnection();
           System.out.println("---------------------------------");
         });
 
@@ -142,6 +134,7 @@ public class ServerApp {
     } catch (Exception e) {
       System.out.println("서버 준비 중 오류 발생!");
     }
+
     executorService.shutdown();
 
 

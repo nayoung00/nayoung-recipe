@@ -7,8 +7,8 @@ import kny.cook.dao.mariadb.MemberDaoImpl;
 import kny.cook.dao.mariadb.PhotoBoardDaoImpl;
 import kny.cook.dao.mariadb.PhotoFileDaoImpl;
 import kny.cook.dao.mariadb.RecipeDaoImpl;
+import kny.cook.sql.DataSource;
 import kny.cook.sql.PlatformTransactionManager;
-import kny.cook.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
@@ -20,18 +20,19 @@ public class DataLoaderListener implements ApplicationContextListener {
       String username = "study";
       String password = "1111";
 
-      ConnectionFactory conFactory = new ConnectionFactory(jdbcUrl, username, password);
+      DataSource dataSource = new DataSource(jdbcUrl, username, password);
 
-      context.put("connectionFactory", conFactory);
+      context.put("dataSource", dataSource);
 
-      context.put("boardDao", new BoardDaoImpl(conFactory));
-      context.put("recipeDao", new RecipeDaoImpl(conFactory));
-      context.put("memberDao", new MemberDaoImpl(conFactory));
-      context.put("photoBoardDao", new PhotoBoardDaoImpl(conFactory));
-      context.put("photoFileDao", new PhotoFileDaoImpl(conFactory));
+      context.put("boardDao", new BoardDaoImpl(dataSource));
+      context.put("recipeDao", new RecipeDaoImpl(dataSource));
+      context.put("memberDao", new MemberDaoImpl(dataSource));
+      context.put("photoBoardDao", new PhotoBoardDaoImpl(dataSource));
+      context.put("photoFileDao", new PhotoFileDaoImpl(dataSource));
 
-      PlatformTransactionManager txManager = new PlatformTransactionManager(conFactory);
+      PlatformTransactionManager txManager = new PlatformTransactionManager(dataSource);
       context.put("transactionManager", txManager);
+
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -39,5 +40,9 @@ public class DataLoaderListener implements ApplicationContextListener {
   }
 
   @Override
-  public void contextDestroyed(Map<String, Object> context) {}
+  public void contextDestroyed(Map<String, Object> context) {
+
+    DataSource dataSource = (DataSource) context.get("dataSource");
+    dataSource.clean();
+  }
 }

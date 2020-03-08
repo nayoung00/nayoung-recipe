@@ -1,53 +1,56 @@
-# 32_4 - Connection을 스레드에 보관하기: 트랜잭션 관리자 도입하기
+# 33_1 - Connection Pool 도입하기
 
+### Pooling 기법
+
+- 생성된 객체를 재사용 하는 것.
+- 객체를 사용한 후에 버리지 않고 보관한다.
+- 객체가 필요할 때 마다 빌려서 쓰고, 쓰고 난 후에는 반납한다.
+- 이점:
+  - 객체 생성에 소요되는 시간을 줄일 수 있다.
+  - 가비지 생성을 억제하기 때문에 메모리 낭비를 줄일 수 있다.
+- 예:
+  - DB 커넥션 풀, 스레드 풀 등
+- GoF의 'Flyweight' 디자인 패턴과 유사하다.
 
 ## 작업 소스 및 결과
 
-- src/main/java/kny/cook/sql/PlatformTransactionManager.java 추가
-- src/main/java/kny/cook/servlet/PhotoBoardAddServlet.java 변경
-- src/main/java/kny/cook/servlet/PhotoBoardUpdateServlet.java 변경
-- src/main/java/kny/cook/servlet/PhotoBoardDeleteServlet.java 변경
+- src/main/java/kny/cook/util/ConnectionFactory.java 삭제
+- src/main/java/kny/cook/sql/DataSource.java 추가
+- src/main/java/kny/cook/sql/PlatformTransactionManager.java 변경
+- src/main/java/kny/cook/dao/mariadb/XxxDaoImpl.java 변경
 - src/main/java/kny/cook/DataLoaderListener.java 변경
 - src/main/java/kny/cook/ServerApp.java 변경
 
 
-### 작업1: 트랜잭션 제어 코드를 캡슐화 하라.
+### 작업1: DB 커넥션 풀 객체를 생성하라.
 
-- kny.cook.sql.PlatformTransactionManager 추가
-  - 트랜잭션을 시작시키고, 커밋/롤백하는 메서드를 정의한다.
+- kny.cook.sql.DataSource 추가
+  - ConnectionFactory를 DataSource로 이름을 변경한다.
+  - JDBC API에서는 커넥션 객체를 생성하고 관리하는 역할자를 DataSource로 정의하였다. 
+  - 그래서 이 이름과 같게 만들자.
+  - ConnectionFactory + Pooling 기능 = DataSource
+   
+### 작업2: PlatformTransactionManager 를 변경하라.
+
+- kny.cook.sql.PlatformTransactionManager 변경
+  - ConnectionFactory 대신 DataSource를 사용하도록 변경한다.
+
+### 작업3: DataSource를 사용하도록 DAO를 변경하라.
+
+- kny.cook.dao.mariadb.XxxDaoImpl 변경
+  - ConnectionFactory 대신 DataSource를 사용하도록 변경한다.
   
-  
-### 작업2: PhotoBoardAddServlet에 트랜잭션 관리자를 적용하라.
-
-- kny.cook.servlet.PhotoBoardAddServlet 변경
-  - PlatformTransactionManager를 주입 받는다.
-  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
-  
-  
-### 작업3: PhotoBoardUpdateServlet에 트랜잭션 관리자를 적용하라.
-
-- kny.cook.servlet.PhotoBoardUpdateServlet 변경
-  - PlatformTransactionManager를 주입 받는다.
-  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
-
-  
-### 작업4: PhotoBoardDeleteServlet에 트랜잭션 관리자를 적용하라.
-
-- kny.cook.servlet.PhotoBoardDeleteServlet 변경
-  - PlatformTransactionManager를 주입 받는다.
-  - 트랜잭션 관리자를 통해 트랜잭션을 제어한다.
-
-
-### 작업5: DataLoaderListener에서 트랜잭션 관리자를 준비하라.
+### 작업4: DataSource를 DAO에 주입하라.
 
 - kny.cook.DataLoaderListener 변경
-  - PlatformTransactionManager 객체를 준비한다.
-
-
-### 작업6: 트랜잭션 관리자를 서블릿에 주입하라.
+  - ConnectionFactory 대신 DataSource 객체를 생성한다.
+  - DAO에 DataSource를 주입한다.
+  - 애플리케이션이 종료될 때 모든 DB 커넥션을 닫는다.
+  
+### 작업5: 클라이언트 요청을 처리한 후 Connection을 닫지 말고 반납하라.
 
 - kny.cook.ServerApp 변경
-  - 맵에서 PlatformTransactionManager 객체를 꺼내 서블릿 객체에 주입한다.
-
+  - 클라이언트에게 응답한 후 스레드에서 커넥션 객체를 제거한다.
+  - 제거된 커넥션 객체는 재사용하기 위해 닫지 않는다.
   
-### 작업7: /photoboard/add, /photoboard/update, /photoboard/delete을 테스트를 해봐라.
+### 작업7: /photoboard/add, /photoboard/update, /photoboard/delete 테스트.

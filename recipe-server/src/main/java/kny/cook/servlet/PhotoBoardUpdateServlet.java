@@ -37,7 +37,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
 
     PhotoBoard photoBoard = new PhotoBoard();
     photoBoard.setTitle(
-        Prompt.getString(in, out, String.format("제목(%s)? \n", old.getTitle(), old.getTitle())));
+        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle(), old.getTitle())));
     photoBoard.setNo(no);
 
     txManager.beginTransaction();

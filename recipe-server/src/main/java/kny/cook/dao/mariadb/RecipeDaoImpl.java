@@ -7,21 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
-import kny.cook.util.ConnectionFactory;
+import kny.cook.sql.DataSource;
 
 public class RecipeDaoImpl implements RecipeDao {
 
- ConnectionFactory conFactory;
+  DataSource dataSource;
 
-  public RecipeDaoImpl(ConnectionFactory conFactory) {
-    this.conFactory = conFactory;
+  public RecipeDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   @Override
   public int insert(Recipe recipe) throws Exception {
 
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       con.setAutoCommit(true);
 
@@ -35,7 +34,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public List<Recipe> findAll() throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
             .executeQuery("select recipe_id, cook, material, met, expense, time from rms_recipe")) {
@@ -59,7 +58,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public Recipe findByNo(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery(
@@ -86,8 +85,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int update(Recipe recipe) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate(
           "update rms_recipe set cook= '" + recipe.getCook() + "', material='" + recipe.getMethod()
@@ -100,8 +98,7 @@ public class RecipeDaoImpl implements RecipeDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);
       return result;

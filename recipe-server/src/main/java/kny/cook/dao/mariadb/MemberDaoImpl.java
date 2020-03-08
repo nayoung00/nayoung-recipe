@@ -1,42 +1,42 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
-import kny.cook.util.ConnectionFactory;
+import kny.cook.sql.DataSource;
 
 public class MemberDaoImpl implements MemberDao {
 
-  ConnectionFactory conFactory;
+  DataSource dataSource;
 
-  public MemberDaoImpl(ConnectionFactory conFactory) {
-    this.conFactory = conFactory;
+  public MemberDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
+
 
   @Override
   public int insert(Member member) throws Exception {
 
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
-      int result = stmt.executeUpdate("insert into rms_member(name ,email, pwd, tel, photo)"
-          + " values('" + member.getName() + "','" + member.getEmail() + "','"
-          + member.getPassword() + "', '" + member.getTel() + "','" + member.getPhoto() + "')");
+      int result = stmt.executeUpdate("insert into lms_member(name, email, pwd, tel, photo) "
+          + "values('" + member.getName() + "', '" + member.getEmail() + "', '"
+          + member.getPassword() + "', '" + member.getTel() + "', '" + member.getPhoto() + "')");
+
       return result;
     }
   }
 
   @Override
   public List<Member> findAll() throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt
-            .executeQuery("select member_id, name, email, pwd, cdt, tel, photo from rms_member")) {
+        ResultSet rs =
+            stmt.executeQuery("select member_id, name, email, tel, cdt from lms_member")) {
       ArrayList<Member> list = new ArrayList<>();
 
       while (rs.next()) {
@@ -44,10 +44,8 @@ public class MemberDaoImpl implements MemberDao {
         member.setNo(rs.getInt("member_id"));
         member.setName(rs.getString("name"));
         member.setEmail(rs.getString("email"));
-        member.setPassword(rs.getString("pwd"));
         member.setRegisteredDate(rs.getDate("cdt"));
         member.setTel(rs.getString("tel"));
-        member.setPhoto(rs.getString("photo"));
 
         list.add(member);
       }
@@ -57,11 +55,10 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public Member findByNo(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery(
-            "select member_id, name, email, pwd, cdt, tel, photo from rms_member where member_id="
-                + no)) {
+        ResultSet rs = stmt.executeQuery("select member_id, name, email, pwd, tel, photo"
+            + " from lms_member" + " where member_id=" + no)) {
       if (rs.next()) {
         Member member = new Member();
 
@@ -80,13 +77,13 @@ public class MemberDaoImpl implements MemberDao {
     }
   }
 
+
   @Override
   public int update(Member member) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       int result =
-          stmt.executeUpdate("update rms_member set name= '" + member.getName() + "', email='"
+          stmt.executeUpdate("update lms_member set name= '" + member.getName() + "', email='"
               + member.getEmail() + "', pwd='" + member.getPassword() + "', tel='" + member.getTel()
               + "', photo='" + member.getPhoto() + "' where member_id=" + member.getNo());
       return result;
@@ -95,8 +92,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("delete from rms_member where member_id = " + no);
       return result;
@@ -106,7 +102,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public List<Member> findByKeWord(String keyword) throws Exception {
 
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select member_id, name, email, tel, cdt"
             + " from rms_member" + " where name like '%" + keyword + "%' or email like '%" + keyword

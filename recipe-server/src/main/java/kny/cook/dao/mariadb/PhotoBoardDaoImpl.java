@@ -1,7 +1,6 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -9,20 +8,19 @@ import java.util.List;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.Recipe;
-import kny.cook.util.ConnectionFactory;
+import kny.cook.sql.DataSource;
 
 public class PhotoBoardDaoImpl implements PhotoBoardDao {
-  ConnectionFactory conFactory;
+  DataSource dataSource;
 
-  public PhotoBoardDaoImpl(ConnectionFactory conFactory) {
-    this.conFactory = conFactory;
-    
+  public PhotoBoardDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
+
   }
 
   @Override
   public int insert(PhotoBoard photoBoard) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
 
       int result = stmt.executeUpdate("insert into rms_photo(titl,recipe_id) values('"
           + photoBoard.getTitle() + "', " + photoBoard.getRecipe().getNo() + ")",
@@ -40,7 +38,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
   @Override
   public PhotoBoard findByNo(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery( //
             "select" //
@@ -78,8 +76,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
   @Override
   public int update(PhotoBoard photoboard) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate( //
           "update rms_photo set titl='" //
               + photoboard.getTitle() //
@@ -90,8 +87,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
-        Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate( //
           "delete from rms_photo" //
               + " where photo_id=" + no);
@@ -101,7 +97,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
 
   @Override
   public List<PhotoBoard> findAllByRecipeNo(int RecipeNo) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
 
         ResultSet rs = stmt.executeQuery( //
