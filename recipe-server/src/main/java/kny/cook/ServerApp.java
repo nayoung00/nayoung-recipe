@@ -39,6 +39,7 @@ import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
+import kny.cook.sql.ConnectionProxy;
 import kny.cook.util.ConnectionFactory;
 
 public class ServerApp {
@@ -51,7 +52,7 @@ public class ServerApp {
 
   boolean shotdown = false;
 
-  public void addApplicationContextListener(ApplicationContextListener listener) { 
+  public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
   }
 
@@ -59,7 +60,7 @@ public class ServerApp {
     listeners.remove(listener);
   }
 
-  private void notifyApplicationInitialized() { 
+  private void notifyApplicationInitialized() {
     for (ApplicationContextListener listener : listeners)
       listener.contextInitialized(context);
   }
@@ -74,13 +75,13 @@ public class ServerApp {
     notifyApplicationInitialized();
 
     ConnectionFactory conFactory = (ConnectionFactory) context.get("connectionFactory");
-    
+
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
     PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
     PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
-    
+
     servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
@@ -101,7 +102,8 @@ public class ServerApp {
     servletMap.put("/board/update", new BoardUpdateServlet(boardDao));
 
     servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
-    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardDao, recipeDao, photoFileDao));
+    servletMap.put("/photoboard/add",
+        new PhotoBoardAddServlet(photoBoardDao, recipeDao, photoFileDao));
     servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
     servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardDao, photoFileDao));
     servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardDao, photoFileDao));
@@ -115,7 +117,15 @@ public class ServerApp {
 
         executorService.submit(() -> {
           processRequest(socket);
-          conFactory.removeConnection();
+
+          ConnectionProxy con = (ConnectionProxy) conFactory.removeConnection();
+          if (con != null) {
+            try {
+              con.realClose();
+            } catch (Exception e) {
+
+            }
+          }
           System.out.println("---------------------------------");
         });
 
@@ -141,7 +151,7 @@ public class ServerApp {
     }
 
     notifyApplicationDestroyed();
-    
+
     System.out.println("서버 종료!");
   }
 
@@ -164,7 +174,7 @@ public class ServerApp {
       if (servlet != null) {
         try {
           servlet.service(in, out);
-          
+
         } catch (Exception e) {
           out.println("요청 처리 중 오류 발생! ");
           out.println(e.getMessage());
