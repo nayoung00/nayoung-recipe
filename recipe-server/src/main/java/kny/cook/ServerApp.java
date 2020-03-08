@@ -39,6 +39,7 @@ import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
+import kny.cook.util.ConnectionFactory;
 
 public class ServerApp {
 
@@ -48,7 +49,7 @@ public class ServerApp {
 
   ExecutorService executorService = Executors.newCachedThreadPool();
 
-  boolean serverStop = false;
+  boolean shotdown = false;
 
   public void addApplicationContextListener(ApplicationContextListener listener) { 
     listeners.add(listener);
@@ -72,6 +73,8 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
+    ConnectionFactory conFactory = (ConnectionFactory) context.get("connectionFactory");
+    
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
@@ -112,10 +115,11 @@ public class ServerApp {
 
         executorService.submit(() -> {
           processRequest(socket);
+          conFactory.removeConnection();
           System.out.println("---------------------------------");
         });
 
-        if (serverStop) {
+        if (shotdown) {
           break;
         }
       }
@@ -137,6 +141,7 @@ public class ServerApp {
     }
 
     notifyApplicationDestroyed();
+    
     System.out.println("서버 종료!");
   }
 
@@ -149,7 +154,7 @@ public class ServerApp {
       String request = in.nextLine();
       System.out.printf("=> %s\n", request);
 
-      if (request.equalsIgnoreCase("/server/stop")) {
+      if (request.equalsIgnoreCase("/shotdown")) {
         quit(out);
         return;
       }
@@ -159,6 +164,7 @@ public class ServerApp {
       if (servlet != null) {
         try {
           servlet.service(in, out);
+          
         } catch (Exception e) {
           out.println("요청 처리 중 오류 발생! ");
           out.println(e.getMessage());
@@ -184,7 +190,7 @@ public class ServerApp {
   }
 
   private void quit(PrintStream out) throws IOException {
-    serverStop = true;
+    shotdown = true;
     out.println("OK");
     out.println("!end!");
     out.flush();

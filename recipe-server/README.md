@@ -1,45 +1,59 @@
-# 31_2 - Connection 개별화하기: 커넥션 객체 생성에 Factory Method 패턴 적용하기
+# 32_1 - Connection을 스레드에 보관하기: ThreadLocal을 사용하여 스레드에 값 보관하기
 
 
-### Factory Method 디자인 패턴
+### Connection을 Thread에 보관하는 이유?
 
-- 객체 생성 과정이 복잡할 경우에 사용하는 설계 기법이다.
-- new 연산자를 이용하여 직접 객체를 생성하는 대신에 메서드를 통해 리턴 받는다.
-
+- 여러 개의 데이터 변경(insert/update/delete) 작업을 한 단위로 묶으려면 
+  같은 Connection을 사용해야 한다.
+- 왜? commit()/rollback()은 커넥션 객체에 대해 실행하기 때문이다.
+- 즉 트랜잭션은 각 커넥션 별로 관리된다. 
+- 그래서 스레드가 실행하는 데이터 변경 작업을 한 단위로 묶으려면 
+  그 스레드가 수행하는 데이터 변경 작업은 같은 커넥션으로 실행해야 한다.
+- DAO의 메서드가 실행될 때 사용하는 커넥션은 스레드에서 꺼낸다.
 
 ## 작업 소스 및 결과
 
-- src/main/java/kny/cook/util/ConnectionFactory.java 추가
+- src/main/java/kny/cook/util/ConnectionFactory.java 변경
 - src/main/java/kny/cook/DataLoaderListener.java 변경
-- src/main/java/kny/cook/dao/mariadb/XxxDaoImpl.java 변경
-
-## 작업  
-
-### 작업1: 커넥션을 생성할 때 팩토리 메서드를 사용하라.
-
-Connection 객체는 DriverManager를 통해 생성하지만, 
-생성 방법이 바뀔 수 있다.
-문제는 Connection 객체 생성 방법이 바뀌면, 
-DAO 구현체를 모두 변경해야 한다.
-이런 문제를 해결하기 위해 커넥션 객체 생성을 별도의 클래스에 맡긴다.
-그리고 메서드를 통해 커넥션 객체를 얻는다.
-
-- kny.cook.util.ConnectionFactory 추가
-  - Connection 객체를 생성하는 메서드를 추가한다.
-- kny.cook.DataLoaderListener 변경
-  - ConnectionFactory 객체를 준비한다.
-  - DAO 구현체에 ConnectionFactory 객체를 주입한다.
-- kny.cook.dao.mariadb.XxxDaoImpl 변경
-  - 생성자에서 ConnectionFactory 객체를 받는다.
-  - 직접 Connection 객체를 생성하는 대신에 
-  ConnectionFactory 객체를 통해 Connection 얻는다.
+- src/main/java/kny/cook/ServerApp.java 변경
 
 
-### 메서드 마다 커넥션을 구분하는 방식의 문제점
+### 작업1: 커넥션 팩토리에서 생성한 Connection 객체를 스레드에 보관하라.
 
-- 메서드 마다 별도의 커넥션을 사용한다.
-- 따라서 PhotoBoardDao의 insert()와 PhotoFileDao의 insert()를 
-  한 단위 작업으로 묶을 수 없다.
-- 즉 사진 게시글 입력과 첨부 파일 입력을 한 단위의 작업으로 다룰 수 없다.
-- 트랜잭션을 구현할 수 없다. 
+- kny.cook.util.ConnectionFactory 변경
+  - getConnection() 변경
+    - 스레드에 보관된 Connection 객체가 없다면, 새로 생성하여 리턴한다.
+    - 새로 생성한 Connection 객체는 스레드에 보관한다.
+    - 스레드에 보관된 Connection 객체가 있다면 그 객체를 꺼내 리턴한다.
+    
+#### 문제점
+
+- 현재 스레드풀(ExecutorService)을 이용하여 스레드를 관리하고 있다.
+- 스레드를 사용한 후(클라이언트 요청에 응답을 완료한 후)에 
+  스레드를 버리지 않고 풀에 보관했다가
+  다음 클라이언트 요청에 재사용한다.
+- DAO가 사용하는 Connection 객체는 스레드에 보관한다.
+- DAO의 메서드(예: findAll(), insert() 등)에서 Connection을 사용한 후에 
+  닫는다.(이게 문제이다!!!!)
+- 따라서 스레드에 보관한 Connection은 DAO 작업이 끝난 후 닫힌 상태가 된다.
+- 그래서 다음 클라이언트 요청을 처리하기 위해 스레드를 재사용할 때
+  그 스레드에 있는 Connection은 닫힌 Connection이기 때문에 
+  DAO가 작업할 때 오류가 발생한다. 
+
+#### 해결책
+
+- 클라이언트에게 응답을 완료한 후에 스레드에 보관된 Connection 객체를 제거한다.
+- 다음에 클라이언트 요청을 처리하기 위해 같은 스레드가 사용되더라도 
+  이미 그 스레드에는 Connection 객체가 없기 때문에 
+  ConnectionFactory는 새 Connection을 만들어 리턴할 것이다.
   
+### 작업2: 클라이언트에 응답을 한 후 스레드에 보관된 Connection 객체를 제거하라.
+
+- kny.cook.util.ConnectionFactory 변경
+  - Thread에 보관된 Connection 객체를 제거하는 메서드를 추가한다.
+  - removeConnection()
+- kny.cook.DataLoaderListener 변경
+  - ServerApp에서 ConnectionFactory를 사용할 수 있도록 맵에 보관하여 리턴한다.
+- kny.cook.ServerApp 변경
+  - 클라이언트 요청을 처리한 후에 
+    ConnectionFactory를 통해 Thread에서 Connection을 제거한다.

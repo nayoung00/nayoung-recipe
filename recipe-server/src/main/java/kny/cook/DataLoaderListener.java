@@ -11,17 +11,19 @@ import kny.cook.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
-
   @Override
   public void contextInitialized(Map<String, Object> context) {
     try {
-      // DB 연결 정
+      // DB 연결 정보
       String jdbcUrl = "jdbc:mariadb://localhost:3306/recipedb";
       String username = "study";
       String password = "1111";
 
-      ConnectionFactory conFactory = new ConnectionFactory(jdbcUrl, username, password);
+      ConnectionFactory conFactory = new ConnectionFactory(
+          jdbcUrl, username, password);
 
+      context.put("connectionFactory", conFactory);
+      
       context.put("boardDao", new BoardDaoImpl(conFactory));
       context.put("recipeDao", new RecipeDaoImpl(conFactory));
       context.put("memberDao", new MemberDaoImpl(conFactory));

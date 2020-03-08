@@ -82,7 +82,6 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public int update(Member member) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
     try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement()) {
 

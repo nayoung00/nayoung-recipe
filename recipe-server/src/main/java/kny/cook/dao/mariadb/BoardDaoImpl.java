@@ -20,7 +20,10 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int insert(Board board) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
+    
+    
+    try (Connection con = conFactory.getConnection(); 
+        Statement stmt = con.createStatement()) {
 
       int result =
           stmt.executeUpdate("insert into rms_board(conts) values('" + board.getTitle() + "')");
@@ -33,7 +36,8 @@ public class BoardDaoImpl implements BoardDao {
   public List<Board> findAll() throws Exception {
     try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select board_id, conts, cdt, vw_cnt from rms_board")) {
+        ResultSet rs = stmt.executeQuery(
+            "select board_id, conts, cdt, vw_cnt from rms_board order by board_id desc")) {
 
       ArrayList<Board> list = new ArrayList<>();
 
@@ -88,8 +92,6 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int delete(int no) throws Exception {
-    Class.forName("org.mariadb.jdbc.Driver");
-
     try (Connection con = conFactory.getConnection(); 
         Statement stmt = con.createStatement()) {
 
