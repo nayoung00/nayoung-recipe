@@ -16,8 +16,7 @@ public class MemberDetailServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-    int no= Prompt.getInt(in, out, "번호? ");
-
+    int no = Prompt.getInt(in, out, "번호? ");
     Member member = memberDao.findByNo(no);
 
     if (member != null) {

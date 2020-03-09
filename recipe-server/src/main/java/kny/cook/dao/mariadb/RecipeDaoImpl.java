@@ -25,10 +25,10 @@ public class RecipeDaoImpl implements RecipeDao {
             "insert into rms_recipe(cook,material,met,expense,time) values(?,?,?,?,?)")) {
 
       stmt.setString(1, recipe.getCook());
-      stmt.setString(1, recipe.getMaterial());
-      stmt.setString(1, recipe.getMethod());
-      stmt.setInt(1, recipe.getExpense());
-      stmt.setInt(1, recipe.getTime());
+      stmt.setString(2, recipe.getMaterial());
+      stmt.setString(3, recipe.getMethod());
+      stmt.setInt(4, recipe.getExpense());
+      stmt.setInt(5, recipe.getTime());
 
       return stmt.executeUpdate();
     }
@@ -94,11 +94,11 @@ public class RecipeDaoImpl implements RecipeDao {
             "update rms_recipe set cook= ?, material=?, met=?, expense=?, time=? where recipe_id=?")) {
 
       stmt.setString(1, recipe.getCook());
-      stmt.setString(1, recipe.getMaterial());
-      stmt.setString(1, recipe.getMethod());
-      stmt.setInt(1, recipe.getExpense());
-      stmt.setInt(1, recipe.getTime());
-      stmt.setInt(1, recipe.getNo());
+      stmt.setString(2, recipe.getMaterial());
+      stmt.setString(3, recipe.getMethod());
+      stmt.setInt(4, recipe.getExpense());
+      stmt.setInt(5, recipe.getTime());
+      stmt.setInt(6, recipe.getNo());
 
       return stmt.executeUpdate();
     }

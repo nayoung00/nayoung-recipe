@@ -75,11 +75,9 @@ public class MemberDaoImpl implements MemberDao {
           member.setName(rs.getString("name"));
           member.setEmail(rs.getString("email"));
           member.setPassword(rs.getString("pwd"));
-          member.setRegisteredDate(rs.getDate("cdt"));
           member.setTel(rs.getString("tel"));
           member.setPhoto(rs.getString("photo"));
           return member;
-
         } else {
           return null;
         }
@@ -95,11 +93,11 @@ public class MemberDaoImpl implements MemberDao {
             "update rms_member set name= ?, email=?, pwd=password(?), tel=?, photo=? where member_id=?")) {
 
       stmt.setString(1, member.getName());
-      stmt.setString(3, member.getEmail());
-      stmt.setString(2, member.getPassword());
-      stmt.setString(5, member.getTel());
-      stmt.setString(4, member.getPhoto());
-      stmt.setInt(4, member.getNo());
+      stmt.setString(2, member.getEmail());
+      stmt.setString(3, member.getPassword());
+      stmt.setString(4, member.getTel());
+      stmt.setString(5, member.getPhoto());
+      stmt.setInt(6, member.getNo());
 
       int result = stmt.executeUpdate();
       return result;
