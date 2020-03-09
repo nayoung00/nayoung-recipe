@@ -9,17 +9,18 @@ import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.sql.PlatformTransactionManager;
+import kny.cook.sql.TransactionTemplate;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
-  PlatformTransactionManager txManager;
+  TransactionTemplate transactionTemplate;
   PhotoBoardDao photoBoardDao;
   PhotoFileDao photoFileDao;
 
   public PhotoBoardUpdateServlet(PlatformTransactionManager txManager, PhotoBoardDao photoBoardDao,
       PhotoFileDao photoFileDao) {
-    this.txManager = txManager;
+    this.transactionTemplate = new TransactionTemplate(txManager);
     this.photoBoardDao = photoBoardDao;
     this.photoFileDao = photoFileDao;
   }
@@ -40,15 +41,13 @@ public class PhotoBoardUpdateServlet implements Servlet {
         Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle(), old.getTitle())));
     photoBoard.setNo(no);
 
-    txManager.beginTransaction();
 
-    try {
+    transactionTemplate.execute(() -> {
       if (photoBoardDao.update(photoBoard) == 0) {
         throw new Exception("사진 게시글 변경에 실패했습니다.");
       }
 
       printPhotoFiles(out, no);
-
       out.println();
       out.println("사진은 일부만 변경할 수 없습니다.");
       out.println("전체를 새로 등록해야 합니다.");
@@ -56,23 +55,16 @@ public class PhotoBoardUpdateServlet implements Servlet {
       String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/n) ");
 
       if (response.equalsIgnoreCase("y")) {
-
         photoFileDao.deleteAll(no);
-
         List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
-
         for (PhotoFile photoFile : photoFiles) {
           photoFile.setBoardNo(no);
           photoFileDao.insert(photoFile);
         }
       }
-      txManager.commit();
       out.println("사진 게시글을 변경했습니다.");
-
-    } catch (Exception e) {
-      txManager.rollback();
-      out.println(e.getMessage());
-    }
+      return null;
+    });
   }
 
   private void printPhotoFiles(PrintStream out, int boardNo) throws Exception {

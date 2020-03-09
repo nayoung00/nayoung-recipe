@@ -11,11 +11,13 @@ import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.domain.Recipe;
 import kny.cook.sql.PlatformTransactionManager;
+import kny.cook.sql.TransactionCallback;
+import kny.cook.sql.TransactionTemplate;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
 
-  PlatformTransactionManager txManager;
+  TransactionTemplate transactionTemplate;
   PhotoBoardDao photoBoardDao;
   RecipeDao recipeDao;
   PhotoFileDao photoFileDao;
@@ -23,7 +25,7 @@ public class PhotoBoardAddServlet implements Servlet {
   public PhotoBoardAddServlet(PlatformTransactionManager txManager, PhotoBoardDao photoBoardDao,
       RecipeDao recipeDao, PhotoFileDao photoFileDao) {
 
-    this.txManager = txManager;
+    this.transactionTemplate = new TransactionTemplate(txManager);
     this.photoBoardDao = photoBoardDao;
     this.recipeDao = recipeDao;
     this.photoFileDao = photoFileDao;
@@ -45,26 +47,26 @@ public class PhotoBoardAddServlet implements Servlet {
 
     photoBoard.setRecipe(recipe);
 
-    txManager.beginTransaction();
+    List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
 
+    transactionTemplate.execute(new TransactionCallback() {
 
-    try {
-      if (photoBoardDao.insert(photoBoard) == 0) {
-        throw new Exception("사진 게시글 등록에 실패했습니다.");
+      @Override
+      public Object doInTransaction() throws Exception {
+
+        if (photoBoardDao.insert(photoBoard) == 0) {
+          throw new Exception("사진 게시글 등록에 실패했습니다.");
+
+        }
+        for (PhotoFile photoFile : photoFiles) {
+          photoFile.setBoardNo(photoBoard.getNo());
+          photoFileDao.insert(photoFile);
+        }
+
+        out.println("새 사진 게시글을 등록했습니다.");
+        return null;
       }
-      List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
-      for (PhotoFile photoFile : photoFiles) {
-        photoFile.setBoardNo(photoBoard.getNo());
-        photoFileDao.insert(photoFile);
-      }
-      txManager.commit();
-      out.println("새 사진 게시글을 등록했습니다.");
-
-    } catch (Exception e) {
-      txManager.rollback();
-      out.println(e.getMessage());
-
-    }
+    });
   }
 
   private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
