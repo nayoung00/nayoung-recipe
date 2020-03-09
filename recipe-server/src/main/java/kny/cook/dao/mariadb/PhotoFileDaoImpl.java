@@ -1,8 +1,8 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.PhotoFileDao;
@@ -19,42 +19,45 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
   @Override
   public int insert(PhotoFile photoFile) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection();
+        PreparedStatement stmt =
+            con.prepareStatement("insert into rms_photo_file(photo_id, file_path) values(?,?)")) {
 
-      String query =
-          String.format("insert into rms_photo_file(photo_id, file_path) values(%d, '%s')",
-              photoFile.getBoardNo(), photoFile.getFilepath());
-      int result = stmt.executeUpdate(query);
-      return result;
+      stmt.setInt(1, photoFile.getBoardNo());
+      stmt.setString(2, photoFile.getFilepath());
+
+      return stmt.executeUpdate();
     }
   }
 
   @Override
   public List<PhotoFile> findAll(int boardNo) throws Exception {
     try (Connection con = dataSource.getConnection();
-        Statement stmt = con.createStatement();
-        ResultSet rs =
-            stmt.executeQuery("select photo_file_id, photo_id, file_path" + " from rms_photo_file"
-                + " where photo_id=" + boardNo + " order by photo_file_id asc")) {
-      ArrayList<PhotoFile> list = new ArrayList<>();
-      while (rs.next()) {
-        list.add(new PhotoFile() //
-            .setNo(rs.getInt("photo_file_id")) //
-            .setFilepath(rs.getString("file_path")) //
-            .setBoardNo(rs.getInt("photo_id")));
+        PreparedStatement stmt = con.prepareStatement("select photo_file_id, photo_id, file_path"
+            + " from rms_photo_file" + " where photo_id=? order by photo_file_id asc")) {
+
+      stmt.setInt(1, boardNo);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        ArrayList<PhotoFile> list = new ArrayList<>();
+        while (rs.next()) {
+          list.add(new PhotoFile() //
+              .setNo(rs.getInt("photo_file_id")) //
+              .setFilepath(rs.getString("file_path")) //
+              .setBoardNo(rs.getInt("photo_id")));
+        }
+        return list;
       }
-      return list;
     }
   }
 
-
   @Override
   public int deleteAll(int boardNo) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
-      int result = stmt.executeUpdate( //
-          "delete from rms_photo_file" //
-              + " where photo_id=" + boardNo);
-      return result;
+    try (Connection con = dataSource.getConnection();
+        PreparedStatement stmt =
+            con.prepareStatement("delete from rms_photo_file where photo_id=?")) {
+      stmt.setInt(1, boardNo);
+      return stmt.executeUpdate();
     }
   }
 }

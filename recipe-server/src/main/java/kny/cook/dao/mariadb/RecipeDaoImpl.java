@@ -1,8 +1,8 @@
 package kny.cook.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import kny.cook.dao.RecipeDao;
@@ -20,89 +20,97 @@ public class RecipeDaoImpl implements RecipeDao {
   @Override
   public int insert(Recipe recipe) throws Exception {
 
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection();
+        PreparedStatement stmt = con.prepareStatement(
+            "insert into rms_recipe(cook,material,met,expense,time) values(?,?,?,?,?)")) {
 
-      con.setAutoCommit(true);
+      stmt.setString(1, recipe.getCook());
+      stmt.setString(1, recipe.getMaterial());
+      stmt.setString(1, recipe.getMethod());
+      stmt.setInt(1, recipe.getExpense());
+      stmt.setInt(1, recipe.getTime());
 
-      int result = stmt.executeUpdate("insert into rms_recipe(cook,material,met,expense,time)"
-          + " values('" + recipe.getCook() + "','" + recipe.getMaterial() + "','"
-          + recipe.getMethod() + "', '" + recipe.getExpense() + "','" + recipe.getTime() + "')");
-
-      return result;
+      return stmt.executeUpdate();
     }
+
   }
 
   @Override
   public List<Recipe> findAll() throws Exception {
     try (Connection con = dataSource.getConnection();
-        Statement stmt = con.createStatement();
-        ResultSet rs = stmt
-            .executeQuery("select recipe_id, cook, material, met, expense, time from rms_recipe")) {
+        PreparedStatement stmt = con.prepareStatement(
+            "select recipe_id, cook, material, met, expense, time from rms_recipe")) {
+      try (ResultSet rs = stmt.executeQuery()) {
 
-      ArrayList<Recipe> list = new ArrayList<>();
+        ArrayList<Recipe> list = new ArrayList<>();
 
-      while (rs.next()) {
-        Recipe recipe = new Recipe();
-        recipe.setNo(rs.getInt("recipe_id"));
-        recipe.setCook(rs.getString("cook"));
-        recipe.setMaterial(rs.getString("material"));
-        recipe.setMethod(rs.getString("met"));
-        recipe.setExpense(rs.getInt("expense"));
-        recipe.setTime(rs.getInt("time"));
+        while (rs.next()) {
+          Recipe recipe = new Recipe();
+          recipe.setNo(rs.getInt("recipe_id"));
+          recipe.setCook(rs.getString("cook"));
+          recipe.setMaterial(rs.getString("material"));
+          recipe.setMethod(rs.getString("met"));
+          recipe.setExpense(rs.getInt("expense"));
+          recipe.setTime(rs.getInt("time"));
 
-        list.add(recipe);
+          list.add(recipe);
+        }
+        return list;
       }
-      return list;
     }
   }
 
   @Override
   public Recipe findByNo(int no) throws Exception {
     try (Connection con = dataSource.getConnection();
-        Statement stmt = con.createStatement();
+        PreparedStatement stmt = con.prepareStatement(
+            "select recipe_id, cook, material, met, expense, time from rms_recipe where recipe_id=?")) {
+      stmt.setInt(1, no);
+      try (ResultSet rs = stmt.executeQuery()) {
 
-        ResultSet rs = stmt.executeQuery(
-            "select recipe_id, cook, material, met, expense, time from rms_recipe where recipe_id="
-                + no)) {
+        if (rs.next()) {
+          Recipe recipe = new Recipe();
+          recipe.setNo(rs.getInt("recipe_id"));
+          recipe.setCook(rs.getString("cook"));
+          recipe.setMaterial(rs.getString("material"));
+          recipe.setMethod(rs.getString("met"));
+          recipe.setExpense(rs.getInt("expense"));
+          recipe.setTime(rs.getInt("time"));
 
-      if (rs.next()) {
+          return recipe;
 
-        Recipe recipe = new Recipe();
-        recipe.setNo(rs.getInt("recipe_id"));
-        recipe.setCook(rs.getString("cook"));
-        recipe.setMaterial(rs.getString("material"));
-        recipe.setMethod(rs.getString("met"));
-        recipe.setExpense(rs.getInt("expense"));
-        recipe.setTime(rs.getInt("time"));
-
-        return recipe;
-
-      } else {
-        return null;
+        } else {
+          return null;
+        }
       }
     }
   }
 
   @Override
   public int update(Recipe recipe) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection();
 
-      int result = stmt.executeUpdate(
-          "update rms_recipe set cook= '" + recipe.getCook() + "', material='" + recipe.getMethod()
-              + "', met='" + recipe.getMethod() + "', expense='" + recipe.getExpense() + "', time='"
-              + recipe.getTime() + "' where recipe_id=" + recipe.getNo());
+        PreparedStatement stmt = con.prepareStatement(
+            "update rms_recipe set cook= ?, material=?, met=?, expense=?, time=? where recipe_id=?")) {
 
-      return result;
+      stmt.setString(1, recipe.getCook());
+      stmt.setString(1, recipe.getMaterial());
+      stmt.setString(1, recipe.getMethod());
+      stmt.setInt(1, recipe.getExpense());
+      stmt.setInt(1, recipe.getTime());
+      stmt.setInt(1, recipe.getNo());
+
+      return stmt.executeUpdate();
     }
   }
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
-
-      int result = stmt.executeUpdate("delete from rms_recipe where recipe_id = " + no);
-      return result;
+    try (Connection con = dataSource.getConnection();
+        PreparedStatement stmt =
+            con.prepareStatement("delete from rms_recipe where recipe_id =?")) {
+      stmt.setInt(1, no);
+      return stmt.executeUpdate();
     }
   }
-
 }
