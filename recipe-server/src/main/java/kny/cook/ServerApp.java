@@ -22,6 +22,7 @@ import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
 import kny.cook.servlet.BoardListServlet;
 import kny.cook.servlet.BoardUpdateServlet;
+import kny.cook.servlet.LoginServlet;
 import kny.cook.servlet.MemberAddServlet;
 import kny.cook.servlet.MemberDeleteServlet;
 import kny.cook.servlet.MemberDetailServlet;
@@ -112,6 +113,9 @@ public class ServerApp {
         new PhotoBoardDeleteServlet(txManager, photoBoardDao, photoFileDao));
     servletMap.put("/photoboard/update",
         new PhotoBoardUpdateServlet(txManager, photoBoardDao, photoFileDao));
+
+
+    servletMap.put("/auth/login", new LoginServlet(memberDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");
