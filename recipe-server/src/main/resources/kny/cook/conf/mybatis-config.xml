@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <properties resource="kny/cook/conf/jdbc.properties"></properties>
+
+  <typeAliases>
+    <typeAlias type="kny.cook.domain.Board" alias="Board"/>
+    <typeAlias type="kny.cook.domain.Recipe" alias="Recipe"/>
+    <typeAlias type="kny.cook.domain.Member" alias="Member"/>
+    <typeAlias type="kny.cook.domain.PhotoBoard" alias="PhotoBoard"/>
+    <typeAlias type="kny.cook.domain.PhotoFile" alias="PhotoFile"/>
+  </typeAliases>
+
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <mappers>
+    <mapper resource="kny/cook/mapper/BoardMapper.xml"/>
+    <mapper resource="kny/cook/mapper/MemberMapper.xml"/>
+    <mapper resource="kny/cook/mapper/RecipeMapper.xml"/>
+    <mapper resource="kny/cook/mapper/PhotoBoardMapper.xml"/>
+    <mapper resource="kny/cook/mapper/PhotoFileMapper.xml"/>
+    
+  </mappers>
+</configuration>
