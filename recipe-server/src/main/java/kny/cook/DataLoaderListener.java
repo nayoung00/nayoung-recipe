@@ -1,6 +1,10 @@
 package kny.cook;
 
+import java.io.InputStream;
 import java.util.Map;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.mariadb.BoardDaoImpl;
 import kny.cook.dao.mariadb.MemberDaoImpl;
@@ -22,13 +26,17 @@ public class DataLoaderListener implements ApplicationContextListener {
 
       DataSource dataSource = new DataSource(jdbcUrl, username, password);
 
+      // Mybatis 객체 준비
+      InputStream inputStream = Resources.getResourceAsStream("kny/cook/conf/mybatis-config.xml");
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
       context.put("dataSource", dataSource);
 
-      context.put("boardDao", new BoardDaoImpl(dataSource));
-      context.put("recipeDao", new RecipeDaoImpl(dataSource));
-      context.put("memberDao", new MemberDaoImpl(dataSource));
-      context.put("photoBoardDao", new PhotoBoardDaoImpl(dataSource));
-      context.put("photoFileDao", new PhotoFileDaoImpl(dataSource));
+      context.put("boardDao", new BoardDaoImpl(sqlSessionFactory));
+      context.put("recipeDao", new RecipeDaoImpl(sqlSessionFactory));
+      context.put("memberDao", new MemberDaoImpl(sqlSessionFactory));
+      context.put("photoBoardDao", new PhotoBoardDaoImpl(sqlSessionFactory));
+      context.put("photoFileDao", new PhotoFileDaoImpl(sqlSessionFactory));
 
       PlatformTransactionManager txManager = new PlatformTransactionManager(dataSource);
       context.put("transactionManager", txManager);
