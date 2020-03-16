@@ -18,8 +18,8 @@ public class MemberSearchServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
 
     String keyword = Prompt.getString(in, out, "검색어? ");
-    
-    List<Member> members = memberDao.findByKeWord(keyword);
+
+    List<Member> members = memberDao.findByKeyword(keyword);
     for (Member member : members) {
       out.printf("%d, %s, %s, %s, %s\n", member.getNo(), member.getName(), member.getEmail(),
           member.getTel(), member.getRegisteredDate());

@@ -17,7 +17,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   @Override
   public int insert(PhotoBoard photoBoard) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int count = sqlSession.insert("photoBoardMapper.insertPhotoBoard", photoBoard);
+      int count = sqlSession.insert("PhotoBoardMapper.insertPhotoBoard", photoBoard);
       sqlSession.commit();
       return count;
     }
@@ -34,7 +34,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   @Override
   public int update(PhotoBoard photoBoard) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int count = sqlSession.update("photoBoardMapper.updatePhotoBoard", photoBoard);
+      int count = sqlSession.update("PhotoBoardMapper.updatePhotoBoard", photoBoard);
       sqlSession.commit();
       return count;
     }
@@ -53,7 +53,7 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   @Override
   public List<PhotoBoard> findAllByRecipeNo(int RecipeNo) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.selectList("photoBoardMapper.selectPhotoBoard", RecipeNo);
+      return sqlSession.selectList("PhotoBoardMapper.selectPhotoBoard", RecipeNo);
     }
   }
 }

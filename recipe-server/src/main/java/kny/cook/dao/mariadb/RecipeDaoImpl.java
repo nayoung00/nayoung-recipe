@@ -27,7 +27,7 @@ public class RecipeDaoImpl implements RecipeDao {
   @Override
   public List<Recipe> findAll() throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.selectList("RecipeMApper.selectRecipe");
+      return sqlSession.selectList("RecipeMapper.selectRecipe");
     }
   }
 

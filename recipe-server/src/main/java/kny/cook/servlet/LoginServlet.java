@@ -18,7 +18,7 @@ public class LoginServlet implements Servlet {
     String email = Prompt.getString(in, out, "email? ");
     String password = Prompt.getString(in, out, "password? ");
 
-    Member member = memberDao.findByEmailandPassword(email, password);
+    Member member = memberDao.findByEmailAndPassword(email, password);
 
     if (member != null) {
       out.printf("'%s'님 환영합니다.\n", member.getName());
