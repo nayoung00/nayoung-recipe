@@ -16,7 +16,7 @@
   </resultMap>
     
   <insert id="insertMember" parameterType="Member">
-    insert int rms_member(
+    insert into rms_member(
       name, 
       email, 
       pwd, 
