@@ -114,7 +114,6 @@ public class ServerApp {
     servletMap.put("/photoboard/update",
         new PhotoBoardUpdateServlet(txManager, photoBoardDao, photoFileDao));
 
-
     servletMap.put("/auth/login", new LoginServlet(memberDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {

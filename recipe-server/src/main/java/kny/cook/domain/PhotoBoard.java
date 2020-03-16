@@ -2,6 +2,7 @@ package kny.cook.domain;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 public class PhotoBoard implements Serializable {
 
@@ -13,12 +14,12 @@ public class PhotoBoard implements Serializable {
   Date createdDate;
   int viewCount;
   Recipe recipe;
-
+  List<PhotoFile> files;
 
   @Override
   public String toString() {
     return "PhotoBoard [no=" + no + ", title=" + title + ", createDate=" + createdDate
-        + ", viewCount=" + viewCount + ", recipe=" + recipe + "]";
+        + ", viewCount=" + viewCount + ", recipe=" + recipe + ", files=" + files + "]";
   }
 
 

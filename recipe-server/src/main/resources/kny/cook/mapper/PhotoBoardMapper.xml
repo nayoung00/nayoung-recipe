@@ -12,8 +12,8 @@
     <result column="vw_cnt"    property="viewCount"/>
     
     <association property="recipe" javaType="Recipe">
-      <id column="recipe_id"   property="no"/>
-      <result column="recipe_titl"  property="title"/>
+      <id column="recipe_id" property="no"/>
+      <result column="cook" property="cook"/>
     </association>
     
     <collection property="files" ofType="PhotoFile">
@@ -25,7 +25,7 @@
   <insert id="insertPhotoBoard" parameterType="PhotoBoard"
     useGeneratedKeys="true" keyColumn="photo_id" keyProperty="no">
     insert into rms_photo(titl,recipe_id) 
-    values(#{title}, #{recipe.no})
+    values(#{cook}, #{recipe.no})
   </insert>
   
   <select id="selectPhotoBoard" resultMap="PhotoBoardMap" parameterType="int">
@@ -43,19 +43,17 @@
 
   <select id="selectDetail" resultMap="PhotoBoardMap" parameterType="int">
     select
-      p.photo_id,
       p.titl,
       p.cdt,
       p.vw_cnt,
       r.recipe_id,
-      r.titl recipe_titl,
+      r.cook,
       f.photo_file_id,
       f.file_path
     from rms_photo p
-      inner join rms_recipe r on p.recipe_id=r.reicpe_id
+      inner join rms_recipe r on p.recipe_id=r.recipe_id
       left outer join rms_photo_file f on p.photo_id=f.photo_id
-    where 
-      p.photo_id=#{no}
+    where photo_id=#{no}
   </select>
   
   <update id="updatePhotoBoard" parameterType="PhotoBoard">
@@ -69,10 +67,3 @@
     where photo_id=#{no}
   </delete>
 </mapper>
-
-
-
-
-
-
-

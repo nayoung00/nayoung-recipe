@@ -6,7 +6,6 @@ public class Recipe implements Serializable {
 
   private static final long serialVersionUID = 20200203L;
 
-
   private int no;
   private String cook;
   private String material;
