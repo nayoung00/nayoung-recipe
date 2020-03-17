@@ -18,7 +18,6 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   public int insert(PhotoBoard photoBoard) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       int count = sqlSession.insert("PhotoBoardMapper.insertPhotoBoard", photoBoard);
-      sqlSession.commit();
       return count;
     }
   }
@@ -35,7 +34,6 @@ public class PhotoBoardDaoImpl implements PhotoBoardDao {
   public int update(PhotoBoard photoBoard) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       int count = sqlSession.update("PhotoBoardMapper.updatePhotoBoard", photoBoard);
-      sqlSession.commit();
       return count;
     }
 

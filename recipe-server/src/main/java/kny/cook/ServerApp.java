@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.ibatis.session.SqlSessionFactory;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.dao.BoardDao;
 import kny.cook.dao.MemberDao;
@@ -40,13 +41,15 @@ import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
-import kny.cook.sql.DataSource;
 import kny.cook.sql.PlatformTransactionManager;
+import kny.cook.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
 
   Set<ApplicationContextListener> listeners = new HashSet<>();
+
   Map<String, Object> context = new HashMap<>();
+
   Map<String, Servlet> servletMap = new HashMap<>();
 
   ExecutorService executorService = Executors.newCachedThreadPool();
@@ -75,7 +78,7 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    DataSource dataSource = (DataSource) context.get("dataSource");
+    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("SqlSessionFactory");
 
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
@@ -126,7 +129,8 @@ public class ServerApp {
         executorService.submit(() -> {
           processRequest(socket);
 
-          dataSource.removeConnection();
+          ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
+
           System.out.println("---------------------------------");
         });
 

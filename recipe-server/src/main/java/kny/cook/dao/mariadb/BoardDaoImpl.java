@@ -19,7 +19,6 @@ public class BoardDaoImpl implements BoardDao {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       int count = sqlSession.insert("BoardMapper.insertBaord", board);
-      sqlSession.commit();
       return count;
     }
   }
