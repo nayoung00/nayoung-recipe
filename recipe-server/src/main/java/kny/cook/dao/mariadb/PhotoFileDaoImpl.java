@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import kny.cook.dao.PhotoFileDao;
+import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 
 public class PhotoFileDaoImpl implements PhotoFileDao {
@@ -15,9 +16,9 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
   }
 
   @Override
-  public int insert(PhotoFile photoFile) throws Exception {
+  public int insert(PhotoBoard photoBoard) throws Exception {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int count = sqlSession.insert("PhotoFileMapper.insertPhotoFile", photoFile);
+      int count = sqlSession.insert("PhotoFileMapper.insertPhotoFile", photoBoard);
       return count;
     }
   }

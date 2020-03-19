@@ -48,6 +48,7 @@ public class PhotoBoardAddServlet implements Servlet {
     photoBoard.setRecipe(recipe);
 
     List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
+    photoBoard.setFiles(photoFiles);
 
     transactionTemplate.execute(new TransactionCallback() {
 
@@ -58,11 +59,7 @@ public class PhotoBoardAddServlet implements Servlet {
           throw new Exception("사진 게시글 등록에 실패했습니다.");
 
         }
-        for (PhotoFile photoFile : photoFiles) {
-          photoFile.setBoardNo(photoBoard.getNo());
-          photoFileDao.insert(photoFile);
-        }
-
+        photoFileDao.insert(photoBoard);
         out.println("새 사진 게시글을 등록했습니다.");
         return null;
       }

@@ -13,9 +13,18 @@
     <result column="time" property="time"/>
   </resultMap>
   
-    <select id="selectRecipe" resultMap="RecipeMap">
+    <sql id="select1">
     select
-    recipe_id, cook, material, met, expense, time 
+      recipe_id, 
+      cook, 
+      material, 
+      met,
+      expense, 
+      time 
+    </sql>
+  
+    <select id="selectRecipe" resultMap="RecipeMap">
+      <include refid="select1"/>
     from rms_recipe
   </select>
   
@@ -23,26 +32,40 @@
   <select id="insertRecipe" parameterType ="Recipe">
    insert 
      into rms_recipe(cook,material,met,expense,time) 
-     values(#{cook},#{material},#{met},#{expense},#{time})
+     values(#{cook},#{material},#{method},#{expense},#{time})
   </select>
   
   
   <select id="detailRecipe" resultMap="RecipeMap" parameterType ="int">
-   select 
-     recipe_id, cook, material, met, expense, time 
+   <include refid="select1"/>
    from 
-    rms_recipe where recipe_id=#{no}
+     rms_recipe 
+    <where>
+     <if test="cook !=null">cook like concat('%',#{cook},'%')</if>
+     <if test="material !=null">material like concat('%',#{material},'%')</if>
+     <if test="method !=null">met like concat('%',#{method},'%')</if>
+     <if test="time !=null">and time &lt;= #{time}</if>
+     <if test="expense !=null">and expense &lt;= #{expense}</if>
+    </where> 
   </select>
   
    <select id="updateRecipe" resultMap="RecipeMap" parameterType ="recipe">
-   update 
-     rms_recipe set cook=#{cook}, material=#{material}, met=#{met}, expense=#{expense}, time=#{time} 
+   update rms_recipe 
+   <set>
+     <if test="cook !=null and cook !=''"> cook=#{cook}, </if> 
+     <if test="material !=null and material !=''"> material=#{material},</if> 
+     <if test="met !=null and met !=''"> met=#{method}, </if> 
+    <if test="expense !=null and expense !=''"> expense=#{expense}, </if> 
+    <if test="time !=null and time !=''"> time=#{time} </if> 
+  </set> 
    where 
-     recipe_id=#{no}
+     recipe_id =#{no}
     </select>
     
   <select id="deleteRecipe" resultMap="RecipeMap" parameterType ="int">
-    delete from rms_recipe where recipe_id =#{no}
+    delete from rms_recipe 
+    where 
+      recipe_id =#{no}
   </select>
     
 </mapper>

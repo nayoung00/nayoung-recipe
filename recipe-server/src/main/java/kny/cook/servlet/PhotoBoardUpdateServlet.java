@@ -37,39 +37,41 @@ public class PhotoBoardUpdateServlet implements Servlet {
     }
 
     PhotoBoard photoBoard = new PhotoBoard();
+    photoBoard.setNo(no);
     photoBoard.setTitle(
         Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle(), old.getTitle())));
-    photoBoard.setNo(no);
 
+    printPhotoFiles(out, old);
+    out.println();
+    out.println("사진은 일부만 변경할 수 없습니다.");
+    out.println("전체를 새로 등록해야 합니다.");
+
+    String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/n) ");
+
+    if (response.equalsIgnoreCase("y")) {
+      photoBoard.setFiles(inputPhotoFiles(in, out));
+    }
+
+    List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
 
     transactionTemplate.execute(() -> {
       if (photoBoardDao.update(photoBoard) == 0) {
         throw new Exception("사진 게시글 변경에 실패했습니다.");
       }
 
-      printPhotoFiles(out, no);
-      out.println();
-      out.println("사진은 일부만 변경할 수 없습니다.");
-      out.println("전체를 새로 등록해야 합니다.");
-
-      String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/n) ");
-
-      if (response.equalsIgnoreCase("y")) {
+      if (photoBoard.getFiles() != null) {
         photoFileDao.deleteAll(no);
-        List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
-        for (PhotoFile photoFile : photoFiles) {
-          photoFile.setBoardNo(no);
-          photoFileDao.insert(photoFile);
-        }
+        photoFileDao.insert(photoBoard);
       }
+
       out.println("사진 게시글을 변경했습니다.");
       return null;
     });
   }
 
-  private void printPhotoFiles(PrintStream out, int boardNo) throws Exception {
+  private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {
     out.println("사진파일:");
-    List<PhotoFile> oldPhotoFiles = photoFileDao.findAll(boardNo);
+    List<PhotoFile> oldPhotoFiles = photoBoard.getFiles();
     for (PhotoFile photoFile : oldPhotoFiles) {
       out.printf("> %s\n", photoFile.getFilepath());
     }

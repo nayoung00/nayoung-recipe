@@ -22,7 +22,6 @@ public class PhotoBoard implements Serializable {
         + ", viewCount=" + viewCount + ", recipe=" + recipe + ", files=" + files + "]";
   }
 
-
   public int getNo() {
     return no;
   }
@@ -62,4 +61,14 @@ public class PhotoBoard implements Serializable {
   public void setRecipe(Recipe recipe) {
     this.recipe = recipe;
   }
+
+  public List<PhotoFile> getFiles() {
+    return files;
+  }
+
+  public void setFiles(List<PhotoFile> files) {
+    this.files = files;
+  }
+
+
 }

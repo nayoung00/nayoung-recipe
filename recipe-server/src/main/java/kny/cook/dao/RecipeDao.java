@@ -1,18 +1,22 @@
 package kny.cook.dao;
 
 import java.util.List;
+import java.util.Map;
 import kny.cook.domain.Recipe;
 
 public interface RecipeDao {
 
-  public int insert(Recipe recipe) throws Exception;
+  int insert(Recipe recipe) throws Exception;
 
-  public List<Recipe> findAll() throws Exception;
+  List<Recipe> findAll() throws Exception;
 
-  public Recipe findByNo(int no) throws Exception;
+  Recipe findByNo(int no) throws Exception;
 
-  public int update(Recipe recipe) throws Exception;
+  int update(Recipe recipe) throws Exception;
 
-  public int delete(int no) throws Exception;
+  int delete(int no) throws Exception;
 
+  default List<Recipe> findByKeyword(Map<String, Object> params) throws Exception {
+    return null;
+  }
 }

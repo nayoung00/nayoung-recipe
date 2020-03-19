@@ -23,7 +23,6 @@ public class DataLoaderListener implements ApplicationContextListener {
 
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
-
       context.put("boardDao", new BoardDaoImpl(sqlSessionFactory));
       context.put("recipeDao", new RecipeDaoImpl(sqlSessionFactory));
       context.put("memberDao", new MemberDaoImpl(sqlSessionFactory));

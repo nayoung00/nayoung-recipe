@@ -39,6 +39,7 @@ import kny.cook.servlet.RecipeAddServlet;
 import kny.cook.servlet.RecipeDeleteServlet;
 import kny.cook.servlet.RecipeDetailServlet;
 import kny.cook.servlet.RecipeListServlet;
+import kny.cook.servlet.RecipeSearchServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
 import kny.cook.sql.PlatformTransactionManager;
@@ -94,6 +95,7 @@ public class ServerApp {
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
     servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeDao));
     servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeDao));
+    servletMap.put("/recipe/search", new RecipeSearchServlet(recipeDao));
 
     servletMap.put("/member/list", new MemberListServlet(memberDao));
     servletMap.put("/member/add", new MemberAddServlet(memberDao));
@@ -170,7 +172,7 @@ public class ServerApp {
       String request = in.nextLine();
       System.out.printf("=> %s\n", request);
 
-      if (request.equalsIgnoreCase("/shotdown")) {
+      if (request.equalsIgnoreCase("/server/stop")) {
         quit(out);
         return;
       }
