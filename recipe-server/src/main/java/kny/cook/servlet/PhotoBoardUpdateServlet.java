@@ -4,25 +4,19 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.PhotoBoardDao;
-import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
-import kny.cook.sql.PlatformTransactionManager;
+import kny.cook.service.PhotoBoardService;
 import kny.cook.sql.TransactionTemplate;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
   TransactionTemplate transactionTemplate;
-  PhotoBoardDao photoBoardDao;
-  PhotoFileDao photoFileDao;
+  PhotoBoardService photoBoardService;
 
-  public PhotoBoardUpdateServlet(PlatformTransactionManager txManager, PhotoBoardDao photoBoardDao,
-      PhotoFileDao photoFileDao) {
-    this.transactionTemplate = new TransactionTemplate(txManager);
-    this.photoBoardDao = photoBoardDao;
-    this.photoFileDao = photoFileDao;
+  public PhotoBoardUpdateServlet(PhotoBoardService photoBoardService) {
+    this.photoBoardService = photoBoardService;
   }
 
   @Override
@@ -30,7 +24,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
 
     int no = Prompt.getInt(in, out, "번호? ");
 
-    PhotoBoard old = photoBoardDao.findByNo(no);
+    PhotoBoard old = photoBoardService.findByNo(no);
     if (old == null) {
       out.println("해당 번호의 게시글이 없습니다.");
       return;
@@ -53,20 +47,6 @@ public class PhotoBoardUpdateServlet implements Servlet {
     }
 
     List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
-
-    transactionTemplate.execute(() -> {
-      if (photoBoardDao.update(photoBoard) == 0) {
-        throw new Exception("사진 게시글 변경에 실패했습니다.");
-      }
-
-      if (photoBoard.getFiles() != null) {
-        photoFileDao.deleteAll(no);
-        photoFileDao.insert(photoBoard);
-      }
-
-      out.println("사진 게시글을 변경했습니다.");
-      return null;
-    });
   }
 
   private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {

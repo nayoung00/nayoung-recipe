@@ -2,15 +2,15 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.RecipeDao;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class RecipeDeleteServlet implements Servlet {
 
-  RecipeDao recipeDao;
+  RecipeService recipeService;
 
-  public RecipeDeleteServlet(RecipeDao recipeDao) {
-    this.recipeDao = recipeDao;
+  public RecipeDeleteServlet(RecipeService recipeService) {
+    this.recipeService = recipeService;
   }
 
   @Override
@@ -18,7 +18,7 @@ public class RecipeDeleteServlet implements Servlet {
 
     int no = Prompt.getInt(in, out, "번호? ");
 
-    if (recipeDao.delete(no) > 0) {
+    if (recipeService.delete(no) > 0) {
       out.println("레시피를 삭제했습니다.");
     } else {
       out.println("해당 번호의 레시피가 없습니다.");

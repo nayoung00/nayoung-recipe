@@ -3,15 +3,15 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.service.MemberService;
 import kny.cook.util.Prompt;
 
 public class MemberSearchServlet implements Servlet {
-  MemberDao memberDao;
+  MemberService memberService;
 
-  public MemberSearchServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
+  public MemberSearchServlet(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
@@ -19,7 +19,7 @@ public class MemberSearchServlet implements Servlet {
 
     String keyword = Prompt.getString(in, out, "검색어? ");
 
-    List<Member> members = memberDao.findByKeyword(keyword);
+    List<Member> members = memberService.findByKeyword(keyword);
     for (Member member : members) {
       out.printf("%d, %s, %s, %s, %s\n", member.getNo(), member.getName(), member.getEmail(),
           member.getTel(), member.getRegisteredDate());

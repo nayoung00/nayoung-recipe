@@ -3,20 +3,20 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.PhotoBoardDao;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.Recipe;
+import kny.cook.service.PhotoBoardService;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardListServlet implements Servlet {
 
-  PhotoBoardDao photoBoardDao;
-  RecipeDao recipeDao;
+  PhotoBoardService photoBoardService;
+  RecipeService recipeService;
 
-  public PhotoBoardListServlet(PhotoBoardDao photoBoardDao, RecipeDao recipeDao) {
-    this.photoBoardDao = photoBoardDao;
-    this.recipeDao = recipeDao;
+  public PhotoBoardListServlet(PhotoBoardService photoBoardService, RecipeService recipeService) {
+    this.photoBoardService = photoBoardService;
+    this.recipeService = recipeService;
   }
 
   @Override
@@ -24,7 +24,7 @@ public class PhotoBoardListServlet implements Servlet {
 
     int recipeNo = Prompt.getInt(in, out, "레시피 번호? ");
 
-    Recipe recipe = recipeDao.findByNo(recipeNo);
+    Recipe recipe = recipeService.findByNo(recipeNo);
 
     if (recipe == null) {
       out.println("레시피 번호가 유효하지 않습니다.");
@@ -34,7 +34,7 @@ public class PhotoBoardListServlet implements Servlet {
     out.printf("요리명: %s\n", recipe.getCook());
     out.println("------------------------------------------------------");
 
-    List<PhotoBoard> photoBoards = photoBoardDao.findAllByRecipeNo(recipeNo);
+    List<PhotoBoard> photoBoards = photoBoardService.findAllByRecipeNo(recipeNo);
 
     for (PhotoBoard photoBoard : photoBoards) {
       out.printf("%d, %s, %s, %d\n", photoBoard.getNo(), photoBoard.getTitle(),

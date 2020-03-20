@@ -2,16 +2,16 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.service.MemberService;
 import kny.cook.util.Prompt;
 
 public class MemberAddServlet implements Servlet {
 
-  MemberDao memberDao;
+  MemberService memberService;
 
-  public MemberAddServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
+  public MemberAddServlet(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
@@ -25,7 +25,7 @@ public class MemberAddServlet implements Servlet {
     member.setTel(Prompt.getString(in, out, "전화? "));
 
     out.flush();
-    if (memberDao.insert(member) > 0) {
+    if (memberService.insert(member) > 0) {
       out.println("새 회원을 등록 했습니다.");
     } else {
       out.println("새 회원을 등록 했습니다.");

@@ -2,15 +2,15 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.service.MemberService;
 import kny.cook.util.Prompt;
 
 public class LoginServlet implements Servlet {
-  MemberDao memberDao;
+  MemberService memberService;
 
-  public LoginServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
+  public LoginServlet(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
@@ -18,7 +18,7 @@ public class LoginServlet implements Servlet {
     String email = Prompt.getString(in, out, "email? ");
     String password = Prompt.getString(in, out, "password? ");
 
-    Member member = memberDao.findByEmailAndPassword(email, password);
+    Member member = memberService.findByEmailAndPassword(email, password);
 
     if (member != null) {
       out.printf("'%s'님 환영합니다.\n", member.getName());

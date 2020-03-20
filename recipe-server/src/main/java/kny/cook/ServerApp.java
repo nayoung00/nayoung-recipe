@@ -13,11 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.dao.BoardDao;
-import kny.cook.dao.MemberDao;
-import kny.cook.dao.PhotoBoardDao;
-import kny.cook.dao.PhotoFileDao;
-import kny.cook.dao.RecipeDao;
+import kny.cook.service.BoardService;
+import kny.cook.service.MemberService;
+import kny.cook.service.PhotoBoardService;
+import kny.cook.service.RecipeService;
 import kny.cook.servlet.BoardAddServlet;
 import kny.cook.servlet.BoardDeleteServlet;
 import kny.cook.servlet.BoardDetailServlet;
@@ -81,45 +80,41 @@ public class ServerApp {
 
     SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("SqlSessionFactory");
 
-    BoardDao boardDao = (BoardDao) context.get("boardDao");
-    RecipeDao recipeDao = (RecipeDao) context.get("recipeDao");
-    MemberDao memberDao = (MemberDao) context.get("memberDao");
-    PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
-    PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
+    BoardService boardService = (BoardService) context.get("boardService");
+    RecipeService recipeService = (RecipeService) context.get("recipeService");
+    MemberService memberService = (MemberService) context.get("memberService");
+    PhotoBoardService photoBoardService = (PhotoBoardService) context.get("photoBoardService");
 
     PlatformTransactionManager txManager =
         (PlatformTransactionManager) context.get("transactionManager");
 
-    servletMap.put("/recipe/list", new RecipeListServlet(recipeDao));
-    servletMap.put("/recipe/add", new RecipeAddServlet(recipeDao));
-    servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeDao));
-    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeDao));
-    servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeDao));
-    servletMap.put("/recipe/search", new RecipeSearchServlet(recipeDao));
+    servletMap.put("/recipe/list", new RecipeListServlet(recipeService));
+    servletMap.put("/recipe/add", new RecipeAddServlet(recipeService));
+    servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeService));
+    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeService));
+    servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeService));
+    servletMap.put("/recipe/search", new RecipeSearchServlet(recipeService));
 
-    servletMap.put("/member/list", new MemberListServlet(memberDao));
-    servletMap.put("/member/add", new MemberAddServlet(memberDao));
-    servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
-    servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
-    servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
-    servletMap.put("/member/search", new MemberSearchServlet(memberDao));
+    servletMap.put("/member/list", new MemberListServlet(memberService));
+    servletMap.put("/member/add", new MemberAddServlet(memberService));
+    servletMap.put("/member/detail", new MemberDetailServlet(memberService));
+    servletMap.put("/member/delete", new MemberDeleteServlet(memberService));
+    servletMap.put("/member/update", new MemberUpdateServlet(memberService));
+    servletMap.put("/member/search", new MemberSearchServlet(memberService));
 
-    servletMap.put("/board/list", new BoardListServlet(boardDao));
-    servletMap.put("/board/add", new BoardAddServlet(boardDao));
-    servletMap.put("/board/detail", new BoardDetailServlet(boardDao));
-    servletMap.put("/board/delete", new BoardDeleteServlet(boardDao));
-    servletMap.put("/board/update", new BoardUpdateServlet(boardDao));
+    servletMap.put("/board/list", new BoardListServlet(boardService));
+    servletMap.put("/board/add", new BoardAddServlet(boardService));
+    servletMap.put("/board/detail", new BoardDetailServlet(boardService));
+    servletMap.put("/board/delete", new BoardDeleteServlet(boardService));
+    servletMap.put("/board/update", new BoardUpdateServlet(boardService));
 
-    servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao, recipeDao));
-    servletMap.put("/photoboard/add",
-        new PhotoBoardAddServlet(txManager, photoBoardDao, recipeDao, photoFileDao));
-    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardDao, photoFileDao));
-    servletMap.put("/photoboard/delete",
-        new PhotoBoardDeleteServlet(txManager, photoBoardDao, photoFileDao));
-    servletMap.put("/photoboard/update",
-        new PhotoBoardUpdateServlet(txManager, photoBoardDao, photoFileDao));
+    servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardService, recipeService));
+    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardService, recipeService));
+    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardService));
+    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardService));
+    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardService));
 
-    servletMap.put("/auth/login", new LoginServlet(memberDao));
+    servletMap.put("/auth/login", new LoginServlet(memberService));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트와 연결 대기 중...");

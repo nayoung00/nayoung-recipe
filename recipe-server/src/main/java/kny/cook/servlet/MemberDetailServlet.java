@@ -2,22 +2,22 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
+import kny.cook.service.MemberService;
 import kny.cook.util.Prompt;
 
 public class MemberDetailServlet implements Servlet {
 
-  MemberDao memberDao;
+  MemberService memberService;
 
-  public MemberDetailServlet(MemberDao memberDao) {
-    this.memberDao = memberDao;
+  public MemberDetailServlet(MemberService memberService) {
+    this.memberService = memberService;
   }
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
-    Member member = memberDao.findByNo(no);
+    Member member = memberService.findByNo(no);
 
     if (member != null) {
       out.printf("번호: %d\n", member.getNo());

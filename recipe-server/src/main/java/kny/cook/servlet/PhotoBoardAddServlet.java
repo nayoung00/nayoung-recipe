@@ -4,31 +4,23 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.PhotoBoardDao;
-import kny.cook.dao.PhotoFileDao;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.domain.Recipe;
-import kny.cook.sql.PlatformTransactionManager;
-import kny.cook.sql.TransactionCallback;
-import kny.cook.sql.TransactionTemplate;
+import kny.cook.service.PhotoBoardService;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardAddServlet implements Servlet {
 
-  TransactionTemplate transactionTemplate;
-  PhotoBoardDao photoBoardDao;
-  RecipeDao recipeDao;
-  PhotoFileDao photoFileDao;
+  PhotoBoardService photoBoardService;
+  RecipeService recipeService;
 
-  public PhotoBoardAddServlet(PlatformTransactionManager txManager, PhotoBoardDao photoBoardDao,
-      RecipeDao recipeDao, PhotoFileDao photoFileDao) {
 
-    this.transactionTemplate = new TransactionTemplate(txManager);
-    this.photoBoardDao = photoBoardDao;
-    this.recipeDao = recipeDao;
-    this.photoFileDao = photoFileDao;
+  public PhotoBoardAddServlet(PhotoBoardService photoBoardService, RecipeService recipeService) {
+
+    this.photoBoardService = photoBoardService;
+    this.recipeService = recipeService;
   }
 
   @Override
@@ -39,31 +31,18 @@ public class PhotoBoardAddServlet implements Servlet {
 
     int recipeNo = Prompt.getInt(in, out, "레시피 번호? ");
 
-    Recipe recipe = recipeDao.findByNo(recipeNo);
+    Recipe recipe = recipeService.findByNo(recipeNo);
     if (recipe == null) {
       out.println("레시피 번호가 유효하지 않습니다.");
       return;
     }
-
     photoBoard.setRecipe(recipe);
 
     List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
     photoBoard.setFiles(photoFiles);
 
-    transactionTemplate.execute(new TransactionCallback() {
-
-      @Override
-      public Object doInTransaction() throws Exception {
-
-        if (photoBoardDao.insert(photoBoard) == 0) {
-          throw new Exception("사진 게시글 등록에 실패했습니다.");
-
-        }
-        photoFileDao.insert(photoBoard);
-        out.println("새 사진 게시글을 등록했습니다.");
-        return null;
-      }
-    });
+    photoBoardService.add(photoBoard);
+    out.println("새 사진 게시글을 등록 했습니다.");
   }
 
   private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {

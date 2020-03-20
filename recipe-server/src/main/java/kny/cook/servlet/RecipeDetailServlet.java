@@ -2,16 +2,16 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class RecipeDetailServlet implements Servlet {
 
-  RecipeDao recipeDao;
+  RecipeService recipeService;
 
-  public RecipeDetailServlet(RecipeDao recipeDao) {
-    this.recipeDao = recipeDao;
+  public RecipeDetailServlet(RecipeService recipeService) {
+    this.recipeService = recipeService;
 
   }
 
@@ -19,7 +19,7 @@ public class RecipeDetailServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    Recipe recipe = recipeDao.findByNo(no);
+    Recipe recipe = recipeService.findByNo(no);
 
     if (recipe != null) {
       out.printf("번호: %d\n", recipe.getNo());

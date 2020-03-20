@@ -2,17 +2,16 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
+import kny.cook.service.BoardService;
 import kny.cook.util.Prompt;
 
 public class BoardAddServlet implements Servlet {
 
-  BoardDao boardDao;
+  BoardService boardService;
 
-
-  public BoardAddServlet(BoardDao boardDao) {
-    this.boardDao = boardDao;
+  public BoardAddServlet(BoardService boardService) {
+    this.boardService = boardService;
   }
 
   @Override
@@ -21,10 +20,10 @@ public class BoardAddServlet implements Servlet {
 
 
     board.setTitle(Prompt.getString(in, out, "제목? "));
-    
-    if (boardDao.insert(board) > 0) {
+
+    if (boardService.insert(board) > 0) {
       out.println("새 게시글을 등록했습니다.");
-      
+
     } else {
       out.println("게시글 등록에 실패했습니다.");
     }

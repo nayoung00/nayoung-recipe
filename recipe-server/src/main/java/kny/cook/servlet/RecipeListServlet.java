@@ -3,21 +3,21 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.service.RecipeService;
 
 public class RecipeListServlet implements Servlet {
 
-  RecipeDao recipeDao;
+  RecipeService recipeService;
 
-  public RecipeListServlet(RecipeDao recipeDao) {
-    this.recipeDao = recipeDao;
+  public RecipeListServlet(RecipeService recipeService) {
+    this.recipeService = recipeService;
   }
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
 
-    List<Recipe> recipes = recipeDao.findAll();
+    List<Recipe> recipes = recipeService.findAll();
 
     for (Recipe recipe : recipes) {
       out.printf("%d, %s, %s, %s, %d, %d\n", recipe.getNo(), recipe.getCook(), recipe.getMaterial(),

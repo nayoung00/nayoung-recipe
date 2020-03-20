@@ -2,16 +2,16 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class RecipeAddServlet implements Servlet {
 
-  RecipeDao recipeDao;
+  RecipeService recipeService;
 
-  public RecipeAddServlet(RecipeDao recipeDao) {
-    this.recipeDao = recipeDao;
+  public RecipeAddServlet(RecipeService recipeService) {
+    this.recipeService = recipeService;
   }
 
   @Override
@@ -24,7 +24,7 @@ public class RecipeAddServlet implements Servlet {
     recipe.setExpense(Prompt.getInt(in, out, "비용? "));
     recipe.setTime(Prompt.getInt(in, out, "시간 ? "));
 
-    if (recipeDao.insert(recipe) > 0) {
+    if (recipeService.insert(recipe) > 0) {
       out.println("새 레시피를 등록했습니다.");
 
     } else {

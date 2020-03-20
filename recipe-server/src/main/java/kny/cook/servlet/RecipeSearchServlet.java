@@ -4,15 +4,15 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
+import kny.cook.service.RecipeService;
 import kny.cook.util.Prompt;
 
 public class RecipeSearchServlet implements Servlet {
-  RecipeDao recipeDao;
+  RecipeService recipeService;
 
-  public RecipeSearchServlet(RecipeDao recipeDao) {
-    this.recipeDao = recipeDao;
+  public RecipeSearchServlet(RecipeService recipeService) {
+    this.recipeService = recipeService;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class RecipeSearchServlet implements Servlet {
     out.println("[검색결과]");
     out.println();
 
-    List<Recipe> recipes = recipeDao.findByKeyword(params);
+    List<Recipe> recipes = recipeService.findByKeyword(params);
     for (Recipe recipe : recipes) {
       out.printf("%d, %s, %s, %s, %d, %d\n", recipe.getNo(), recipe.getCook(), recipe.getMaterial(),
           recipe.getMethod(), recipe.getExpense(), recipe.getTime());
