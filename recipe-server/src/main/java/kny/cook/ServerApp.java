@@ -41,7 +41,6 @@ import kny.cook.servlet.RecipeListServlet;
 import kny.cook.servlet.RecipeSearchServlet;
 import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
-import kny.cook.sql.PlatformTransactionManager;
 import kny.cook.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
@@ -78,15 +77,13 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
-    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("SqlSessionFactory");
+    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
 
     BoardService boardService = (BoardService) context.get("boardService");
     RecipeService recipeService = (RecipeService) context.get("recipeService");
     MemberService memberService = (MemberService) context.get("memberService");
     PhotoBoardService photoBoardService = (PhotoBoardService) context.get("photoBoardService");
 
-    PlatformTransactionManager txManager =
-        (PlatformTransactionManager) context.get("transactionManager");
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipeService));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeService));
@@ -181,7 +178,6 @@ public class ServerApp {
         } catch (Exception e) {
           out.println("요청 처리 중 오류 발생! ");
           out.println(e.getMessage());
-
           System.out.println("클라이언트 요청 처리 중 오류 발생:");
           e.printStackTrace();
         }

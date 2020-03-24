@@ -44,7 +44,7 @@ public class RecipeSearchServlet implements Servlet {
     out.println("[검색결과]");
     out.println();
 
-    List<Recipe> recipes = recipeService.findByKeyword(params);
+    List<Recipe> recipes = recipeService.search(params);
     for (Recipe recipe : recipes) {
       out.printf("%d, %s, %s, %s, %d, %d\n", recipe.getNo(), recipe.getCook(), recipe.getMaterial(),
           recipe.getMethod(), recipe.getExpense(), recipe.getTime());

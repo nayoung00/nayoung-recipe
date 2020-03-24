@@ -14,45 +14,38 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public int insert(Member member) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int add(Member member) throws Exception {
+    return memberDao.insert(member);
   }
 
   @Override
-  public int delete(int no) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int delete(int no) throws Exception {
+    return memberDao.delete(no);
   }
 
   @Override
-  public Member findByNo(int no) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Member> search(String keyword) throws Exception {
+    return memberDao.findByKeyword(keyword);
   }
 
   @Override
-  public List<Member> findAll() {
-    // TODO Auto-generated method stub
-    return null;
+  public int update(Member member) throws Exception {
+    return memberDao.update(member);
   }
 
   @Override
-  public List<Member> findByKeyword(String keyword) {
-    // TODO Auto-generated method stub
-    return null;
+  public Member findByEmailAndPassword(String email, String password) throws Exception {
+    return memberDao.findByEmailAndPassword(email, password);
   }
 
   @Override
-  public int update(Member member) {
-    // TODO Auto-generated method stub
-    return 0;
+  public Member findByNo(int no) throws Exception {
+    return memberDao.findByNo(no);
   }
 
   @Override
-  public Member findByEmailAndPassword(String email, String password) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Member> list() throws Exception {
+    return memberDao.findAll();
   }
 
 }

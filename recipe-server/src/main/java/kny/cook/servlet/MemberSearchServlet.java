@@ -19,7 +19,7 @@ public class MemberSearchServlet implements Servlet {
 
     String keyword = Prompt.getString(in, out, "검색어? ");
 
-    List<Member> members = memberService.findByKeyword(keyword);
+    List<Member> members = memberService.search(keyword);
     for (Member member : members) {
       out.printf("%d, %s, %s, %s, %s\n", member.getNo(), member.getName(), member.getEmail(),
           member.getTel(), member.getRegisteredDate());

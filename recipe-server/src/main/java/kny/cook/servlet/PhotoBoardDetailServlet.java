@@ -20,7 +20,7 @@ public class PhotoBoardDetailServlet implements Servlet {
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 
-    PhotoBoard photoBoard = photoBoardService.findByNo(no);
+    PhotoBoard photoBoard = photoBoardService.get(no);
 
     if (photoBoard != null) {
       out.printf("번호: %d\n", photoBoard.getNo());

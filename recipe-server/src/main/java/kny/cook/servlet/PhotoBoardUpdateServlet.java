@@ -7,12 +7,10 @@ import java.util.Scanner;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.service.PhotoBoardService;
-import kny.cook.sql.TransactionTemplate;
 import kny.cook.util.Prompt;
 
 public class PhotoBoardUpdateServlet implements Servlet {
 
-  TransactionTemplate transactionTemplate;
   PhotoBoardService photoBoardService;
 
   public PhotoBoardUpdateServlet(PhotoBoardService photoBoardService) {
@@ -24,7 +22,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
 
     int no = Prompt.getInt(in, out, "번호? ");
 
-    PhotoBoard old = photoBoardService.findByNo(no);
+    PhotoBoard old = photoBoardService.get(no);
     if (old == null) {
       out.println("해당 번호의 게시글이 없습니다.");
       return;

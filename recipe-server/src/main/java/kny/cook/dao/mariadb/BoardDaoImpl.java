@@ -35,7 +35,7 @@ public class BoardDaoImpl implements BoardDao {
   public Board findByNo(int no) throws Exception {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.selectOne("BoardMapper.detailBoard", no);
+      return sqlSession.selectOne("BoardMapper.selectDetail", no);
     }
   }
 
@@ -43,7 +43,7 @@ public class BoardDaoImpl implements BoardDao {
   public int update(Board board) throws Exception {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.update("BoardMapper.detailBoard", board);
+      return sqlSession.update("BoardMapper.updateBoard", board);
     }
   }
 

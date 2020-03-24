@@ -16,7 +16,7 @@ public class MemberListServlet implements Servlet {
 
   @Override
   public void service(Scanner in, PrintStream out) throws Exception {
-    List<Member> members = memberService.findAll();
+    List<Member> members = memberService.list();
 
     for (Member member : members) {
       out.printf("%d, %s, %s, %s, %s, %s\n", member.getNo(), member.getName(), member.getEmail(),

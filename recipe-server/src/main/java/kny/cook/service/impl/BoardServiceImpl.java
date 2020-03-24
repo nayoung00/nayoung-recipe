@@ -14,39 +14,30 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public List<Board> findAll() throws Exception {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Board> list() throws Exception {
+    return boardDao.findAll();
   }
 
   @Override
   public Board get(int no) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
+    return boardDao.findByNo(no);
   }
 
   @Override
   public int update(Board board) throws Exception {
-    // TODO Auto-generated method stub
-    return 0;
+    return boardDao.update(board);
   }
 
   @Override
   public int delete(int no) throws Exception {
-    // TODO Auto-generated method stub
-    return 0;
+    return boardDao.delete(no);
   }
 
   @Override
-  public int insert(Board board) {
-    // TODO Auto-generated method stub
-    return 0;
+  public void add(Board board) throws Exception {
+    boardDao.insert(board);
   }
 
-  @Override
-  public Board findByNo(int no) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+
 
 }

@@ -25,7 +25,7 @@ public class MemberAddServlet implements Servlet {
     member.setTel(Prompt.getString(in, out, "전화? "));
 
     out.flush();
-    if (memberService.insert(member) > 0) {
+    if (memberService.add(member) > 0) {
       out.println("새 회원을 등록 했습니다.");
     } else {
       out.println("새 회원을 등록 했습니다.");

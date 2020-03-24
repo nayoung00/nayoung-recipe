@@ -5,7 +5,7 @@ import kny.cook.domain.Board;
 
 public interface BoardService {
 
-  List<Board> findAll() throws Exception;
+  List<Board> list() throws Exception;
 
   Board get(int no) throws Exception;
 
@@ -13,9 +13,7 @@ public interface BoardService {
 
   int delete(int no) throws Exception;
 
-  int insert(Board board);
-
-  Board findByNo(int no);
+  void add(Board board) throws Exception;
 
 
 }

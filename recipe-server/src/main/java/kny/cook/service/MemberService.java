@@ -5,18 +5,18 @@ import kny.cook.domain.Member;
 
 public interface MemberService {
 
-  int insert(Member member);
+  int add(Member member) throws Exception;
 
-  int delete(int no);
+  int delete(int no) throws Exception;
 
-  Member findByNo(int no);
+  Member findByNo(int no) throws Exception;
 
-  List<Member> findAll();
+  List<Member> list() throws Exception;
 
-  List<Member> findByKeyword(String keyword);
+  List<Member> search(String keyword) throws Exception;
 
-  int update(Member member);
+  int update(Member member) throws Exception;
 
-  Member findByEmailAndPassword(String email, String password);
+  Member findByEmailAndPassword(String email, String password) throws Exception;
 
 }

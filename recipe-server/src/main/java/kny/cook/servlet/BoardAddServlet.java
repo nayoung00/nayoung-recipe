@@ -21,11 +21,8 @@ public class BoardAddServlet implements Servlet {
 
     board.setTitle(Prompt.getString(in, out, "제목? "));
 
-    if (boardService.insert(board) > 0) {
-      out.println("새 게시글을 등록했습니다.");
+    boardService.add(board);
+    out.println("새 게시글을 등록했습니다.");
 
-    } else {
-      out.println("게시글 등록에 실패했습니다.");
-    }
   }
 }

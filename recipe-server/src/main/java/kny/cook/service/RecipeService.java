@@ -6,16 +6,16 @@ import kny.cook.domain.Recipe;
 
 public interface RecipeService {
 
-  int insert(Recipe recipe);
+  int add(Recipe recipe) throws Exception;
 
-  int delete(int no);
+  int delete(int no) throws Exception;
 
-  Recipe findByNo(int no);
+  Recipe findByNo(int no) throws Exception;
 
-  List<Recipe> findAll();
+  List<Recipe> findAll() throws Exception;
 
-  List<Recipe> findByKeyword(HashMap<String, Object> params);
+  List<Recipe> search(HashMap<String, Object> params) throws Exception;
 
-  int update(Recipe recipe);
+  int update(Recipe recipe) throws Exception;
 
 }

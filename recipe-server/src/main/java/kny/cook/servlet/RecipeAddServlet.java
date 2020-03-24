@@ -24,7 +24,7 @@ public class RecipeAddServlet implements Servlet {
     recipe.setExpense(Prompt.getInt(in, out, "비용? "));
     recipe.setTime(Prompt.getInt(in, out, "시간 ? "));
 
-    if (recipeService.insert(recipe) > 0) {
+    if (recipeService.add(recipe) > 0) {
       out.println("새 레시피를 등록했습니다.");
 
     } else {

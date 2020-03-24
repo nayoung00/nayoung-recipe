@@ -34,7 +34,7 @@ public class PhotoBoardListServlet implements Servlet {
     out.printf("요리명: %s\n", recipe.getCook());
     out.println("------------------------------------------------------");
 
-    List<PhotoBoard> photoBoards = photoBoardService.findAllByRecipeNo(recipeNo);
+    List<PhotoBoard> photoBoards = photoBoardService.listRecipePhoto(recipeNo);
 
     for (PhotoBoard photoBoard : photoBoards) {
       out.printf("%d, %s, %s, %d\n", photoBoard.getNo(), photoBoard.getTitle(),

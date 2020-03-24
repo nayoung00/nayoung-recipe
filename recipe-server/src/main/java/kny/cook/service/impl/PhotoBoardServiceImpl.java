@@ -50,6 +50,7 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
 
   @Override
   public void update(PhotoBoard photoBoard) throws Exception {
+
     transactionTemplate.execute(() -> {
       if (photoBoardDao.update(photoBoard) == 0) {
         throw new Exception("사진 게시글 변경에 실패했습니다.");
@@ -72,17 +73,5 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
       }
       return null;
     });
-  }
-
-  @Override
-  public List<PhotoBoard> findAllByRecipeNo(int recipeNo) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public PhotoBoard findByNo(int no) {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

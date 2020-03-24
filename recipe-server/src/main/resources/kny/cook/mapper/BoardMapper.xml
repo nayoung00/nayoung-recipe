@@ -34,21 +34,23 @@
   </select>
   
   
-  <select id="detailBoard" resultMap="BoardMap" parameterType ="int">
+  <select id="selectDetail" resultMap="BoardMap" parameterType ="int">
     <include refid="select1"/> 
    where 
     board_id=#{no}"
   </select>
   
-   <select id="updateBoard" resultMap="BoardMap" parameterType ="board">
+   <select id="updateBoard" parameterType ="board">
    update 
-    rms_board set conts=#{board}
+    rms_board set 
+    conts=#{board}
    where board_id =#{no}
     </select>
     
-  <select id="deleteBoard" resultMap="BoardMap" parameterType ="int">
+  <select id="deleteBoard" parameterType ="int">
     delete 
-      from rms_board where board_id=#{no}
+      from rms_board 
+    where board_id=#{no}
   </select>
     
 </mapper>

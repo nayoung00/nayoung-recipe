@@ -15,41 +15,32 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   @Override
-  public int insert(Recipe recipe) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int add(Recipe recipe) throws Exception {
+    return recipeDao.insert(recipe);
   }
 
   @Override
-  public int delete(int no) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int delete(int no) throws Exception {
+    return recipeDao.delete(no);
   }
 
   @Override
-  public Recipe findByNo(int no) {
-    // TODO Auto-generated method stub
-    return null;
+  public Recipe findByNo(int no) throws Exception {
+    return recipeDao.findByNo(no);
   }
 
   @Override
-  public List<Recipe> findAll() {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Recipe> findAll() throws Exception {
+    return recipeDao.findAll();
   }
 
   @Override
-  public List<Recipe> findByKeyword(HashMap<String, Object> params) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Recipe> search(HashMap<String, Object> params) throws Exception {
+    return recipeDao.findByKeyword(params);
   }
 
   @Override
-  public int update(Recipe recipe) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int update(Recipe recipe) throws Exception {
+    return recipeDao.update(recipe);
   }
-
-
-
 }

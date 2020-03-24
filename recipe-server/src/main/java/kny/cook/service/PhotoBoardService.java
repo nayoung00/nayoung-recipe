@@ -13,10 +13,6 @@ public interface PhotoBoardService {
 
   void delete(int no) throws Exception;
 
-  List<PhotoBoard> findAllByRecipeNo(int recipeNo);
-
-  PhotoBoard findByNo(int no);
-
   List<PhotoBoard> listRecipePhoto(int recipeNo) throws Exception;
 
 }
