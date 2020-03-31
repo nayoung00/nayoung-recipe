@@ -1,3 +1,4 @@
+// LMS 서버
 package kny.cook;
 
 import java.io.IOException;
@@ -45,15 +46,18 @@ import kny.cook.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
 
+  // 옵저버 관련 코드
   Set<ApplicationContextListener> listeners = new HashSet<>();
-
   Map<String, Object> context = new HashMap<>();
 
+  // 커맨드(예: Servlet 구현체) 디자인 패턴과 관련된 코드
   Map<String, Servlet> servletMap = new HashMap<>();
 
+  // 스레드 풀
   ExecutorService executorService = Executors.newCachedThreadPool();
 
-  boolean shotdown = false;
+  // 서버 멈춤 여부 설정 변수
+  boolean serverStop = false;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -64,96 +68,130 @@ public class ServerApp {
   }
 
   private void notifyApplicationInitialized() {
-    for (ApplicationContextListener listener : listeners)
+    for (ApplicationContextListener listener : listeners) {
       listener.contextInitialized(context);
+    }
   }
 
   private void notifyApplicationDestroyed() {
-    for (ApplicationContextListener listener : listeners)
+    for (ApplicationContextListener listener : listeners) {
       listener.contextDestroyed(context);
+    }
   }
+  // 옵저버 관련코드 끝!
 
   public void service() {
 
     notifyApplicationInitialized();
 
-    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
+    // SqlSessionFactory를 꺼낸다.
+    SqlSessionFactory sqlSessionFactory = //
+        (SqlSessionFactory) context.get("sqlSessionFactory");
 
-    BoardService boardService = (BoardService) context.get("boardService");
-    RecipeService recipeService = (RecipeService) context.get("recipeService");
-    MemberService memberService = (MemberService) context.get("memberService");
-    PhotoBoardService photoBoardService = (PhotoBoardService) context.get("photoBoardService");
+    // DataLoaderListener가 준비한 서비스 객체를 꺼내 변수에 저장한다.
+    RecipeService recipeService = //
+        (RecipeService) context.get("RecipeService");
+    PhotoBoardService photoBoardService = //
+        (PhotoBoardService) context.get("photoBoardService");
+    BoardService boardService = //
+        (BoardService) context.get("boardService");
+    MemberService memberService = //
+        (MemberService) context.get("memberService");
 
+    // 커맨드 객체 역할을 수행하는 서블릿 객체를 맵에 보관한다.
+    servletMap.put("/board/list", new BoardListServlet(boardService));
+    servletMap.put("/board/add", new BoardAddServlet(boardService));
+    servletMap.put("/board/detail", new BoardDetailServlet(boardService));
+    servletMap.put("/board/update", new BoardUpdateServlet(boardService));
+    servletMap.put("/board/delete", new BoardDeleteServlet(boardService));
 
     servletMap.put("/recipe/list", new RecipeListServlet(recipeService));
     servletMap.put("/recipe/add", new RecipeAddServlet(recipeService));
     servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeService));
-    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeService));
     servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeService));
+    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeService));
     servletMap.put("/recipe/search", new RecipeSearchServlet(recipeService));
 
     servletMap.put("/member/list", new MemberListServlet(memberService));
     servletMap.put("/member/add", new MemberAddServlet(memberService));
     servletMap.put("/member/detail", new MemberDetailServlet(memberService));
-    servletMap.put("/member/delete", new MemberDeleteServlet(memberService));
     servletMap.put("/member/update", new MemberUpdateServlet(memberService));
+    servletMap.put("/member/delete", new MemberDeleteServlet(memberService));
     servletMap.put("/member/search", new MemberSearchServlet(memberService));
 
-    servletMap.put("/board/list", new BoardListServlet(boardService));
-    servletMap.put("/board/add", new BoardAddServlet(boardService));
-    servletMap.put("/board/detail", new BoardDetailServlet(boardService));
-    servletMap.put("/board/delete", new BoardDeleteServlet(boardService));
-    servletMap.put("/board/update", new BoardUpdateServlet(boardService));
-
-    servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardService, recipeService));
-    servletMap.put("/photoboard/add", new PhotoBoardAddServlet(photoBoardService, recipeService));
-    servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet(photoBoardService));
-    servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet(photoBoardService));
-    servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet(photoBoardService));
+    servletMap.put("/photoboard/list", //
+        new PhotoBoardListServlet(photoBoardService, recipeService));
+    servletMap.put("/photoboard/detail", //
+        new PhotoBoardDetailServlet(photoBoardService));
+    servletMap.put("/photoboard/add", //
+        new PhotoBoardAddServlet(photoBoardService, recipeService));
+    servletMap.put("/photoboard/update", //
+        new PhotoBoardUpdateServlet(photoBoardService));
+    servletMap.put("/photoboard/delete", //
+        new PhotoBoardDeleteServlet(photoBoardService));
 
     servletMap.put("/auth/login", new LoginServlet(memberService));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
-      System.out.println("클라이언트와 연결 대기 중...");
+
+      System.out.println("클라이언트 연결 대기중...");
 
       while (true) {
         Socket socket = serverSocket.accept();
-        System.out.println("클라이언트와 연결 되었음!");
+        System.out.println("클라이언트와 연결되었음!");
 
         executorService.submit(() -> {
           processRequest(socket);
 
+          // 스레드에 보관된 SqlSession 객체를 제거한다.
           ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
 
-          System.out.println("---------------------------------");
+          System.out.println("--------------------------------------");
         });
 
-        if (shotdown) {
+        // 현재 '서버 멈춤' 상태라면,
+        // 다음 클라이언트 요청을 받지 않고 종료한다.
+        if (serverStop) {
           break;
         }
+
       }
+
     } catch (Exception e) {
       System.out.println("서버 준비 중 오류 발생!");
     }
 
+
+    // 스레드풀을 다 사용했으면 종료하라고 해야 한다.
     executorService.shutdown();
+    // => 스레드풀을 당장 종료시키는 것이 아니다.
+    // => 스레드풀에 소속된 스레드들의 작업이 모두 끝나면
+    // 스레드풀의 동작을 종료하라는 뜻이다.
+    // => 따라서 shutdown()을 호출했다고 해서
+    // 모든 스레드가 즉시 작업을 멈추는 것이 아니다.
+    // => 즉 스레드풀 종료를 예약한 다음에 바로 리턴한다.
 
-
+    // 모든 스레드가 끝날 때까지 DB 커넥션을 종료하고 싶지 않다면,
+    // 스레드가 끝났는지 검사하며 기다려야 한다.
     while (true) {
       if (executorService.isTerminated()) {
         break;
       }
       try {
+        // 0.5초 마다 깨어나서 스레드 종료 여부를 검사한다.
         Thread.sleep(500);
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
 
+    // 클라이언트 요청을 처리하는 스레드가 모두 종료된 후에
+    // DB 커넥션을 닫도록 한다.
     notifyApplicationDestroyed();
 
     System.out.println("서버 종료!");
-  }
+  } // service()
+
 
   void processRequest(Socket clientSocket) {
 
@@ -176,8 +214,9 @@ public class ServerApp {
           servlet.service(in, out);
 
         } catch (Exception e) {
-          out.println("요청 처리 중 오류 발생! ");
+          out.println("요청 처리 중 오류 발생!");
           out.println(e.getMessage());
+
           System.out.println("클라이언트 요청 처리 중 오류 발생:");
           e.printStackTrace();
         }
@@ -189,7 +228,7 @@ public class ServerApp {
       System.out.println("클라이언트에게 응답하였음!");
 
     } catch (Exception e) {
-      System.out.println("예외 발생: ");
+      System.out.println("예외 발생:");
       e.printStackTrace();
     }
   }
@@ -199,7 +238,7 @@ public class ServerApp {
   }
 
   private void quit(PrintStream out) throws IOException {
-    shotdown = true;
+    serverStop = true;
     out.println("OK");
     out.println("!end!");
     out.flush();
@@ -213,4 +252,3 @@ public class ServerApp {
     app.service();
   }
 }
-

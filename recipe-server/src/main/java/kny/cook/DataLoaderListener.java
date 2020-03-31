@@ -11,15 +11,11 @@ import kny.cook.dao.MemberDao;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.dao.RecipeDao;
-import kny.cook.dao.mariadb.BoardDaoImpl;
-import kny.cook.dao.mariadb.MemberDaoImpl;
-import kny.cook.dao.mariadb.PhotoBoardDaoImpl;
-import kny.cook.dao.mariadb.PhotoFileDaoImpl;
-import kny.cook.dao.mariadb.RecipeDaoImpl;
 import kny.cook.service.impl.BoardServiceImpl;
 import kny.cook.service.impl.MemberServiceImpl;
 import kny.cook.service.impl.PhotoBoardServiceImpl;
 import kny.cook.service.impl.RecipeServiceImpl;
+import kny.cook.sql.MybatisDaoFactory;
 import kny.cook.sql.PlatformTransactionManager;
 
 public class DataLoaderListener implements ApplicationContextListener {
@@ -33,11 +29,13 @@ public class DataLoaderListener implements ApplicationContextListener {
       SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
       context.put("SqlSessionFactory", sqlSessionFactory);
 
-      PhotoFileDao photoFileDao = new PhotoFileDaoImpl(sqlSessionFactory);
-      BoardDao boardDao = new BoardDaoImpl(sqlSessionFactory);
-      MemberDao memberDao = new MemberDaoImpl(sqlSessionFactory);
-      RecipeDao recipeDao = new RecipeDaoImpl(sqlSessionFactory);
-      PhotoBoardDao photoBoardDao = new PhotoBoardDaoImpl(sqlSessionFactory);
+      MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSessionFactory);
+
+      PhotoFileDao photoFileDao = daoFactory.createDao(PhotoFileDao.class);
+      BoardDao boardDao = daoFactory.createDao(BoardDao.class);
+      MemberDao memberDao = daoFactory.createDao(MemberDao.class);
+      RecipeDao recipeDao = daoFactory.createDao(RecipeDao.class);
+      PhotoBoardDao photoBoardDao = daoFactory.createDao(PhotoBoardDao.class);
 
       PlatformTransactionManager txManager = new PlatformTransactionManager(sqlSessionFactory);
 

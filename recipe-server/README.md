@@ -1,82 +1,36 @@
-# 36_1 - UI객체에서 비즈니스 로직 분리하기.
+# 37_1 - Java Proxy를 이용하여 DAO 구현체 자동 생성하기
 
-비즈니스 로직을 별도의 클래스로 분리하면,
-UI 구현 방식이 변경되더라도 비즈니스 로직을 재사용할 수 있다.
 
-### Presentation Layer
+## 작업 소스 및 결과
 
-- UI를 담당한다.
+- src/main/java/kny/cook/dao 에서 인터페이스 구현 클래스를 모두 삭제
+- src/main/resources/kny/cook/lms/mapper/XxxMapper.xml 변경
+- src/main/java/kny/cook/dao/MemberDao.java 변경
+- src/main/java/kny/cook/service/impl/MemberServiceImpl.java 변경
+- src/main/java/kny/cook/sql/MybatisDaoFactory.java 추가
+- src/main/java/kny/cook//DataLoaderListener.java 변경
 
-### Business(Service) Layer
 
-- 업무 로직을 담당한다.
-- 트랜잭션 제어를 담당한다.
+### 작업1: InvocationHandler에서 SQL을 찾기 쉽도록 DAO 인터페이스 메서드명과 SQL ID를 일치시킨다.
 
-### Persistence Layer
+- src/main/resources/kny/cook/mapper/XxxMapper.xml 변경
+  - namespace 값을 인터페이스 전체 이름(fully-qualified name)과 일치시킨다.
+  - 메서드에서 사용할 SQL은 메서드 이름과 일치시킨다.
+- kny.cook.dao.MemberDao 변경
+  - findByEmailAndPassword()의 파라미터를 Map 타입으로 변경한다.
+- kny.cook.lms.service.impl.MemberServiceImpl 변경
+  - findByEmailAndPassword()를 호출할 때 파라미터를 Map에 담아 넘긴다. 
 
-- 데이터 저장을 담당한다.
+### 작업2: 복잡한 DAO 생성을 단순화시키는 팩토리 클래스를 정의한다.
 
-## 실습 소스 및 결과
+- kny.cook.sql.MybatisDaoFactory 클래스 추가
+  - DAO 프록시 객체를 생성하는 팩토리 메서드 createDao()를 정의한다.
+  - 인터페이스에 따라 리턴 타입을 다르도록 제네릭을 적용한다.
+  - InvocationHandler 구현체를 람다 문법을 사용하여 로컬 클래스로 정의한다. 
 
-- src/main/java//kny/cook/service/BoardService.java 추가
-- src/main/java//kny/cook/service/RecipeService.java 추가
-- src/main/java//kny/cook/service/MemberService.java 추가
-- src/main/java//kny/cook/service/PhotoBoardService.java 추가
-- src/main/java//kny/cook/service/impl/BoardServiceImpl.java 추가
-- src/main/java//kny/cook/service/impl/RecipeServiceImpl.java 추가
-- src/main/java//kny/cook/service/impl/MemberServiceImpl.java 추가
-- src/main/java//kny/cook/service/impl/PhotoBoardServiceImpl.java 추가
-- src/main/java//kny/cook/ServerApp.java 변경
-- src/main/java//kny/cook/DataLoaderListener.java 변경
-- src/main/java//kny/cook/servlet/XxxServlet.java 변경
+### 작업3: DAO 객체 생성에 프록시 생성기를 적용한다.
 
-## 실습  
-
-### 훈련1: PhotoBoardXxxServlet 에서 비즈니스 로직을 분리한다.
-
-- kny.cook.service 패키지 추가
-- kny.cook.service.PhotoBoardService 인터페이스 추가
-- kny.cook.service.RecipeService 인터페이스 추가
-- kny.cook.service.impl.PhotoBoardServiceImpl 클래스 추가
-- kny.cook.service.impl.RecipeServiceImpl 클래스 추가
-- kny.cook.servlet.PhotoBoardXxxServlet 변경
-  - 비즈니스 로직과 트랜잭션 제어 코드를 서비스 객체로 옮긴다.
+- kny.cook.dao.* 에서 DAO 구현체 모두 제거
 - kny.cook.DataLoaderListener 변경
-  - 서비스를 객체를 생성한다.
-- kny.cook.ServerApp 변경
-  - 서블릿에 서비스 객체를 주입한다.
-  
-### 훈련2: BoardXxxServlet 에서 비즈니스 로직을 분리한다.
+  - MybatisDaoFactory를 이용하여 DAO 구현 객체 생성한다.
 
-- kny.cook.service.BoardService 인터페이스 추가
-- kny.cook.service.impl.BoardServiceImpl 클래스 추가
-- kny.cook.servlet.BoardXxxServlet 변경
-  - 비즈니스 로직과 트랜잭션 제어 코드를 서비스 객체로 옮긴다.
-- kny.cook.DataLoaderListener 변경
-  - 서비스를 객체를 생성한다.
-- kny.cook.ServerApp 변경
-  - 서블릿에 서비스 객체를 주입한다.
-  
-### 훈련3: MemberXxxServlet 에서 비즈니스 로직을 분리한다.
-
-- kny.cook.service.MemberService 인터페이스 추가
-- kny.cook.service.impl.MemberServiceImpl 클래스 추가
-- kny.cook.servlet.MemberXxxServlet 변경
-  - 비즈니스 로직과 트랜잭션 제어 코드를 서비스 객체로 옮긴다.
-- kny.cook.servlet.LoginServlet 변경
-  - 비즈니스 로직과 트랜잭션 제어 코드를 서비스 객체로 옮긴다.
-- kny.cook.DataLoaderListener 변경
-  - 서비스를 객체를 생성한다.
-- kny.cook.ServerApp 변경
-  - 서블릿에 서비스 객체를 주입한다.
-  
-### 훈련4: RecipeXxxServlet 에서 비즈니스 로직을 분리한다.
-
-- kny.cook.service.RecipeService 인터페이스 변경
-- kny.cook.service.impl.RecipeServiceImpl 클래스 변경
-- kny.cook.servlet.RecipeXxxServlet 변경
-  - 비즈니스 로직과 트랜잭션 제어 코드를 서비스 객체로 옮긴다.
-- kny.cook.DataLoaderListener 변경
-  - 서비스를 객체를 생성한다.
-- kny.cook.ServerApp 변경
-  - 서블릿에 서비스 객체를 주입한다.

@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="RecipeMapper">
+<mapper namespace="kny.cook.dao.RecipeDao">
   <resultMap type="Recipe" id="RecipeMap">
     <id column="recipe_id" property="no"/>
     <result column="cook" property="cook"/>
@@ -23,20 +23,20 @@
       time 
     </sql>
   
-    <select id="selectRecipe" resultMap="RecipeMap">
+    <select id="findAll" resultMap="RecipeMap">
       <include refid="select1"/>
     from rms_recipe
   </select>
   
   
-  <select id="insertRecipe" parameterType ="Recipe">
-   insert 
-     into rms_recipe(cook,material,met,expense,time) 
+  <select id="insert" parameterType ="Recipe">
+   insert into rms_recipe(
+   cook,material,met,expense,time) 
      values(#{cook},#{material},#{method},#{expense},#{time})
   </select>
   
   
-  <select id="detailRecipe" resultMap="RecipeMap" parameterType ="int">
+  <select id="findByKeyword" resultMap="RecipeMap" parameterType ="int">
    <include refid="select1"/>
    from 
      rms_recipe 
@@ -49,7 +49,7 @@
     </where> 
   </select>
   
-   <select id="updateRecipe" resultMap="RecipeMap" parameterType ="recipe">
+   <select id="update" resultMap="RecipeMap" parameterType ="recipe">
    update rms_recipe 
    <set>
      <if test="cook !=null and cook !=''"> cook=#{cook}, </if> 
@@ -62,7 +62,7 @@
      recipe_id =#{no}
     </select>
     
-  <select id="deleteRecipe" resultMap="RecipeMap" parameterType ="int">
+  <select id="delete" resultMap="RecipeMap" parameterType ="int">
     delete from rms_recipe 
     where 
       recipe_id =#{no}

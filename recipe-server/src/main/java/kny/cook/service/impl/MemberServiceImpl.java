@@ -1,5 +1,6 @@
 package kny.cook.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
@@ -35,7 +36,11 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public Member findByEmailAndPassword(String email, String password) throws Exception {
-    return memberDao.findByEmailAndPassword(email, password);
+    HashMap<String, Object> params = new HashMap<>();
+    params.put("email", email);
+    params.put("password", password);
+
+    return memberDao.findByEmailAndPassword(params);
   }
 
   @Override

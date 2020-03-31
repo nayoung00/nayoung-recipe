@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="BoardMapper">
+<mapper namespace="kny.cook.dao.BoardDao">
   <resultMap type="Board" id="BoardMap">
     <id column="board_id" property="no"/>
     <result column="conts" property="title"/>
@@ -21,33 +21,33 @@
      rms_board
   </sql>
   
-  <select id="selectBoard" resultMap="BoardMap">
+  <select id="findAll" resultMap="BoardMap">
      <include refid="select1"/> 
     order by 
       board_id desc
   </select>
   
   
-  <select id="insertBoard" parameterType ="Board">
+  <select id="insert" parameterType ="Board">
     insert into rms_board(conts) 
     values(#{title})
   </select>
   
   
-  <select id="selectDetail" resultMap="BoardMap" parameterType ="int">
+  <select id="findByNo" resultMap="BoardMap" parameterType ="int">
     <include refid="select1"/> 
    where 
-    board_id=#{no}"
+    board_id=#{no}
   </select>
   
-   <select id="updateBoard" parameterType ="board">
+   <select id="update" parameterType ="board">
    update 
     rms_board set 
     conts=#{board}
    where board_id =#{no}
     </select>
     
-  <select id="deleteBoard" parameterType ="int">
+  <select id="delete" parameterType ="int">
     delete 
       from rms_board 
     where board_id=#{no}

@@ -1,6 +1,7 @@
 package kny.cook.dao;
 
 import java.util.List;
+import java.util.Map;
 import kny.cook.domain.Member;
 
 public interface MemberDao {
@@ -11,7 +12,7 @@ public interface MemberDao {
 
   Member findByNo(int no) throws Exception;
 
-  default Member findByEmailAndPassword(String email, String password) throws Exception {
+  default Member findByEmailAndPassword(Map<String, Object> params) throws Exception {
     return null;
   }
 
