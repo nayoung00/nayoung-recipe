@@ -154,7 +154,6 @@ public class ServerApp {
         if (serverStop) {
           break;
         }
-
       }
 
     } catch (Exception e) {

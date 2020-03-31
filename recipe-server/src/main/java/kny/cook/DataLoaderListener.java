@@ -11,7 +11,7 @@ import kny.cook.dao.MemberDao;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.dao.RecipeDao;
-import kny.cook.service.impl.BoardServiceImpl;
+import kny.cook.service.impl.BoardServiceImpl2;
 import kny.cook.service.impl.MemberServiceImpl;
 import kny.cook.service.impl.PhotoBoardServiceImpl;
 import kny.cook.service.impl.RecipeServiceImpl;
@@ -39,7 +39,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 
       PlatformTransactionManager txManager = new PlatformTransactionManager(sqlSessionFactory);
 
-      context.put("boardService", new BoardServiceImpl(boardDao));
+      context.put("boardService", new BoardServiceImpl2(sqlSessionFactory));
       context.put("recipeService", new RecipeServiceImpl(recipeDao));
       context.put("memberService", new MemberServiceImpl(memberDao));
       context.put("photoBoardService",
