@@ -14,9 +14,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.servlet.Servlet;
 import kny.cook.sql.SqlSessionFactoryProxy;
 import kny.cook.util.ApplicationContext;
+import kny.cook.util.RequestHandler;
+import kny.cook.util.RequestMappingHandlerMapping;
 
 public class ServerApp {
 
@@ -31,6 +32,8 @@ public class ServerApp {
   boolean serverStop = false;
 
   ApplicationContext iocContainer;
+
+  RequestMappingHandlerMapping handlerMapper;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -58,6 +61,8 @@ public class ServerApp {
     notifyApplicationInitialized();
 
     iocContainer = (ApplicationContext) context.get("iocContainer");
+
+    handlerMapper = (RequestMappingHandlerMapping) context.get("handlerMapper");
 
     // SqlSessionFactory를 꺼낸다.
     SqlSessionFactory sqlSessionFactory = //
@@ -137,11 +142,11 @@ public class ServerApp {
         return;
       }
 
-      Servlet servlet = (Servlet) iocContainer.getBean(request);
+      RequestHandler requestHandler = handlerMapper.getHandler(request);
 
-      if (servlet != null) {
+      if (requestHandler != null) {
         try {
-          servlet.service(in, out);
+          requestHandler.getMethod().invoke(requestHandler.getBean(), in, out);
 
         } catch (Exception e) {
           out.println("요청 처리 중 오류 발생!");

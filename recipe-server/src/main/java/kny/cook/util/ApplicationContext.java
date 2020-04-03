@@ -1,6 +1,7 @@
 package kny.cook.util;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -42,6 +43,26 @@ public class ApplicationContext {
 
       }
     }
+  }
+
+
+  public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+
+    ArrayList<String> beanNames = new ArrayList<>();
+
+    Set<String> beanNameSet = objPool.keySet();
+    for (String beanName : beanNameSet) {
+      Object obj = objPool.get(beanName);
+
+      if (obj.getClass().getAnnotation(annotationType) != null) {
+        beanNames.add(beanName);
+      }
+
+    }
+    String[] names = new String[beanNames.size()];
+    beanNames.toArray(names);
+
+    return names;
   }
 
   public void printBeans() {
@@ -178,5 +199,6 @@ public class ApplicationContext {
     // 오직 @Component 애노테이션이 붙은 일반 클래스만이 객체 생성 대상이다.
     return true;
   }
+
 }
 

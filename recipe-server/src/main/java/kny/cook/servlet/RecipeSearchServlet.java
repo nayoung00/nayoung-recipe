@@ -8,16 +8,17 @@ import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/recipe/search")
-public class RecipeSearchServlet implements Servlet {
+@Component
+public class RecipeSearchServlet {
   RecipeService recipeService;
 
   public RecipeSearchServlet(RecipeService recipeService) {
     this.recipeService = recipeService;
   }
 
-  @Override
+  @RequestMapping("/recipe/search")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     HashMap<String, Object> params = new HashMap<>();

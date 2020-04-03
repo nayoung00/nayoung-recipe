@@ -6,9 +6,10 @@ import java.util.Scanner;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 import kny.cook.util.Component;
+import kny.cook.util.RequestMapping;
 
-@Component("/member/list")
-public class MemberListServlet implements Servlet {
+@Component
+public class MemberListServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class MemberListServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/list")
   public void service(Scanner in, PrintStream out) throws Exception {
     List<Member> members = memberService.list();
 

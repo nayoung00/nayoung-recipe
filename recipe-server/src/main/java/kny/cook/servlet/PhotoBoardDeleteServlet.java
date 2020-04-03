@@ -5,9 +5,10 @@ import java.util.Scanner;
 import kny.cook.service.PhotoBoardService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/photoboard/delete")
-public class PhotoBoardDeleteServlet implements Servlet {
+@Component
+public class PhotoBoardDeleteServlet {
 
   PhotoBoardService photoBoardService;
 
@@ -15,7 +16,7 @@ public class PhotoBoardDeleteServlet implements Servlet {
     this.photoBoardService = photoBoardService;
   }
 
-  @Override
+  @RequestMapping("/photoboard/delete")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     int no = Prompt.getInt(in, out, "번호? ");

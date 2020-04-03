@@ -6,9 +6,10 @@ import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/recipe/add")
-public class RecipeAddServlet implements Servlet {
+@Component
+public class RecipeAddServlet {
 
   RecipeService recipeService;
 
@@ -16,7 +17,7 @@ public class RecipeAddServlet implements Servlet {
     this.recipeService = recipeService;
   }
 
-  @Override
+  @RequestMapping("/recipe/add")
   public void service(Scanner in, PrintStream out) throws Exception {
     Recipe recipe = new Recipe();
 

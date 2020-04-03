@@ -6,9 +6,10 @@ import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/recipe/detail")
-public class RecipeDetailServlet implements Servlet {
+@Component
+public class RecipeDetailServlet {
 
   RecipeService recipeService;
 
@@ -17,7 +18,7 @@ public class RecipeDetailServlet implements Servlet {
 
   }
 
-  @Override
+  @RequestMapping("/recipe/detail")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
 

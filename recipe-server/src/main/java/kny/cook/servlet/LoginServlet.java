@@ -6,16 +6,17 @@ import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/auth/login")
-public class LoginServlet implements Servlet {
+@Component
+public class LoginServlet {
   MemberService memberService;
 
   public LoginServlet(MemberService memberService) {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/auth/login")
   public void service(Scanner in, PrintStream out) throws Exception {
     String email = Prompt.getString(in, out, "email? ");
     String password = Prompt.getString(in, out, "password? ");

@@ -6,9 +6,10 @@ import java.util.Scanner;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
+import kny.cook.util.RequestMapping;
 
-@Component("/recipe/list")
-public class RecipeListServlet implements Servlet {
+@Component
+public class RecipeListServlet {
 
   RecipeService recipeService;
 
@@ -16,7 +17,7 @@ public class RecipeListServlet implements Servlet {
     this.recipeService = recipeService;
   }
 
-  @Override
+  @RequestMapping("/recipe/list")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     List<Recipe> recipes = recipeService.findAll();

@@ -11,9 +11,10 @@ import kny.cook.service.PhotoBoardService;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/photoboard/add")
-public class PhotoBoardAddServlet implements Servlet {
+@Component
+public class PhotoBoardAddServlet {
 
   PhotoBoardService photoBoardService;
   RecipeService recipeService;
@@ -25,7 +26,7 @@ public class PhotoBoardAddServlet implements Servlet {
     this.recipeService = recipeService;
   }
 
-  @Override
+  @RequestMapping("/photoboard/add")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     PhotoBoard photoBoard = new PhotoBoard();

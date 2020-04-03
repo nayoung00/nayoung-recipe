@@ -9,10 +9,11 @@ import kny.cook.service.PhotoBoardService;
 import kny.cook.service.RecipeService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
 
-@Component("/photoboard/list")
-public class PhotoBoardListServlet implements Servlet {
+@Component
+public class PhotoBoardListServlet {
 
   PhotoBoardService photoBoardService;
   RecipeService recipeService;
@@ -22,7 +23,7 @@ public class PhotoBoardListServlet implements Servlet {
     this.recipeService = recipeService;
   }
 
-  @Override
+  @RequestMapping("/photoboard/list")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     int recipeNo = Prompt.getInt(in, out, "레시피 번호? ");

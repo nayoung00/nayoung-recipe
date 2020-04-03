@@ -9,9 +9,10 @@ import kny.cook.domain.PhotoFile;
 import kny.cook.service.PhotoBoardService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/photoboard/update")
-public class PhotoBoardUpdateServlet implements Servlet {
+@Component
+public class PhotoBoardUpdateServlet {
 
   PhotoBoardService photoBoardService;
 
@@ -19,7 +20,7 @@ public class PhotoBoardUpdateServlet implements Servlet {
     this.photoBoardService = photoBoardService;
   }
 
-  @Override
+  @RequestMapping("/photoboard/update")
   public void service(Scanner in, PrintStream out) throws Exception {
 
     int no = Prompt.getInt(in, out, "번호? ");

@@ -6,9 +6,10 @@ import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/member/add")
-public class MemberAddServlet implements Servlet {
+@Component
+public class MemberAddServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class MemberAddServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/add")
   public void service(Scanner in, PrintStream out) throws Exception {
     Member member = new Member();
 

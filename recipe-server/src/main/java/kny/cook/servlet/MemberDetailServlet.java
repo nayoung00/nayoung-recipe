@@ -6,9 +6,10 @@ import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 import kny.cook.util.Component;
 import kny.cook.util.Prompt;
+import kny.cook.util.RequestMapping;
 
-@Component("/member/detail")
-public class MemberDetailServlet implements Servlet {
+@Component
+public class MemberDetailServlet {
 
   MemberService memberService;
 
@@ -16,7 +17,7 @@ public class MemberDetailServlet implements Servlet {
     this.memberService = memberService;
   }
 
-  @Override
+  @RequestMapping("/member/detail")
   public void service(Scanner in, PrintStream out) throws Exception {
     int no = Prompt.getInt(in, out, "번호? ");
     Member member = memberService.findByNo(no);
