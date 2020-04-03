@@ -5,7 +5,9 @@ import java.util.List;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 
+@Component
 public class RecipeServiceImpl implements RecipeService {
 
   RecipeDao recipeDao;

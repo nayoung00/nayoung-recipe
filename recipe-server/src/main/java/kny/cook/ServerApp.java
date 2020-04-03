@@ -14,35 +14,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
 import kny.cook.context.ApplicationContextListener;
-import kny.cook.service.BoardService;
-import kny.cook.service.MemberService;
-import kny.cook.service.PhotoBoardService;
-import kny.cook.service.RecipeService;
-import kny.cook.servlet.BoardAddServlet;
-import kny.cook.servlet.BoardDeleteServlet;
-import kny.cook.servlet.BoardDetailServlet;
-import kny.cook.servlet.BoardListServlet;
-import kny.cook.servlet.BoardUpdateServlet;
-import kny.cook.servlet.LoginServlet;
-import kny.cook.servlet.MemberAddServlet;
-import kny.cook.servlet.MemberDeleteServlet;
-import kny.cook.servlet.MemberDetailServlet;
-import kny.cook.servlet.MemberListServlet;
-import kny.cook.servlet.MemberSearchServlet;
-import kny.cook.servlet.MemberUpdateServlet;
-import kny.cook.servlet.PhotoBoardAddServlet;
-import kny.cook.servlet.PhotoBoardDeleteServlet;
-import kny.cook.servlet.PhotoBoardDetailServlet;
-import kny.cook.servlet.PhotoBoardListServlet;
-import kny.cook.servlet.PhotoBoardUpdateServlet;
-import kny.cook.servlet.RecipeAddServlet;
-import kny.cook.servlet.RecipeDeleteServlet;
-import kny.cook.servlet.RecipeDetailServlet;
-import kny.cook.servlet.RecipeListServlet;
-import kny.cook.servlet.RecipeSearchServlet;
-import kny.cook.servlet.RecipeUpdateServlet;
 import kny.cook.servlet.Servlet;
 import kny.cook.sql.SqlSessionFactoryProxy;
+import kny.cook.util.ApplicationContext;
 
 public class ServerApp {
 
@@ -50,14 +24,13 @@ public class ServerApp {
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
 
-  // 커맨드(예: Servlet 구현체) 디자인 패턴과 관련된 코드
-  Map<String, Servlet> servletMap = new HashMap<>();
-
   // 스레드 풀
   ExecutorService executorService = Executors.newCachedThreadPool();
 
   // 서버 멈춤 여부 설정 변수
   boolean serverStop = false;
+
+  ApplicationContext iocContainer;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -84,53 +57,11 @@ public class ServerApp {
 
     notifyApplicationInitialized();
 
+    iocContainer = (ApplicationContext) context.get("iocContainer");
+
     // SqlSessionFactory를 꺼낸다.
     SqlSessionFactory sqlSessionFactory = //
         (SqlSessionFactory) context.get("sqlSessionFactory");
-
-    // DataLoaderListener가 준비한 서비스 객체를 꺼내 변수에 저장한다.
-    RecipeService recipeService = //
-        (RecipeService) context.get("RecipeService");
-    PhotoBoardService photoBoardService = //
-        (PhotoBoardService) context.get("photoBoardService");
-    BoardService boardService = //
-        (BoardService) context.get("boardService");
-    MemberService memberService = //
-        (MemberService) context.get("memberService");
-
-    // 커맨드 객체 역할을 수행하는 서블릿 객체를 맵에 보관한다.
-    servletMap.put("/board/list", new BoardListServlet(boardService));
-    servletMap.put("/board/add", new BoardAddServlet(boardService));
-    servletMap.put("/board/detail", new BoardDetailServlet(boardService));
-    servletMap.put("/board/update", new BoardUpdateServlet(boardService));
-    servletMap.put("/board/delete", new BoardDeleteServlet(boardService));
-
-    servletMap.put("/recipe/list", new RecipeListServlet(recipeService));
-    servletMap.put("/recipe/add", new RecipeAddServlet(recipeService));
-    servletMap.put("/recipe/detail", new RecipeDetailServlet(recipeService));
-    servletMap.put("/recipe/update", new RecipeUpdateServlet(recipeService));
-    servletMap.put("/recipe/delete", new RecipeDeleteServlet(recipeService));
-    servletMap.put("/recipe/search", new RecipeSearchServlet(recipeService));
-
-    servletMap.put("/member/list", new MemberListServlet(memberService));
-    servletMap.put("/member/add", new MemberAddServlet(memberService));
-    servletMap.put("/member/detail", new MemberDetailServlet(memberService));
-    servletMap.put("/member/update", new MemberUpdateServlet(memberService));
-    servletMap.put("/member/delete", new MemberDeleteServlet(memberService));
-    servletMap.put("/member/search", new MemberSearchServlet(memberService));
-
-    servletMap.put("/photoboard/list", //
-        new PhotoBoardListServlet(photoBoardService, recipeService));
-    servletMap.put("/photoboard/detail", //
-        new PhotoBoardDetailServlet(photoBoardService));
-    servletMap.put("/photoboard/add", //
-        new PhotoBoardAddServlet(photoBoardService, recipeService));
-    servletMap.put("/photoboard/update", //
-        new PhotoBoardUpdateServlet(photoBoardService));
-    servletMap.put("/photoboard/delete", //
-        new PhotoBoardDeleteServlet(photoBoardService));
-
-    servletMap.put("/auth/login", new LoginServlet(memberService));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
 
@@ -206,7 +137,7 @@ public class ServerApp {
         return;
       }
 
-      Servlet servlet = servletMap.get(request);
+      Servlet servlet = (Servlet) iocContainer.getBean(request);
 
       if (servlet != null) {
         try {
@@ -247,7 +178,7 @@ public class ServerApp {
     System.out.println("서버 레시피 관리 시스템입니다.");
 
     ServerApp app = new ServerApp();
-    app.addApplicationContextListener(new DataLoaderListener());
+    app.addApplicationContextListener(new ContextLoaderListener());
     app.service();
   }
 }

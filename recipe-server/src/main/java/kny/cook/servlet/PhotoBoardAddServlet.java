@@ -9,8 +9,10 @@ import kny.cook.domain.PhotoFile;
 import kny.cook.domain.Recipe;
 import kny.cook.service.PhotoBoardService;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/photoboard/add")
 public class PhotoBoardAddServlet implements Servlet {
 
   PhotoBoardService photoBoardService;

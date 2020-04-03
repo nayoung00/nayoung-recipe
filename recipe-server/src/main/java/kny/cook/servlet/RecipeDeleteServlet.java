@@ -3,8 +3,10 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/recipe/delete")
 public class RecipeDeleteServlet implements Servlet {
 
   RecipeService recipeService;

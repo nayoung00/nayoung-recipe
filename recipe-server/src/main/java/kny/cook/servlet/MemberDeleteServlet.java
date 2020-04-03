@@ -3,8 +3,10 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.service.MemberService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/member/delete")
 public class MemberDeleteServlet implements Servlet {
 
   MemberService memberService;

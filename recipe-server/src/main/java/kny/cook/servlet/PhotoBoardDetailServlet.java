@@ -5,8 +5,10 @@ import java.util.Scanner;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.service.PhotoBoardService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/photoboard/detail")
 public class PhotoBoardDetailServlet implements Servlet {
 
   PhotoBoardService photoBoardService;

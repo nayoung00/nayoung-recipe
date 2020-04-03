@@ -4,8 +4,11 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.domain.Board;
 import kny.cook.service.BoardService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+
+@Component("/board/detail")
 public class BoardDetailServlet implements Servlet {
 
   BoardService boardService;

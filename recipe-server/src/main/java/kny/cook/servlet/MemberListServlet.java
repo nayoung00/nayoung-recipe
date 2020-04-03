@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
+import kny.cook.util.Component;
 
+@Component("/member/list")
 public class MemberListServlet implements Servlet {
 
   MemberService memberService;

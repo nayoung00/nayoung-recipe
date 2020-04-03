@@ -4,8 +4,10 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/recipe/update")
 public class RecipeUpdateServlet implements Servlet {
 
   RecipeService recipeService;

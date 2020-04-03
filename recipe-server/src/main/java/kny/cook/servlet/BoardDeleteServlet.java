@@ -3,8 +3,10 @@ package kny.cook.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import kny.cook.service.BoardService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/board/delete")
 public class BoardDeleteServlet implements Servlet {
 
   BoardService boardService;

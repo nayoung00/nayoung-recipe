@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 
+@Component("/recipe/list")
 public class RecipeListServlet implements Servlet {
 
   RecipeService recipeService;

@@ -4,7 +4,9 @@ import java.util.List;
 import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 import kny.cook.service.BoardService;
+import kny.cook.util.Component;
 
+@Component
 public class BoardServiceImpl implements BoardService {
 
   BoardDao boardDao;

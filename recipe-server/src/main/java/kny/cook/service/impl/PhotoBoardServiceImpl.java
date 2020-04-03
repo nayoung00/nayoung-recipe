@@ -8,7 +8,9 @@ import kny.cook.service.PhotoBoardService;
 import kny.cook.sql.PlatformTransactionManager;
 import kny.cook.sql.TransactionCallback;
 import kny.cook.sql.TransactionTemplate;
+import kny.cook.util.Component;
 
+@Component
 public class PhotoBoardServiceImpl implements PhotoBoardService {
 
   TransactionTemplate transactionTemplate;

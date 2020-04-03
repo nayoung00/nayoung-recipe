@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Scanner;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+@Component("/member/search")
 public class MemberSearchServlet implements Servlet {
   MemberService memberService;
 

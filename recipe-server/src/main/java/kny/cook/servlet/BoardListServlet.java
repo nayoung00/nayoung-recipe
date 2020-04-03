@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 import kny.cook.domain.Board;
 import kny.cook.service.BoardService;
+import kny.cook.util.Component;
 
+@Component("/board/list")
 public class BoardListServlet implements Servlet {
 
   BoardService boardService;

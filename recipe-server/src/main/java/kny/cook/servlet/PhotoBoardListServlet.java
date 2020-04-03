@@ -7,8 +7,11 @@ import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.Recipe;
 import kny.cook.service.PhotoBoardService;
 import kny.cook.service.RecipeService;
+import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 
+
+@Component("/photoboard/list")
 public class PhotoBoardListServlet implements Servlet {
 
   PhotoBoardService photoBoardService;
