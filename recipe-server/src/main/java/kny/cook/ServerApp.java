@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.context.ApplicationContext;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.sql.SqlSessionFactoryProxy;
-import kny.cook.util.ApplicationContext;
 import kny.cook.util.RequestHandler;
 import kny.cook.util.RequestMappingHandlerMapping;
 
@@ -66,7 +66,8 @@ public class ServerApp {
 
     // SqlSessionFactory를 꺼낸다.
     SqlSessionFactory sqlSessionFactory = //
-        (SqlSessionFactory) context.get("sqlSessionFactory");
+        (SqlSessionFactory) iocContainer.getBean("sqlSessionFactory");
+
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
 

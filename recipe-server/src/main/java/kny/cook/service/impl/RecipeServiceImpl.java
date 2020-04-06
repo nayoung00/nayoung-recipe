@@ -2,10 +2,10 @@ package kny.cook.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.stereotype.Component;
 import kny.cook.dao.RecipeDao;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
-import kny.cook.util.Component;
 
 @Component
 public class RecipeServiceImpl implements RecipeService {

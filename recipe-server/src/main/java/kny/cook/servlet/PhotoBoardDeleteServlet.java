@@ -2,8 +2,8 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import kny.cook.service.PhotoBoardService;
-import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 

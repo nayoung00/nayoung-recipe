@@ -2,10 +2,10 @@ package kny.cook.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.stereotype.Component;
 import kny.cook.dao.MemberDao;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
-import kny.cook.util.Component;
 
 @Component
 public class MemberServiceImpl implements MemberService {

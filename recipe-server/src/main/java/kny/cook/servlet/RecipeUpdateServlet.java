@@ -2,9 +2,9 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
-import kny.cook.util.Component;
 import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 

@@ -1,6 +1,7 @@
 package kny.cook.service.impl;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
 import kny.cook.dao.PhotoBoardDao;
 import kny.cook.dao.PhotoFileDao;
 import kny.cook.domain.PhotoBoard;
@@ -8,7 +9,6 @@ import kny.cook.service.PhotoBoardService;
 import kny.cook.sql.PlatformTransactionManager;
 import kny.cook.sql.TransactionCallback;
 import kny.cook.sql.TransactionTemplate;
-import kny.cook.util.Component;
 
 @Component
 public class PhotoBoardServiceImpl implements PhotoBoardService {

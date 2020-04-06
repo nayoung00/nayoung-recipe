@@ -1,10 +1,10 @@
 package kny.cook.service.impl;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
 import kny.cook.dao.BoardDao;
 import kny.cook.domain.Board;
 import kny.cook.service.BoardService;
-import kny.cook.util.Component;
 
 @Component
 public class BoardServiceImpl implements BoardService {
