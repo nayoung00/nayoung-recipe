@@ -1,88 +1,80 @@
 package kny.cook;
 
-import java.io.InputStream;
-import org.apache.ibatis.io.Resources;
+import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import kny.cook.dao.BoardDao;
-import kny.cook.dao.MemberDao;
-import kny.cook.dao.PhotoBoardDao;
-import kny.cook.dao.PhotoFileDao;
-import kny.cook.dao.RecipeDao;
-import kny.cook.sql.MybatisDaoFactory;
-import kny.cook.sql.PlatformTransactionManager;
-import kny.cook.sql.SqlSessionFactoryProxy;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 // Spring IoC 컨테이너가 탐색할 패키지 설정
 // => 지정한 패키지 및 하위 패키지를 모두 뒤져서
 // @Component 애노테이션이 붙은 클래스를 찾아 객체를 생성한다.
 //
 @ComponentScan(value = "kny.cook")
+
+// Spring IoC 컨테이너에서 사용할 Properties 파일 로딩
+@PropertySource("classpath:kny/cook/conf/jdbc.properties")
+
+// Mybatis DAO 프록시를 자동 생성할 인터페이스 지정
+@MapperScan("kny.cook.dao")
 public class AppConfig {
 
-  public AppConfig() throws Exception {
+  // @PropertySource로 로딩한 .properties 파일의 값을 사용하고 싶다면,
+  // 다음 애노테이션을 인스턴스 필드 앞에 붙여라.
+  // Spring IoC 컨테이너가 이 클래스의 객체를 생성할 때
+  // 해당 필드의 프로퍼티 값을 자동으로 주입할 것이다.
+  @Value("${jdbc.driver}")
+  String jdbcDriver;
 
-  }
+  @Value("${jdbc.url}")
+  String jdbcUrl;
 
-  // Spring IoC 컨테이너에 수동으로 객체를 등록하고 싶다면,
-  // 그 객체를 만들어 주는 팩토리 메서드를 만든다.
-  // => 단, 메서드 선언부에 @Bean 애노테이션을 붙여야 한다.
-  // => 그래야만 Spring IoC 컨테이너는
-  // 이 메서드를 호출하고 그 리턴값을 보관한다.
-  @Bean
-  public SqlSessionFactory sqlSessionFactory() throws Exception {
-    // Mybatis 설정 파일을 로딩할 때 사용할 입력 스트림 준비
-    InputStream inputStream = Resources.getResourceAsStream("kny/cook/conf/mybatis-config.xml");
+  @Value("${jdbc.username}")
+  String jdbcUsername;
 
-    // 트랜잭션 제어를 위해 오리지널 객체를 프록시 객체에 담아 사용한다.
-    return new SqlSessionFactoryProxy(new SqlSessionFactoryBuilder().build(inputStream));
-  }
+  @Value("${jdbc.password}")
+  String jdbcPassword;
 
   @Bean
-  public MybatisDaoFactory daoFactory(
-      // 이 메서드를 호출할 때 Spring IoC 컨테이너에 들어있는 객체를 원한다면,
-      // 이렇게 파라미터로 선언하라.
-      // 그러면 Spring IoC 컨테이너가 이 팩토리 메서드를 호출하기 전에
-      // SqlSessionFactory를 먼저 준비한 다음에 이 메서드를 실행할 것이다.
-      SqlSessionFactory sqlSessionFactory) {
-
-    // Dao 프록시 객체를 생성해 줄 Factory를 준비
-    return new MybatisDaoFactory(sqlSessionFactory);
+  public DataSource dataSource() {
+    DriverManagerDataSource ds = new DriverManagerDataSource();
+    ds.setDriverClassName(jdbcDriver);
+    ds.setUrl(jdbcUrl);
+    ds.setUsername(jdbcUsername);
+    ds.setPassword(jdbcPassword);
+    return ds;
   }
+
+
+  @Bean
+  public SqlSessionFactory sqlSessionFactory(DataSource dataSource, ApplicationContext appCtx)
+      throws Exception {
+
+    SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+    sqlSessionFactoryBean.setDataSource(dataSource);
+    sqlSessionFactoryBean.setTypeAliasesPackage("kny.cook.domain");
+    sqlSessionFactoryBean
+        .setMapperLocations(appCtx.getResources("classpath:kny/cook/mapper/*Mapper.xml"));
+
+
+    return sqlSessionFactoryBean.getObject();
+  }
+
+
 
   @Bean
   public PlatformTransactionManager TransactionManger(
       // 필요한 값이 있다면 이렇게 파라미터로 선언만 하라.
       // 단 IoC 컨테이너에 들어 있는 값이어야 한다.
-      SqlSessionFactory sqlSessionFactory) {
-    return new PlatformTransactionManager(sqlSessionFactory);
-  }
-
-  @Bean
-  public BoardDao BoardDao(MybatisDaoFactory daoFactory) {
-    return daoFactory.createDao(BoardDao.class);
-  }
-
-  @Bean
-  public RecipeDao RecipeDao(MybatisDaoFactory daoFactory) {
-    return daoFactory.createDao(RecipeDao.class);
-  }
-
-  @Bean
-  public MemberDao MemberDao(MybatisDaoFactory daoFactory) {
-    return daoFactory.createDao(MemberDao.class);
-  }
-
-  @Bean
-  public PhotoBoardDao PhotoBoardDao(MybatisDaoFactory daoFactory) {
-    return daoFactory.createDao(PhotoBoardDao.class);
-  }
-
-  @Bean
-  public PhotoFileDao PhotoFileDao(MybatisDaoFactory daoFactory) {
-    return daoFactory.createDao(PhotoFileDao.class);
+      DataSource dataSource) {
+    return new DataSourceTransactionManager(dataSource);
   }
 
 
