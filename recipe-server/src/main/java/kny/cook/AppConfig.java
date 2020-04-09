@@ -1,5 +1,7 @@
 package kny.cook;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.ComponentScan;
 
 // Spring IoC 컨테이너가 탐색할 패키지 설정
@@ -9,8 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(value = "kny.cook")
 public class AppConfig {
 
+  static Logger logger = LogManager.getLogger(AppConfig.class);
+
   public AppConfig() {
-    System.out.println("AppConfig 객체 생성!");
+    logger.debug("AppConfig 객체 생성!");
   }
 
 }

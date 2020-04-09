@@ -3,6 +3,8 @@ package kny.cook;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -12,6 +14,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import kny.cook.context.ApplicationContextListener;
 import kny.cook.util.RequestHandler;
@@ -19,6 +23,7 @@ import kny.cook.util.RequestMappingHandlerMapping;
 
 public class ServerApp {
 
+  static Logger logger = LogManager.getLogger(ServerApp.class);
   // 옵저버 관련 코드
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
@@ -64,11 +69,11 @@ public class ServerApp {
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
 
-      System.out.println("클라이언트 연결 대기중...");
+      logger.info("클라이언트 연결 대기중...");
 
       while (true) {
         Socket socket = serverSocket.accept();
-        System.out.println("클라이언트와 연결되었음!");
+        logger.info("클라이언트와 연결되었음!");
 
         executorService.submit(() -> {
           processRequest(socket);
@@ -85,7 +90,7 @@ public class ServerApp {
       }
 
     } catch (Exception e) {
-      System.out.println("서버 준비 중 오류 발생!");
+      logger.error(String.format("서버 준비 중 오류 발생!: %s", e.getMessage()));
     }
 
 
@@ -116,7 +121,7 @@ public class ServerApp {
     // DB 커넥션을 닫도록 한다.
     notifyApplicationDestroyed();
 
-    System.out.println("서버 종료!");
+    logger.info("서버 종료!");
   } // service()
 
 
@@ -127,7 +132,7 @@ public class ServerApp {
         PrintStream out = new PrintStream(socket.getOutputStream())) {
 
       String request = in.nextLine();
-      System.out.printf("=> %s\n", request);
+      logger.info(String.format("요청명령 => %s\n", request));
 
       if (request.equalsIgnoreCase("/server/stop")) {
         quit(out);
@@ -144,19 +149,25 @@ public class ServerApp {
           out.println("요청 처리 중 오류 발생!");
           out.println(e.getMessage());
 
-          System.out.println("클라이언트 요청 처리 중 오류 발생:");
-          e.printStackTrace();
+          logger.info("클라이언트 요청 처리 중 오류 발생");
+          logger.info(e.getMessage());
+          StringWriter strWriter = new StringWriter();
+          e.printStackTrace(new PrintWriter(strWriter));
+          logger.debug(strWriter.toString());
         }
       } else {
         notFound(out);
+        logger.info("해당 명령을 지원하지 않습니다.");
       }
       out.println("!end!");
       out.flush();
-      System.out.println("클라이언트에게 응답하였음!");
+      logger.info("클라이언트에게 응답하였음!");
 
     } catch (Exception e) {
-      System.out.println("예외 발생:");
-      e.printStackTrace();
+      logger.error(String.format("예외발생: %s", e.getMessage()));
+      StringWriter strWriter = new StringWriter();
+      e.printStackTrace(new PrintWriter(strWriter));
+      logger.debug(strWriter.toString());
     }
   }
 
@@ -172,7 +183,7 @@ public class ServerApp {
   }
 
   public static void main(String[] args) {
-    System.out.println("서버 레시피 관리 시스템입니다.");
+    logger.info("서버 레시피 관리 시스템입니다.");
 
     ServerApp app = new ServerApp();
     app.addApplicationContextListener(new ContextLoaderListener());
