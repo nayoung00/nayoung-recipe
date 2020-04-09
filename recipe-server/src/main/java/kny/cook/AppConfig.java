@@ -1,7 +1,7 @@
 package kny.cook;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.ComponentScan;
 
 // Spring IoC 컨테이너가 탐색할 패키지 설정
