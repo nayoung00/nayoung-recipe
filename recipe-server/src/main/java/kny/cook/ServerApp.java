@@ -77,9 +77,7 @@ public class ServerApp {
 
         executorService.submit(() -> {
           processRequest(socket);
-
-
-          System.out.println("--------------------------------------");
+          logger.info("--------------------------------------");
         });
 
         // 현재 '서버 멈춤' 상태라면,
@@ -131,15 +129,29 @@ public class ServerApp {
         Scanner in = new Scanner(socket.getInputStream());
         PrintStream out = new PrintStream(socket.getOutputStream())) {
 
-      String request = in.nextLine();
-      logger.info(String.format("요청명령 => %s\n", request));
+      String[] requestLine = in.nextLine().split(" ");
 
-      if (request.equalsIgnoreCase("/server/stop")) {
+      while (true) {
+        String line = in.nextLine();
+        if (line.length() == 0) {
+          break;
+        }
+      }
+
+      String method = requestLine[0];
+      String requestUri = requestLine[1];
+      logger.info(String.format("method => %s", method));
+      logger.info(String.format("request-uri => %s", requestUri));
+
+      // HTTP 응답 헤더 출력
+      printResponsHeader(out);
+
+      if (requestUri.equalsIgnoreCase("/server/stop")) {
         quit(out);
         return;
       }
 
-      RequestHandler requestHandler = handlerMapper.getHandler(request);
+      RequestHandler requestHandler = handlerMapper.getHandler(requestUri);
 
       if (requestHandler != null) {
         try {
@@ -159,7 +171,6 @@ public class ServerApp {
         notFound(out);
         logger.info("해당 명령을 지원하지 않습니다.");
       }
-      out.println("!end!");
       out.flush();
       logger.info("클라이언트에게 응답하였음!");
 
@@ -169,6 +180,13 @@ public class ServerApp {
       e.printStackTrace(new PrintWriter(strWriter));
       logger.debug(strWriter.toString());
     }
+  }
+
+  private void printResponsHeader(PrintStream out) {
+    out.println("HTTP/1.1 200 OK");
+    out.println("Server: reipceServer");
+    out.println();
+
   }
 
   private void notFound(PrintStream out) throws IOException {
