@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -143,6 +144,9 @@ public class ServerApp {
       logger.info(String.format("method => %s", method));
       logger.info(String.format("request-uri => %s", requestUri));
 
+      String servletPath = getServletPath(requestUri);
+      logger.debug(String.format("servlet path => %s", servletPath));
+
       // HTTP 응답 헤더 출력
       printResponsHeader(out);
 
@@ -180,6 +184,34 @@ public class ServerApp {
       e.printStackTrace(new PrintWriter(strWriter));
       logger.debug(strWriter.toString());
     }
+  }
+
+  private String getServletPath(String requestUri) {
+    // requestUri => /member/add?email=aaa@test.com&name=aaa&password=1111
+    return requestUri.split("\\")[0];
+  }
+
+  private Map<String, String> getParameters(String requestUri) throws Exception {
+
+    Map<String, String> params = new HashMap<>();
+    String[] items = requestUri.split("\\?");
+    if (items.length > 1) {
+      logger.debug(String.format("query string => %s", items[1]));
+      String[] entries = items[1].split("&");
+      for (String entry : entries) {
+        logger.debug(String.format("parameter => %s", entry));
+        String[] kv = entry.split("=");
+
+        if (kv.length > 1) {
+          String value = URLDecoder.decode(kv[1], "UTF-8");
+
+          params.put(kv[0], value);
+        } else {
+          params.put(kv[0], "");
+        }
+      }
+    }
+    return params;
   }
 
   private void printResponsHeader(PrintStream out) {
