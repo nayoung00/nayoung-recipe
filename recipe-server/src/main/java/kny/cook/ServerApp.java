@@ -216,7 +216,7 @@ public class ServerApp {
 
   private void printResponsHeader(PrintStream out) {
     out.println("HTTP/1.1 200 OK");
-    out.println("Server: reipceServer");
+    out.println("Server: recipeServer");
     out.println();
 
   }

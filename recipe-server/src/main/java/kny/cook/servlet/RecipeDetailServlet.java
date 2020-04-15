@@ -1,11 +1,10 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
-import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 
 @Component
@@ -19,21 +18,33 @@ public class RecipeDetailServlet {
   }
 
   @RequestMapping("/recipe/detail")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int no = Prompt.getInt(in, out, "번호? ");
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
+    int no = Integer.parseInt(params.get("no"));
+    Recipe recipe = recipeService.get(no);
 
-    Recipe recipe = recipeService.findByNo(no);
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println(" <head>");
+    out.println("<meta charset='UTF-8'>");
+    out.println(" <title>레시피 상세정보</title>");
+    out.println(" </head>");
+    out.println(" <body>");
+    out.println(" <h1> 레시피 상세정보</h1>");
 
     if (recipe != null) {
-      out.printf("번호: %d\n", recipe.getNo());
-      out.printf("요리: %s\n", recipe.getCook());
-      out.printf("재료: %s\n", recipe.getMaterial());
-      out.printf("방법: %s\n", recipe.getMethod());
-      out.printf("비용: %d\n", recipe.getExpense());
-      out.printf("시간: %d\n", recipe.getTime());
+      out.printf("번호: %d<br>\n", recipe.getNo());
+      out.printf("요리: %s<br>\n", recipe.getCook());
+      out.printf("재료: %s<br>\n", recipe.getMaterial());
+      out.printf("방법: %s<br>\n", recipe.getMethod());
+      out.printf("비용: %d<br>\n", recipe.getExpense());
+      out.printf("시간: %d<br>\n", recipe.getTime());
+      out.printf("<p><a href='/recipe/delete?no=%d'삭제</a>\n", recipe.getNo());
+      out.printf("<a href='/recipe/updateForm?no=%d'>변경</a></p>\n", recipe.getNo());
 
     } else {
-      out.println("해당 번호의 레시피가 없습니다.");
+      out.println("<p>해당 번호의 레시피가 없습니다.</p>");
     }
+    out.println(" </body>");
+    out.println(" </html>");
   }
 }

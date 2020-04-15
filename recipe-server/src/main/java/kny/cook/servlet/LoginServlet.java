@@ -1,11 +1,10 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
-import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 
 @Component
@@ -17,16 +16,33 @@ public class LoginServlet {
   }
 
   @RequestMapping("/auth/login")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    String email = Prompt.getString(in, out, "email? ");
-    String password = Prompt.getString(in, out, "password? ");
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
+    String email = params.get("email");
+    String password = params.get("password");
 
-    Member member = memberService.findByEmailAndPassword(email, password);
+    Member member = memberService.get(email, password);
+
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
+    if (member != null) {
+      out.println("<meta http-equiv='refresh' content='2;url=/board/list'>");
+    } else {
+      out.println("<meta http-equiv='refresh' content='2;url=/auth/loginForm'>");
+    }
+    out.println("<title>로그인</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>로그인 결과</h1>");
 
     if (member != null) {
-      out.printf("'%s'님 환영합니다.\n", member.getName());
+      out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
     } else {
-      out.println("사용자가 정보가 유효하지 않습니다.");
+      out.println("<p>사용자가 정보가 유효하지 않습니다.</p>");
     }
+    out.println("</body>");
+    out.println("</html>");
+
   }
 }

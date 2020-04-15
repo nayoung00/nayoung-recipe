@@ -1,11 +1,10 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
-import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 
 @Component
@@ -18,20 +17,24 @@ public class RecipeAddServlet {
   }
 
   @RequestMapping("/recipe/add")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
     Recipe recipe = new Recipe();
+    recipe.setCook(params.get("cook"));
+    recipe.setMaterial(params.get("material"));
+    recipe.setMethod(params.get("method"));
+    recipe.setExpense(Integer.parseInt(params.get("expense")));
+    recipe.setTime(Integer.parseInt(params.get("time")));
 
-    recipe.setCook(Prompt.getString(in, out, "요리? "));
-    recipe.setMaterial(Prompt.getString(in, out, "재료? "));
-    recipe.setMethod(Prompt.getString(in, out, "방법? "));
-    recipe.setExpense(Prompt.getInt(in, out, "비용? "));
-    recipe.setTime(Prompt.getInt(in, out, "시간 ? "));
-
-    if (recipeService.add(recipe) > 0) {
-      out.println("새 레시피를 등록했습니다.");
-
-    } else {
-      out.println("레시피 등록에 실패했습니다.");
-    }
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println(" <meta charset='UTF-8'>");
+    out.println(" <title>레시피 등록</title>");
+    out.println(" </head>");
+    out.println(" <body>");
+    out.println(" <h1>레시피 등록 결과</h1>");
+    out.println(" <p>새 레시피를 등록 했습니다.</p>");
+    out.println(" </body>");
+    out.println(" </html>");
   }
 }

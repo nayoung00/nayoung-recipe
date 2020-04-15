@@ -2,13 +2,11 @@ package kny.cook.servlet;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.PhotoBoard;
 import kny.cook.domain.PhotoFile;
 import kny.cook.service.PhotoBoardService;
-import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 
 @Component
@@ -21,64 +19,46 @@ public class PhotoBoardUpdateServlet {
   }
 
   @RequestMapping("/photoboard/update")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
 
-    int no = Prompt.getInt(in, out, "번호? ");
+    int no = Integer.parseInt(params.get("no"));
+    PhotoBoard photoBoard = photoBoardService.get(no);
+    photoBoard.setTitle(params.get("title"));
 
-    PhotoBoard old = photoBoardService.get(no);
-    if (old == null) {
-      out.println("해당 번호의 게시글이 없습니다.");
-      return;
-    }
-
-    PhotoBoard photoBoard = new PhotoBoard();
-    photoBoard.setNo(no);
-    photoBoard.setTitle(
-        Prompt.getString(in, out, String.format("제목(%s)? ", old.getTitle(), old.getTitle())));
-
-    printPhotoFiles(out, old);
-    out.println();
-    out.println("사진은 일부만 변경할 수 없습니다.");
-    out.println("전체를 새로 등록해야 합니다.");
-
-    String response = Prompt.getString(in, out, "사진을 변경하시겠습니까?(y/n) ");
-
-    if (response.equalsIgnoreCase("y")) {
-      photoBoard.setFiles(inputPhotoFiles(in, out));
-    }
-
-    List<PhotoFile> photoFiles = inputPhotoFiles(in, out);
-  }
-
-  private void printPhotoFiles(PrintStream out, PhotoBoard photoBoard) throws Exception {
-    out.println("사진파일:");
-    List<PhotoFile> oldPhotoFiles = photoBoard.getFiles();
-    for (PhotoFile photoFile : oldPhotoFiles) {
-      out.printf("> %s\n", photoFile.getFilepath());
-    }
-  }
-
-  private List<PhotoFile> inputPhotoFiles(Scanner in, PrintStream out) {
-
-    out.println("최소 한 개 사진 파일을 등록해야 합니다.");
-    out.println("파일명 입력 없이 그냥 엔터를 치면 파일 추가를 마칩니다.");
 
     ArrayList<PhotoFile> photoFiles = new ArrayList<>();
-
-    while (true) {
-      String filepath = Prompt.getString(in, out, "사진 파일? ");
-
-      if (filepath.length() == 0) {
-        if (photoFiles.size() > 0) {
-          break;
-        } else {
-          out.println("최소 한개의 사진 파일을 등록해야 합니다.");
-          continue;
-        }
+    for (int i = 1; i <= 5; i++) {
+      String filepath = params.get("photo" + i);
+      if (filepath.length() > 0) {
+        photoFiles.add(new PhotoFile().setFilepath(filepath));
       }
-      photoFiles.add(new PhotoFile().setFilepath(filepath));
+    }
+    if (photoFiles.size() > 0) {
+      photoBoard.setFiles(photoFiles);
+    } else {
+      photoBoard.setFiles(null);
     }
 
-    return photoFiles;
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
+    out.printf("<meta http-equiv='refresh' content='2;url=/photoboard/list?recipeNo=%d'>", //
+        photoBoard.getRecipe().getNo());
+    out.println("<title>사진 변경</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>사진 변경 결과</h1>");
+
+    try {
+      photoBoardService.update(photoBoard);
+      out.println("<p>사진을 변경했습니다.</p>");
+    } catch (Exception e) {
+      out.println("<p>해당 사진 게시물이 존재하지 않습니다.</p>");
+    }
+
+    out.println("</body>");
+    out.println("</html>");
+
   }
 }

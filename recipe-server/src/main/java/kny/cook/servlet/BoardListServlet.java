@@ -20,7 +20,6 @@ public class BoardListServlet {
   @RequestMapping("/board/list")
   public void service(Scanner in, PrintStream out) throws Exception {
 
-    out.println("");
     out.println(" <!DOCTYPE html>");
     out.println("<html>");
     out.println(" <head>");

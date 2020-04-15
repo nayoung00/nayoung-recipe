@@ -17,6 +17,6 @@ public interface MemberService {
 
   int update(Member member) throws Exception;
 
-  Member findByEmailAndPassword(String email, String password) throws Exception;
+  Member get(String email, String password) throws Exception;
 
 }

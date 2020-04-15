@@ -1,6 +1,5 @@
 package kny.cook.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import kny.cook.dao.RecipeDao;
@@ -27,7 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   @Override
-  public Recipe findByNo(int no) throws Exception {
+  public Recipe get(int no) throws Exception {
     return recipeDao.findByNo(no);
   }
 
@@ -37,8 +36,8 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   @Override
-  public List<Recipe> search(HashMap<String, Object> params) throws Exception {
-    return recipeDao.findByKeyword(params);
+  public List<Recipe> search(String keyword) throws Exception {
+    return recipeDao.findByKeyword(keyword);
   }
 
   @Override

@@ -82,7 +82,7 @@
 - kny.cook.servlet.MemberXxxServlet 변경
 - kny.cook.ServerApp 변경
 
-### 작업10: 수업 관리 서블릿을 모두 변경하기
+### 작업10: 레시피 관리 서블릿을 모두 변경하기
 
 - kny.cook.dao.RecipeDao 변경
   - default 메서드를 추상 메서드로 전환한다.

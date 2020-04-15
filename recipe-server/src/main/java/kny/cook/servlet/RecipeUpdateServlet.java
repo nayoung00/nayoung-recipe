@@ -1,11 +1,10 @@
 package kny.cook.servlet;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
-import kny.cook.util.Prompt;
 import kny.cook.util.RequestMapping;
 
 @Component
@@ -18,34 +17,32 @@ public class RecipeUpdateServlet {
   }
 
   @RequestMapping("/recipe/update")
-  public void service(Scanner in, PrintStream out) throws Exception {
-    int no = Prompt.getInt(in, out, "번호? ");
-
-    Recipe old = recipeService.findByNo(no);
-
-    if (old == null) {
-      out.println("해당 번호의 레시피가 없습니다.");
-      return;
-    }
+  public void service(Map<String, String> params, PrintStream out) throws Exception {
     Recipe recipe = new Recipe();
 
-    recipe.setNo(no);
-    recipe
-        .setCook(Prompt.getString(in, out, String.format("요리(%s)?", old.getCook(), old.getCook())));
-    recipe.setMaterial(
-        Prompt.getString(in, out, String.format("재료(%s)?", old.getMaterial(), old.getMaterial())));
-    recipe.setMethod(
-        Prompt.getString(in, out, String.format("방법(%s)?", old.getMethod(), old.getMethod())));
-    recipe.setExpense(
-        Prompt.getInt(in, out, String.format("비용(%d)?", old.getExpense(), old.getExpense())));
-    recipe.setTime(Prompt.getInt(in, out, String.format("시간(%d)?", old.getTime(), old.getTime())));
+    recipe.setNo(Integer.parseInt(params.get("no")));
+    recipe.setCook(params.get("name"));
+    recipe.setMaterial(params.get("material"));
+    recipe.setMethod(params.get("method"));
+    recipe.setExpense(Integer.parseInt(params.get("expense")));
+    recipe.setTime(Integer.parseInt(params.get("time")));
 
-
+    out.println("<!DOCTYPE html>");
+    out.println("<html>");
+    out.println("<head>");
+    out.println("<meta charset='UTF-8'>");
+    out.println("<meta http-equiv='refresh' content='1;url=/recipe/list'>");
+    out.println("<title>레시피 변경</title>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("<h1>레시피 변경 결과</h1>");
 
     if (recipeService.update(recipe) > 0) {
-      out.println("레시피를 변경했습니다.");
+      out.println("<p>레시피를 변경했습니다.</p>");
     } else {
-      out.println("레시피 변경에 실패했습니다.");
+      out.println("<p>레시피 변경에 실패했습니다.</p>");
     }
+    out.println("</body>");
+    out.println("</html>");
   }
 }
