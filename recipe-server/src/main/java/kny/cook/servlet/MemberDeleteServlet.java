@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.service.MemberService;
@@ -18,7 +18,7 @@ public class MemberDeleteServlet {
 
 
   @RequestMapping("/member/delete")
-  public void service(Map<String, String> params, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
 
     out.println("");
     out.println("<!DOCTYPE html>");

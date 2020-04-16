@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.util.RequestMapping;
@@ -9,7 +9,7 @@ import kny.cook.util.RequestMapping;
 public class BoardAddFormServlet {
 
   @RequestMapping("/board/addForm")
-  public void service(Map<String, String> parmas, PrintStream out) throws Exception {
+  public void service(Map<String, String> parmas, PrintWriter out) throws Exception {
 
     out.println(" <!DOCTYPE html>");
     out.println(" <html>");
@@ -26,6 +26,5 @@ public class BoardAddFormServlet {
     out.println(" </form>");
     out.println("</body>");
     out.println("</html>");
-
   }
 }

@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Recipe;
@@ -18,7 +18,7 @@ public class RecipeDetailServlet {
   }
 
   @RequestMapping("/recipe/detail")
-  public void service(Map<String, String> params, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
     int no = Integer.parseInt(params.get("no"));
     Recipe recipe = recipeService.get(no);
 

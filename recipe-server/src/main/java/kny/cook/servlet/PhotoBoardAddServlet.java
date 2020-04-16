@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class PhotoBoardAddServlet {
   }
 
   @RequestMapping("/photoboard/add")
-  public void service(Map<String, String> params, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
 
     int recipeNo = Integer.parseInt(params.get("RecipeNo"));
     out.println("<!DOCTYPE html>");

@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class RecipeListServlet {
   }
 
   @RequestMapping("/recipe/list")
-  public void service(Scanner in, PrintStream out) throws Exception {
+  public void service(Scanner in, PrintWriter out) throws Exception {
 
     List<Recipe> recipes = recipeService.findAll();
 

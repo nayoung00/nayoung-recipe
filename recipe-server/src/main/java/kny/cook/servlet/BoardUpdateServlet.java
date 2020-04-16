@@ -1,6 +1,6 @@
 package kny.cook.servlet;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import kny.cook.domain.Board;
@@ -17,7 +17,7 @@ public class BoardUpdateServlet {
   }
 
   @RequestMapping("/board/update")
-  public void service(Map<String, String> params, PrintStream out) throws Exception {
+  public void service(Map<String, String> params, PrintWriter out) throws Exception {
 
     Board board = new Board();
     board.setTitle(params.get("title"));
