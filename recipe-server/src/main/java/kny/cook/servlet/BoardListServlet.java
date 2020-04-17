@@ -1,49 +1,65 @@
 package kny.cook.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Board;
 import kny.cook.service.BoardService;
-import kny.cook.util.RequestMapping;
 
-@Component
-public class BoardListServlet {
+@WebServlet("/board/list")
+public class BoardListServlet extends GenericServlet {
 
-  BoardService boardService;
+  private static final long serialVersionUID = 1L;
 
-  public BoardListServlet(BoardService boardService) {
-    this.boardService = boardService;
-  }
+  @Override
+  public void service(ServletRequest req, ServletResponse res)
+      throws ServletException, IOException {
 
-  @RequestMapping("/board/list")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+    try {
 
-    out.println("<!DOCTYPE html>");
-    out.println(" <html>");
-    out.println(" <head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println(" <title>게시글 목록</title>");
-    out.println(" <body>");
-    out.println("<h1>게시글</h1>");
-    out.println("</body>");
-    out.println("<a href='/board/addForm'> 새 글 </a><br>");
-    out.println(" <table border='14'>");
-    out.println(" <tr>");
-    out.println(" <th>번호</th>");
-    out.println(" <th>제목</th>");
-    out.println(" <th>등록일</th>");
-    out.println(" <th>조회수</th>");
-    out.println(" </tr>");
+      res.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = res.getWriter();
 
-    List<Board> boards = boardService.list();
-    for (Board board : boards) {
-      out.printf(
-          "<tr><td>%d</td> <td><a href='/board/detail?no=%d'>%s</a></td> <td>%s</td> <td>%d</td></tr>\n",
-          board.getNo(), board.getNo(), board.getTitle(), board.getDate(), board.getViewCount());
+      ServletContext servletContext = req.getServletContext();
+      ApplicationContext iocContainer =
+          (ApplicationContext) servletContext.getAttribute("iocContainer");
+      BoardService boardService = iocContainer.getBean(BoardService.class);
+
+
+      out.println("<!DOCTYPE html>");
+      out.println(" <html>");
+      out.println(" <head>");
+      out.println("<meta charset='UTF-8'>");
+      out.println(" <title>게시글 목록</title>");
+      out.println(" <body>");
+      out.println("<h1>게시글</h1>");
+      out.println("</body>");
+      out.println("<a href='/board/addForm'> 새 글 </a><br>");
+      out.println(" <table border='14'>");
+      out.println(" <tr>");
+      out.println(" <th>번호</th>");
+      out.println(" <th>제목</th>");
+      out.println(" <th>등록일</th>");
+      out.println(" <th>조회수</th>");
+      out.println(" </tr>");
+
+      List<Board> boards = boardService.list();
+      for (Board board : boards) {
+        out.printf(
+            "<tr><td>%d</td> <td><a href='/board/detail?no=%d'>%s</a></td> <td>%s</td> <td>%d</td></tr>\n",
+            board.getNo(), board.getNo(), board.getTitle(), board.getDate(), board.getViewCount());
+      }
+      out.println(" </head>");
+      out.println("</html>");
+    } catch (Exception e) {
+      throw new ServletException(e);
     }
-    out.println(" </head>");
-    out.println("</html>");
   }
 }

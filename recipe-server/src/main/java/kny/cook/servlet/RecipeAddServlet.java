@@ -1,40 +1,54 @@
 package kny.cook.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Recipe;
-import kny.cook.service.RecipeService;
-import kny.cook.util.RequestMapping;
 
-@Component
-public class RecipeAddServlet {
+@WebServlet("/recipe/add")
+public class RecipeAddServlet extends GenericServlet {
 
-  RecipeService recipeService;
+  private static final long serialVersionUID = 1L;
 
-  public RecipeAddServlet(RecipeService recipeService) {
-    this.recipeService = recipeService;
-  }
 
-  @RequestMapping("/recipe/add")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
-    Recipe recipe = new Recipe();
-    recipe.setCook(params.get("cook"));
-    recipe.setMaterial(params.get("material"));
-    recipe.setMethod(params.get("method"));
-    recipe.setExpense(Integer.parseInt(params.get("expense")));
-    recipe.setTime(Integer.parseInt(params.get("time")));
+  @Override
+  public void service(ServletRequest req, ServletResponse res)
+      throws ServletException, IOException {
 
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println(" <meta charset='UTF-8'>");
-    out.println(" <title>레시피 등록</title>");
-    out.println(" </head>");
-    out.println(" <body>");
-    out.println(" <h1>레시피 등록 결과</h1>");
-    out.println(" <p>새 레시피를 등록 했습니다.</p>");
-    out.println(" </body>");
-    out.println(" </html>");
+    try {
+      res.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = res.getWriter();
+
+      ServletContext servletContext = req.getServletContext();
+      ApplicationContext iocContainer =
+          (ApplicationContext) servletContext.getAttribute("iocContainer");
+
+      Recipe recipe = new Recipe();
+      recipe.setCook(req.getParameter("cook"));
+      recipe.setMaterial(req.getParameter("material"));
+      recipe.setMethod(req.getParameter("method"));
+      recipe.setExpense(Integer.parseInt(req.getParameter("expense")));
+      recipe.setTime(Integer.parseInt(req.getParameter("time")));
+
+      out.println("<!DOCTYPE html>");
+      out.println("<html>");
+      out.println("<head>");
+      out.println(" <meta charset='UTF-8'>");
+      out.println(" <title>레시피 등록</title>");
+      out.println(" </head>");
+      out.println(" <body>");
+      out.println(" <h1>레시피 등록 결과</h1>");
+      out.println(" <p>새 레시피를 등록 했습니다.</p>");
+      out.println(" </body>");
+      out.println(" </html>");
+    } catch (Exception e) {
+      throw new ServletException(e);
+    }
   }
 }

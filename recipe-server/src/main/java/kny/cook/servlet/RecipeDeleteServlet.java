@@ -1,45 +1,58 @@
 package kny.cook.servlet;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
-import org.springframework.stereotype.Component;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
+import org.springframework.context.ApplicationContext;
 import kny.cook.service.RecipeService;
-import kny.cook.util.RequestMapping;
 
-@Component
-public class RecipeDeleteServlet {
-
-  RecipeService recipeService;
-
-  public RecipeDeleteServlet(RecipeService recipeService) {
-    this.recipeService = recipeService;
-  }
-
-  @RequestMapping("/recipe/add")
-  public void service(Map<String, String> params, PrintWriter out) throws Exception {
+@WebServlet("/recipe/delete")
+public class RecipeDeleteServlet extends GenericServlet {
 
 
-    out.println("");
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("<meta charset='UTF-8'>");
-    out.println("<meta http-equiv='refresh' content='2;url=/recipe/list'>");
-    out.println(" <title>레시피 삭제</title>");
-    out.println(" </head>");
-    out.println("<body>");
-    out.println(" <h1>레시피 삭제 결과</h1>");
+  private static final long serialVersionUID = 1L;
 
-    int no = Integer.parseInt(params.get("no"));
+  @Override
+  public void service(ServletRequest req, ServletResponse res)
+      throws ServletException, IOException {
+
+    try {
+      res.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = res.getWriter();
+
+      ServletContext servletContext = req.getServletContext();
+      ApplicationContext iocContainer =
+          (ApplicationContext) servletContext.getAttribute("iocContainer");
+      RecipeService recipeService = iocContainer.getBean(RecipeService.class);
+
+      out.println("<!DOCTYPE html>");
+      out.println("<html>");
+      out.println("<head>");
+      out.println("<meta charset='UTF-8'>");
+      out.println("<meta http-equiv='refresh' content='2;url=/recipe/list'>");
+      out.println(" <title>레시피 삭제</title>");
+      out.println(" </head>");
+      out.println("<body>");
+      out.println(" <h1>레시피 삭제 결과</h1>");
+
+      int no = Integer.parseInt(req.getParameter("no"));
 
 
-    if (recipeService.delete(no) > 0) {
-      out.println("<p>레시피를 삭제했습니다.</p>");
-    } else {
-      out.println("<p>해당 번호의 레시피가 없습니다.</p>");
+      if (recipeService.delete(no) > 0) {
+        out.println("<p>레시피를 삭제했습니다.</p>");
+      } else {
+        out.println("<p>해당 번호의 레시피가 없습니다.</p>");
+      }
+      out.println("</body>");
+      out.println("</html>");
+    } catch (Exception e) {
+      throw new ServletException(e);
     }
-    out.println("</body>");
-    out.println("</html>");
   }
-
 }
+

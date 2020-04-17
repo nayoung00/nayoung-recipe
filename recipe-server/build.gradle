@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'eclipse'
+    id 'eclipse-wtp' 
+    id 'war'
 }
 
 tasks.withType(JavaCompile) {
@@ -36,6 +37,15 @@ dependencies {
     implementation 'org.mybatis:mybatis:3.5.4'
     
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.5.4'
+
+    // Servlet-API
+    // => 컴파일 할 때만 사용한다.
+    // => 배치할 때는 포함하지 않는다.
+    // => 왜? 서버에 이미 라이브러리가 있기 때문에
+    // 의존라이브러리 옵션
+    // => implementation: 컴파일한 후 생성되는 빌드 파일에 포함된다.
+    // => compileOnly: 컴파일한 후 생성되는 빌드 파일에 포함되지 않는다.
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
   
