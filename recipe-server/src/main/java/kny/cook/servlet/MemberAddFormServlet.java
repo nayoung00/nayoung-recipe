@@ -28,7 +28,7 @@ public class MemberAddFormServlet extends GenericServlet {
       out.println(" </head>");
       out.println(" <body>");
       out.println(" <h1>회원 입력</h1>");
-      out.println(" <form action='/member/add'>");
+      out.println(" <form action='add'>");
       out.println("  이름:<br>");
       out.println(" <textarea name='name' rows='1' cols='60'></textarea><br>");
       out.println("  이메일:<br>");

@@ -3,12 +3,10 @@ package kny.cook.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Recipe;
 
 @WebServlet("/recipe/add")
@@ -25,10 +23,6 @@ public class RecipeAddServlet extends GenericServlet {
       res.setContentType("text/html;charset=UTF-8");
       PrintWriter out = res.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
-      ApplicationContext iocContainer =
-          (ApplicationContext) servletContext.getAttribute("iocContainer");
-
       Recipe recipe = new Recipe();
       recipe.setCook(req.getParameter("cook"));
       recipe.setMaterial(req.getParameter("material"));
@@ -40,6 +34,7 @@ public class RecipeAddServlet extends GenericServlet {
       out.println("<html>");
       out.println("<head>");
       out.println(" <meta charset='UTF-8'>");
+      out.println("<meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>레시피 등록</title>");
       out.println(" </head>");
       out.println(" <body>");

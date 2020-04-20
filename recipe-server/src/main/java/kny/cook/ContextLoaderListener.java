@@ -52,7 +52,7 @@ public class ContextLoaderListener implements ServletContextListener {
     String[] beanNames = appCtx.getBeanDefinitionNames();
     for (String beanName : beanNames) {
       logger.debug(
-          String.format("%s ======> %s", beanName, appCtx.getBean(beanName).getClass().getName()));
+          String.format("%s =====> %s", beanName, appCtx.getBean(beanName).getClass().getName()));
     }
   }
 

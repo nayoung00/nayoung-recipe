@@ -38,8 +38,7 @@ public class PhotoBoardAddServlet extends GenericServlet {
       out.println("<html>");
       out.println("<head>");
       out.println("<meta charset='UTF-8'>");
-      out.println(
-          "<meta http-equiv='refresh' content='2;url=/photoboard/list?recipeNo=" + recipeNo + "'>");
+      out.println("<meta http-equiv='refresh' content='2;url=list?recipeNo=" + recipeNo + "'>");
       out.println("<title>사진 입력</title>");
       out.println("</head>");
       out.println("<body>");

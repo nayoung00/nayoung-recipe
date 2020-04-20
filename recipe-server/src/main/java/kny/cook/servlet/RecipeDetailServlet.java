@@ -14,8 +14,6 @@ import kny.cook.service.RecipeService;
 
 @WebServlet("/recipe/detail")
 public class RecipeDetailServlet extends GenericServlet {
-
-
   private static final long serialVersionUID = 1L;
 
   @Override
@@ -43,20 +41,30 @@ public class RecipeDetailServlet extends GenericServlet {
       out.println(" <h1> 레시피 상세정보</h1>");
 
       if (recipe != null) {
-        out.printf("번호: %d<br>\n", recipe.getNo());
-        out.printf("요리: %s<br>\n", recipe.getCook());
-        out.printf("재료: %s<br>\n", recipe.getMaterial());
-        out.printf("방법: %s<br>\n", recipe.getMethod());
-        out.printf("비용: %d<br>\n", recipe.getExpense());
-        out.printf("시간: %d<br>\n", recipe.getTime());
-        out.printf("<p><a href='/recipe/delete?no=%d'삭제</a>\n", recipe.getNo());
-        out.printf("<a href='/recipe/updateForm?no=%d'>변경</a></p>\n", recipe.getNo());
-
+        out.println("<form action='update'>");
+        out.printf("번호: <input name='no' readonly type='text' value='%d'><br>\n", recipe.getNo());
+        out.printf("요리: <input name='cook' readonly type='text' value='%s'><br>\n",
+            recipe.getCook());
+        out.printf("재료: <input name='material' readonly type='text' value='%s'><br>\n",
+            recipe.getMaterial());
+        out.printf("방법<br>");
+        out.printf(" <textarea name='method' rows='5' cols='60'>%s</textarea><br>\n",
+            recipe.getMethod());
+        out.printf("비용: <input name='expense' readonly type='text' value='%d'><br>\n",
+            recipe.getExpense());
+        out.printf("시간: <input name='time' readonly type='text' value='%d'><br>\n",
+            recipe.getTime());
+        out.println("<p>");
+        out.println("<button>변경</button>");
+        out.printf("<a href='delete?no=%d'>삭제</a>\n", recipe.getNo());
+        out.printf("<a href='../photoboard/list?recipeNo=%d'>사진게시판</a>\n", recipe.getNo());
+        out.println("</p>");
+        out.println("</form>");
       } else {
-        out.println("<p>해당 번호의 레시피가 없습니다.</p>");
+        out.println("<p>해당 번호의 강의가 없습니다.</p>");
       }
-      out.println(" </body>");
-      out.println(" </html>");
+      out.println("</body>");
+      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

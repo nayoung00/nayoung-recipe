@@ -53,7 +53,7 @@ public class RecipeSearchServlet extends GenericServlet {
       List<Recipe> recipes = recipeService.search(keyword);
       for (Recipe recipe : recipes) {
         out.printf(
-            "<tr><td>%d</td> <a href='/member/detail?no=%d'>%s</a></td>  <td>%s</td> <td>%s</td> <td>%d</td> <td>%d</td></tr>\n",
+            "<tr><td>%d</td> <a href='detail?no=%d'>%s</a></td>  <td>%s</td> <td>%s</td> <td>%d</td> <td>%d</td></tr>\n",
             recipe.getNo(), recipe.getNo(), recipe.getCook(), recipe.getMaterial(),
             recipe.getMethod(), recipe.getExpense(), recipe.getTime());
       }

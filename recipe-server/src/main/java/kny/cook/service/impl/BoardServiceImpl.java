@@ -16,8 +16,18 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
+  public void add(Board board) throws Exception {
+    boardDao.insert(board);
+  }
+
+  @Override
   public List<Board> list() throws Exception {
     return boardDao.findAll();
+  }
+
+  @Override
+  public int delete(int no) throws Exception {
+    return boardDao.delete(no);
   }
 
   @Override
@@ -29,17 +39,4 @@ public class BoardServiceImpl implements BoardService {
   public int update(Board board) throws Exception {
     return boardDao.update(board);
   }
-
-  @Override
-  public int delete(int no) throws Exception {
-    return boardDao.delete(no);
-  }
-
-  @Override
-  public void add(Board board) throws Exception {
-    boardDao.insert(board);
-  }
-
-
-
 }

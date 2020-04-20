@@ -34,7 +34,7 @@ public class RecipeDeleteServlet extends GenericServlet {
       out.println("<html>");
       out.println("<head>");
       out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=/recipe/list'>");
+      out.println("<meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>레시피 삭제</title>");
       out.println(" </head>");
       out.println("<body>");

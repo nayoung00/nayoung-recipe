@@ -3,13 +3,10 @@ package kny.cook.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import org.springframework.context.ApplicationContext;
-import kny.cook.domain.Recipe;
 
 @WebServlet("/recipe/addForm")
 public class RecipeAddFormServlet extends GenericServlet {
@@ -23,12 +20,6 @@ public class RecipeAddFormServlet extends GenericServlet {
       res.setContentType("text/html;charset=UTF-8");
       PrintWriter out = res.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
-      ApplicationContext iocContainer =
-          (ApplicationContext) servletContext.getAttribute("iocContainer");
-
-      Recipe recipe = new Recipe();
-
       out.println("<!DOCTYPE html>");
       out.println(" <html>");
       out.println(" <head>");
@@ -37,7 +28,7 @@ public class RecipeAddFormServlet extends GenericServlet {
       out.println(" </head>");
       out.println(" <body>");
       out.println(" <h1>레시피 입력</h1>");
-      out.println(" <form action='/recipe/add'>");
+      out.println(" <form action='add'>");
       out.println(" 요리:<br>");
       out.println(" <textarea name='cook' rows='1' cols='60'></textarea><br>");
       out.println(" 재료:<br>");

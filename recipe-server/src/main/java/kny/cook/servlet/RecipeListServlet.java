@@ -42,7 +42,7 @@ public class RecipeListServlet extends GenericServlet {
       out.println(" <body>");
       out.println("  <h1> 레시피 </h1>");
       out.println("  </body>");
-      out.println("  <a href='/board/addForm'> 새 글 </a><br>");
+      out.println("  <a href='addForm'> 새 글 </a><br>");
       out.println("  <table border='14'>");
       out.println("  <tr>");
       out.println(" <th>번호</th>");
@@ -54,7 +54,7 @@ public class RecipeListServlet extends GenericServlet {
       out.println(" </tr>");
       for (Recipe recipe : recipes) {
         out.printf(
-            "<tr><td>%d</td>, <td><a href='/recipe/detail?no=%d'>%s</a></td>, <td>%s</td>, <td>%s</td>, <td>%d</td>, <td>%d</td></tr>\n",
+            "<tr><td>%d</td>, <td><a href='detail?no=%d'>%s</a></td>, <td>%s</td>, <td>%s</td>, <td>%d</td>, <td>%d</td></tr>\n",
             recipe.getNo(), recipe.getNo(), recipe.getCook(), recipe.getMaterial(),
             recipe.getMethod(), recipe.getExpense(), recipe.getTime());
       }

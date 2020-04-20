@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.util.Scanner;
 
 public class Prompt {
-
   public static int getInt(Scanner in, PrintStream out, String title) {
     try {
       return Integer.parseInt(getString(in, out, title));
@@ -22,12 +21,10 @@ public class Prompt {
     }
   }
 
-
   public static String getString(Scanner in, PrintStream out, String title) {
     out.println(title);
     out.println("!{}!");
     out.flush();
-
     return in.nextLine();
   }
 

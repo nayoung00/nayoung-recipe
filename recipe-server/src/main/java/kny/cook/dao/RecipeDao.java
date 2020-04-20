@@ -1,6 +1,7 @@
 package kny.cook.dao;
 
 import java.util.List;
+import java.util.Map;
 import kny.cook.domain.Recipe;
 
 public interface RecipeDao {
@@ -15,7 +16,5 @@ public interface RecipeDao {
 
   int delete(int no) throws Exception;
 
-  default List<Recipe> findByKeyword(String keyword) throws Exception {
-    return null;
-  }
+  List<Recipe> findByKeyword(Map<String, Object> params) throws Exception;
 }
