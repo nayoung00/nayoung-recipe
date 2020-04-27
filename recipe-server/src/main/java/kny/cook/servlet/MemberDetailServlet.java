@@ -2,35 +2,35 @@ package kny.cook.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 
 @WebServlet("/member/detail")
-public class MemberDetailServlet extends GenericServlet {
+public class MemberDetailServlet extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void service(ServletRequest req, ServletResponse res)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
-      res.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = res.getWriter();
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
+      ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
 
-      int no = Integer.parseInt(req.getParameter("no"));
+      int no = Integer.parseInt(request.getParameter("no"));
 
       Member member = memberService.findByNo(no);
 
@@ -44,7 +44,7 @@ public class MemberDetailServlet extends GenericServlet {
       out.println("<h1>회원 상세정보</h1>");
 
       if (member != null) {
-        out.println("<form action=' update'>");
+        out.println("<form action='update'>");
         out.printf("번호: <input name='no' type='text' readonly value='%d'><br>\n", member.getNo());
         out.printf("이름: <input name='name' type='text' value='%s'><br>\n", member.getName());
         out.printf("이메일: <input name='email' type='text' value='%s'><br>\\n\n", member.getEmail());

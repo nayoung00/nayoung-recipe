@@ -3,31 +3,30 @@ package kny.cook.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 
 @WebServlet("/recipe/list")
-public class RecipeListServlet extends GenericServlet {
-
+public class RecipeListServlet extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void service(ServletRequest req, ServletResponse res)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
-      res.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = res.getWriter();
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
+      ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       RecipeService recipeService = iocContainer.getBean(RecipeService.class);
@@ -42,7 +41,7 @@ public class RecipeListServlet extends GenericServlet {
       out.println(" <body>");
       out.println("  <h1> 레시피 </h1>");
       out.println("  </body>");
-      out.println("  <a href='addForm'> 새 글 </a><br>");
+      out.println("  <a href='add'> 새 글 </a><br>");
       out.println("  <table border='14'>");
       out.println("  <tr>");
       out.println(" <th>번호</th>");

@@ -3,29 +3,29 @@ package kny.cook.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
 
 @WebServlet("/member/list")
-public class MemberListServlet extends GenericServlet {
+public class MemberListServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void service(ServletRequest req, ServletResponse res)
+  protected void doPost(HttpServletRequest request, HttpServletResponse respons)
       throws ServletException, IOException {
 
     try {
-      res.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = res.getWriter();
+      respons.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = respons.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
+      ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
@@ -38,7 +38,7 @@ public class MemberListServlet extends GenericServlet {
       out.println("</head>");
       out.println("<body>");
       out.println("<h1>회원</h1>");
-      out.println("<a href='addForm'>새 회원</a><br>");
+      out.println("<a href='add'>새 회원</a><br>");
       out.println("<table border='1'>");
       out.println("<tr>");
       out.println("<th>번호</th>");

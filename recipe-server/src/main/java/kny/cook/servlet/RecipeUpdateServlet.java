@@ -2,31 +2,31 @@ package kny.cook.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Recipe;
 import kny.cook.service.RecipeService;
 
 @WebServlet("/recipe/update")
-public class RecipeUpdateServlet extends GenericServlet {
+public class RecipeUpdateServlet extends HttpServlet {
 
 
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void service(ServletRequest req, ServletResponse res)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
-      res.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = res.getWriter();
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = req.getServletContext();
+      ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
 
@@ -34,12 +34,12 @@ public class RecipeUpdateServlet extends GenericServlet {
 
       Recipe recipe = new Recipe();
 
-      recipe.setNo(Integer.parseInt(req.getParameter("no")));
-      recipe.setCook(req.getParameter("name"));
-      recipe.setMaterial(req.getParameter("material"));
-      recipe.setMethod(req.getParameter("method"));
-      recipe.setExpense(Integer.parseInt(req.getParameter("expense")));
-      recipe.setTime(Integer.parseInt(req.getParameter("time")));
+      recipe.setNo(Integer.parseInt(request.getParameter("no")));
+      recipe.setCook(request.getParameter("name"));
+      recipe.setMaterial(request.getParameter("material"));
+      recipe.setMethod(request.getParameter("method"));
+      recipe.setExpense(Integer.parseInt(request.getParameter("expense")));
+      recipe.setTime(Integer.parseInt(request.getParameter("time")));
 
       out.println("<!DOCTYPE html>");
       out.println("<html>");
