@@ -39,6 +39,7 @@ public class BoardDetailServlet extends HttpServlet {
       out.println("<html>");
       out.println(" <head>");
       out.println("<meta charset='UTF-8'>");
+      out.println("<meta http-equiv='refresh' content='2; url=list'>");
       out.println(" <title>게시글 상세정보</title>");
       out.println(" </head>");
       out.println(" <body>");
@@ -49,7 +50,7 @@ public class BoardDetailServlet extends HttpServlet {
         out.printf("제목: %s<br>\n", board.getTitle());
         out.printf("등록일: %s<br>\n", board.getDate());
         out.printf("조회수: %d<br>\n", board.getViewCount());
-        out.printf("<p><a href='delete?no=%d'삭제</a>\n", board.getNo());
+        out.printf("<p><a href='delete?no=%d'>삭제</a>\n", board.getNo());
         out.printf("<a href='update?no=%d'>변경</a></p>\n", board.getNo());
       } else {
         out.println("<p>해당 번호의 게시물이 없습니다.</p>");

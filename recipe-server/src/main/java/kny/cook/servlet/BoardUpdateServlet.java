@@ -85,7 +85,7 @@ public class BoardUpdateServlet extends HttpServlet {
       out.println("<html>");
       out.println("<head>");
       out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
+      out.println("<meta http-equiv='refresh' content='1;url=list'>");
       out.println("<title>게시글 변경</title>");
       out.println("</head>");
       out.println("<body>");

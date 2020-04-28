@@ -28,10 +28,10 @@
   </select>
   
   
-  <select id="insert" parameterType ="Board">
+  <insert id="insert" parameterType ="Board">
     insert into rms_board(conts) 
     values(#{title})
-  </select>
+  </insert>
   
   
   <select id="findByNo" resultMap="BoardMap" parameterType ="int">
@@ -40,17 +40,17 @@
     board_id=#{no}
   </select>
   
-   <select id="update" parameterType ="board">
+   <update id="update" parameterType ="board" >
    update 
     rms_board set 
-    conts=#{board}
+    conts=#{title}
    where board_id =#{no}
-    </select>
+    </update>
     
-  <select id="delete" parameterType ="int">
+  <delete id="delete" parameterType ="int">
     delete 
       from rms_board 
     where board_id=#{no}
-  </select>
+  </delete>
     
 </mapper>
