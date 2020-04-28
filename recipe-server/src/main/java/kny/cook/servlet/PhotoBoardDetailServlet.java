@@ -19,7 +19,7 @@ public class PhotoBoardDetailServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
       response.setContentType("text/html;charset=UTF-8");
@@ -43,7 +43,7 @@ public class PhotoBoardDetailServlet extends HttpServlet {
       out.println("<h1>사진 상세정보</h1>");
 
       if (photoBoard != null) {
-        out.println("<form action='update'>");
+        out.println("<form action='update' method='post'>");
         out.printf("번호: <intput name='no' type='text' readonly value='%d'><br>\n",
             photoBoard.getNo());
         out.printf("제목: <textarea name='title' rows='1' cols='60'>%s</textarea><br>\n",

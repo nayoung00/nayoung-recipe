@@ -17,7 +17,7 @@ public class RecipeDetailServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
       response.setContentType("text/html;charset=UTF-8");
@@ -41,7 +41,7 @@ public class RecipeDetailServlet extends HttpServlet {
       out.println(" <h1> 레시피 상세정보</h1>");
 
       if (recipe != null) {
-        out.println("<form action='update'>");
+        out.println("<form action='update' method='post'>");
         out.printf("번호: <input name='no' readonly type='text' value='%d'><br>\n", recipe.getNo());
         out.printf("요리: <input name='cook' readonly type='text' value='%s'><br>\n",
             recipe.getCook());

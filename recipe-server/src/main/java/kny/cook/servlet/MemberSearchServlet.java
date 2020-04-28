@@ -19,7 +19,7 @@ public class MemberSearchServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
@@ -53,7 +53,7 @@ public class MemberSearchServlet extends HttpServlet {
       List<Member> members = memberService.search(keyword);
       for (Member member : members) {
         out.printf(
-            "<tr> <td>%d</td><td><a href='detail?no=%d'>%s</a></td> <td>%s</td> <td>%s</td> <td>%s</td> </tr>\n",
+            "<tr> <td>%d</td><td><a href='detail?no=%d'>%s</a></td> <td>%s</td> <td>%s</td> <td>%s</td></tr>\n",
             member.getNo(), member.getNo(), member.getName(), member.getEmail(), member.getTel(),
             member.getRegisteredDate());
       }

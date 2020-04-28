@@ -18,17 +18,18 @@ public class MemberListServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse respons)
+  protected void doGet(HttpServletRequest request, HttpServletResponse respons)
       throws ServletException, IOException {
 
     try {
       respons.setContentType("text/html;charset=UTF-8");
       PrintWriter out = respons.getWriter();
 
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
+
 
       out.println("<!DOCTYPE html>");
       out.println("<html>");
@@ -52,20 +53,18 @@ public class MemberListServlet extends HttpServlet {
 
       for (Member member : members) {
         out.printf(
-            "<tr><td>%d</td>, <td><a href='detail?no=%d'>%s</a></td>, <td>%s</td>, <td>%s</td>, <td>%s</td>, <td>%s</td></tr>\n",
-            member.getNo(), member.getNo(), member.getName(), member.getEmail(),
-            member.getRegisteredDate(), member.getTel(), member.getPhoto());
+            "<tr><td>%d</td>, <td><a href='detail?no=%d'>%s</a></td>, <td>%s</td>, <td>%s</td>, <td>%s</td></tr>\n",
+            member.getNo(), member.getNo(), member.getName(), member.getEmail(), member.getTel(),
+            member.getRegisteredDate());
       }
       out.println("</table>");
 
       out.println("<hr>");
-
-      out.println("<form action='search'>");
+      out.println("<form action='search' method='get'>");
       out.println("검색어: <input name='keyword' type='text'>");
       out.println("<button>검색</button>");
       out.println("</body>");
       out.println("</html>");
-
     } catch (Exception e) {
       throw new ServletException(e);
     }

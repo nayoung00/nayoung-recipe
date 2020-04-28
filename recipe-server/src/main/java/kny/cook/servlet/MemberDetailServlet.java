@@ -18,7 +18,7 @@ public class MemberDetailServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
@@ -44,10 +44,10 @@ public class MemberDetailServlet extends HttpServlet {
       out.println("<h1>회원 상세정보</h1>");
 
       if (member != null) {
-        out.println("<form action='update'>");
+        out.println("<form action='update' method='post'>");
         out.printf("번호: <input name='no' type='text' readonly value='%d'><br>\n", member.getNo());
         out.printf("이름: <input name='name' type='text' value='%s'><br>\n", member.getName());
-        out.printf("이메일: <input name='email' type='text' value='%s'><br>\\n\n", member.getEmail());
+        out.printf("이메일: <input name='email' type='text' value='%s'><br>\n", member.getEmail());
         out.printf("암호: <input name='password' type='password'><br>\n", member.getPassword());
         out.printf("사진:  <input name='photo' type='text' value='%s'><br>\n", member.getPhoto());
         out.printf("전화:  <input name='tel' type='text' value='%s'><br>\n", member.getTel());

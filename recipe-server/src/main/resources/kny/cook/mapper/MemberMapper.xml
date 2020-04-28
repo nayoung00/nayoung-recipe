@@ -59,16 +59,19 @@
       member_id=#{no}
   </select>
   
-  <update id="update" parameterType="Member">
-    update rms_member set
-      name=#{name}, 
-      email=#{email}, 
-      pwd=password(#{password}), 
-      tel=#{tel}, 
-      photo=#{photo}
+    <update id="update" parameterType="Member">
+    update rms_member
+    <set>
+      <if test="name != null and name != ''">name=#{name},</if>
+      <if test="email != null and email != ''">email=#{email},</if> 
+      <if test="password != null and password != ''">pwd=password(#{password}),</if>
+      <if test="tel != null and tel != ''">tel=#{tel},</if>
+      <if test="photo != null and photo != ''">photo=#{photo}</if>
+    </set>
     where 
       member_id=#{no}
   </update>
+
   
   <delete id="delete" parameterType="int">
     delete from rms_member
@@ -80,10 +83,10 @@
     parameterType="string">
     <bind name="keywordPattern" value="'%' + _parameter + '%'"/>
     select 
-     <include refid="select1"/>
+      <include refid="select1"/>
       cdt
     from 
-      rms_member
+      lms_member
     where 
       name like #{keywordPattern}
       or email like #{keywordPattern}

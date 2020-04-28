@@ -19,7 +19,7 @@ public class RecipeListServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
@@ -42,7 +42,7 @@ public class RecipeListServlet extends HttpServlet {
       out.println("  <h1> 레시피 </h1>");
       out.println("  </body>");
       out.println("  <a href='add'> 새 글 </a><br>");
-      out.println("  <table border='14'>");
+      out.println("  <table border='1'>");
       out.println("  <tr>");
       out.println(" <th>번호</th>");
       out.println("  <th>요리</th>");
