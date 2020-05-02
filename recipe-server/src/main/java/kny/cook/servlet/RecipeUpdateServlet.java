@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +23,6 @@ public class RecipeUpdateServlet extends HttpServlet {
 
     try {
       response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
@@ -41,23 +39,13 @@ public class RecipeUpdateServlet extends HttpServlet {
       recipe.setExpense(Integer.parseInt(request.getParameter("expense")));
       recipe.setTime(Integer.parseInt(request.getParameter("time")));
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='1;url=list'>");
-      out.println("<title>레시피 변경</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>레시피 변경 결과</h1>");
-
       if (recipeService.update(recipe) > 0) {
-        out.println("<p>레시피를 변경했습니다.</p>");
+        response.sendRedirect("list");
       } else {
-        out.println("<p>레시피 변경에 실패했습니다.</p>");
+        request.getSession().setAttribute("errorMessage", "레시피를 변경할 수 없습니다.");
+        request.getSession().setAttribute("url", "recipe/list");
+        response.sendRedirect("../error");
       }
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

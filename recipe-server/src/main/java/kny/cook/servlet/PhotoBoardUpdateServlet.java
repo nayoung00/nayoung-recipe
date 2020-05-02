@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,16 +20,16 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    int no = Integer.parseInt(request.getParameter("no"));
+    int recipeNo = 0;
     try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
-      int no = Integer.parseInt(request.getParameter("no"));
       PhotoBoard photoBoard = photoBoardService.get(no);
       photoBoard.setTitle(request.getParameter("title"));
 
@@ -47,30 +46,14 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       } else {
         photoBoard.setFiles(null);
       }
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.printf("<meta http-equiv='refresh' content='2;url=list?recipeNo=%d'>", //
-          photoBoard.getRecipe().getNo());
-      out.println("<title>사진 변경</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>사진 변경 결과</h1>");
-
-      try {
-        photoBoardService.update(photoBoard);
-        out.println("<p>사진을 변경했습니다.</p>");
-      } catch (Exception e) {
-        out.println("<p>해당 사진 게시물이 존재하지 않습니다.</p>");
-      }
-
-      out.println("</body>");
-      out.println("</html>");
+      recipeNo = photoBoard.getRecipe().getNo();
+      photoBoardService.update(photoBoard);
+      response.sendRedirect("list?recipeNo=" + recipeNo);
 
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.getSession().setAttribute("errorMessage", e.getMessage());
+      request.getSession().setAttribute("url", "photoboard/list?recipeNo=" + recipeNo);
+      response.sendRedirect("../error");
     }
   }
 }

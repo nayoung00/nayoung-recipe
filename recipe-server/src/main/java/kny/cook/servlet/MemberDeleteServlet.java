@@ -2,7 +2,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,33 +21,21 @@ public class MemberDeleteServlet extends HttpServlet {
 
     try {
       response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
 
-      out.println("");
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
-      out.println(" <title>회원 삭제</title>");
-      out.println(" </head>");
-      out.println("<body>");
-      out.println(" <h1>회원 삭제 결과</h1>");
-
       int no = Integer.parseInt(request.getParameter("no"));
 
       if (memberService.delete(no) > 0) {
-        out.println("<p>회원을 삭제했습니다.</p>");
+        response.sendRedirect("list");
       } else {
-        out.println("<p>해당 번호의 회원이 없습니다.</p>");
+        request.getSession().setAttribute("errorMessage", "삭제할 회원 번호가 유효하지 않습니다.");
+        request.getSession().setAttribute("url", "member/list");
+        response.sendRedirect("../error");
       }
-      out.println("</body>");
-      out.println("</html>");
     } catch (Exception e) {
       throw new ServletException(e);
     }

@@ -58,8 +58,6 @@ public class RecipeAddServlet extends HttpServlet {
 
     try {
       request.setCharacterEncoding("UTF-8");
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
@@ -77,18 +75,14 @@ public class RecipeAddServlet extends HttpServlet {
 
       recipeService.add(recipe);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println(" <meta charset='UTF-8'>");
-      out.println(" <meta http-equiv='refresh' content='2;url=list'>");
-      out.println(" <title>레시피 등록</title>");
-      out.println(" </head>");
-      out.println(" <body>");
-      out.println(" <h1>레시피 등록 결과</h1>");
-      out.println(" <p>새 레시피를 등록 했습니다.</p>");
-      out.println(" </body>");
-      out.println(" </html>");
+      if (recipeService.add(recipe) > 0) {
+        response.sendRedirect("list");
+      } else {
+        request.getSession().setAttribute("errorMessage", "레시피를 추가할 수 없습니다.");
+        request.getSession().setAttribute("url", "recipe/list");
+        response.sendRedirect("../error");
+      }
+
     } catch (Exception e) {
       throw new ServletException(e);
     }
