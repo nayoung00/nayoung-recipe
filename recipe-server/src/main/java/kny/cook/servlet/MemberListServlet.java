@@ -58,7 +58,6 @@ public class MemberListServlet extends HttpServlet {
             member.getRegisteredDate());
       }
       out.println("</table>");
-
       out.println("<hr>");
       out.println("<form action='search' method='get'>");
       out.println("검색어: <input name='keyword' type='text'>");

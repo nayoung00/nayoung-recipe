@@ -2,12 +2,15 @@ package kny.cook.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Recipe;
+import kny.cook.service.RecipeService;
 
 @WebServlet("/recipe/add")
 public class RecipeAddServlet extends HttpServlet {
@@ -24,12 +27,11 @@ public class RecipeAddServlet extends HttpServlet {
       out.println(" <html>");
       out.println(" <head>");
       out.println(" <meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>레시피 입력</title>");
       out.println(" </head>");
       out.println(" <body>");
       out.println(" <h1>레시피 입력</h1>");
-      out.println(" <form action='add'>");
+      out.println(" <form action='add' method='post'>");
       out.println(" 요리:<br>");
       out.println(" <textarea name='cook' rows='1' cols='60'></textarea><br>");
       out.println(" 재료:<br>");
@@ -55,8 +57,16 @@ public class RecipeAddServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
+      request.setCharacterEncoding("UTF-8");
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
+
+      ServletContext servletContext = getServletContext();
+      ApplicationContext iocContainer =
+          (ApplicationContext) servletContext.getAttribute("iocContainer");
+
+      RecipeService recipeService = iocContainer.getBean(RecipeService.class);
+
 
       Recipe recipe = new Recipe();
       recipe.setCook(request.getParameter("cook"));
@@ -65,11 +75,13 @@ public class RecipeAddServlet extends HttpServlet {
       recipe.setExpense(Integer.parseInt(request.getParameter("expense")));
       recipe.setTime(Integer.parseInt(request.getParameter("time")));
 
+      recipeService.add(recipe);
+
       out.println("<!DOCTYPE html>");
       out.println("<html>");
       out.println("<head>");
       out.println(" <meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
+      out.println(" <meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>레시피 등록</title>");
       out.println(" </head>");
       out.println(" <body>");

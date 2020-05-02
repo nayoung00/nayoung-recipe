@@ -22,10 +22,11 @@ public class MemberAddServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
+      request.setCharacterEncoding("UTF-8");
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
 
@@ -44,6 +45,7 @@ public class MemberAddServlet extends HttpServlet {
       out.println("<html>");
       out.println("<head>");
       out.println(" <meta charset='UTF-8'>");
+      out.println("<meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>회원 등록</title>");
       out.println(" </head>");
       out.println(" <body>");
@@ -69,12 +71,11 @@ public class MemberAddServlet extends HttpServlet {
       out.println(" <html>");
       out.println(" <head>");
       out.println("  <meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2;url=list'>");
       out.println(" <title>회원 입력</title>");
       out.println(" </head>");
       out.println(" <body>");
       out.println(" <h1>회원 입력</h1>");
-      out.println(" <form action='add'>");
+      out.println(" <form action='add' method='post'>");
       out.println("  이름:<br>");
       out.println(" <textarea name='name' rows='1' cols='60'></textarea><br>");
       out.println("  이메일:<br>");

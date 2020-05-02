@@ -14,7 +14,7 @@
     <association property="recipe" javaType="Recipe">
       <id column="recipe_id" property="no"/>
       <result column="cook" property="cook"/>
-    </association>
+    </association>  
     
     <collection property="files" ofType="PhotoFile">
       <id column="photo_file_id"   property="no"/>
@@ -24,7 +24,8 @@
     
   <insert id="insertPhotoBoard" parameterType="PhotoBoard"
     useGeneratedKeys="true" keyColumn="photo_id" keyProperty="no">
-    insert into rms_photo(titl,recipe_id) 
+    insert 
+      into rms_photo(titl,recipe_id) 
     values(#{cook}, #{recipe.no})
   </insert>
   
@@ -43,21 +44,24 @@
 
   <select id="findByNo" resultMap="PhotoBoardMap" parameterType="int">
     select
+      p.photo_id,
       p.titl,
       p.cdt,
       p.vw_cnt,
       r.recipe_id,
-      r.cook,
+      r.cook    ,
       f.photo_file_id,
       f.file_path
     from rms_photo p
       inner join rms_recipe r on p.recipe_id=r.recipe_id
       left outer join rms_photo_file f on p.photo_id=f.photo_id
-    where photo_id=#{no}
+    where 
+      p.photo_id=#{no}
   </select>
   
   <update id="update" parameterType="PhotoBoard">
-    update rms_photo set
+    update 
+      rms_photo set
       titl=#{title}
     where photo_id=#{no}
   </update>

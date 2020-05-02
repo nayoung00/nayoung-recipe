@@ -26,7 +26,7 @@ public class PhotoBoardListServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       RecipeService recipeService = iocContainer.getBean(RecipeService.class);
@@ -47,7 +47,6 @@ public class PhotoBoardListServlet extends HttpServlet {
           throw new Exception("레시피 번호가 유효하지 않습니다.");
         }
         out.printf("  <h1>요리 사진 - %s</h1>", recipe.getCook());
-
         out.printf("  <a href='add?recipeNo=%d'>새 사진</a><br>\n", //
             recipeNo);
         out.println("  <table border='1'>");

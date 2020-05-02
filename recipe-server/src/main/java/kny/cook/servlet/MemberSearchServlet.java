@@ -26,7 +26,7 @@ public class MemberSearchServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      ServletContext servletContext = request.getServletContext();
+      ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
