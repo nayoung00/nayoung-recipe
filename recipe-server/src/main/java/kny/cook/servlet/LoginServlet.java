@@ -24,24 +24,23 @@ public class LoginServlet extends HttpServlet {
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>로그인</title>");
-      out.println("</head>");
-      out.println("<body>");
+      request.getRequestDispatcher("/header").include(request, response);
+
+
       out.println("<h1>로그인</h1>");
       out.println("<form action='login' method='post'>");
       out.println("이메일: <input name='email' type='email'><br>");
       out.println("암호: <input name='password' type='password'><br>");
       out.println("<button>로그인</button>");
       out.println("</form>");
-      out.println("</body>");
-      out.println("</html>");
+
+      request.getRequestDispatcher("/footer").include(request, response);
 
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list");
+      request.getRequestDispatcher("/error").forward(request, response);
+
     }
   }
 
@@ -87,8 +86,7 @@ public class LoginServlet extends HttpServlet {
 
     } catch (Exception e) {
       request.setAttribute("error", e);
-      request.setAttribute("url", "list");
-      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.setAttribute("url", "login");
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }

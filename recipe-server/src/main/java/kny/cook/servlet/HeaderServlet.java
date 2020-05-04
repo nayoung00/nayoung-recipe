@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import kny.cook.domain.Member;
 
 @WebServlet("/header")
 public class HeaderServlet extends HttpServlet {
@@ -59,6 +60,16 @@ public class HeaderServlet extends HttpServlet {
     out.println("      <a class='nav-link' href='../auth/login'>로그인</a>");
     out.println("    </li>");
     out.println("  </ul>");
+    Member loginUser = (Member) request.getSession().getAttribute("loginUser");
+    if (loginUser != null) {
+      out.printf(" <span class='navbar-text'> %s </span>\n", loginUser.getName());
+      out.println(
+          " <button type='button' class='btn btn-outline-danger btn-sm'><a href='../auth/login'> 로그아웃 </a></button>");
+    } else {
+
+      out.println(
+          " <button type='button' class='btn btn-outline-danger btn-sm'><a href='../auth/login'> 로그인 </a></button>");
+    }
     out.println("</div>");
     out.println("</nav>");
     out.println("<div class='container'>"); // 가운데정렬

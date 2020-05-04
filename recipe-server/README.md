@@ -1,24 +1,25 @@
-# 46_4 - 포워딩과 인클루딩 활용
+# 46_5 - HttpSession을 활용하여 로그인, 로그아웃 구현하기
 
 
-## 실습 소스 및 결과
+## 작업 소스 및 결과
 
-- src/main/java/kny/cook/servlet/HeaderServlet.java 추가
-- src/main/java/kny/cook/servlet/FooterServlet.java 추가
-- src/main/java/kny/cook/servlet/XxxServlet 변경
+- src/main/java/kny/com/servlet/HeaderServlet.java 변경
+- src/main/java/kny/com/servlet/LoginServlet.java 추가
+- src/main/java/kny/com/servlet/LogoutServlet.java 추가
 
 
-### 작업1: 오류가 발생하면 ErrorServlet 으로 포워딩 한다.
 
-- kny.cook.servlet.XxxServlet 변경
-  - 정상적으로 실행했을 경우 목록 화면으로 리다이렉트 한다.
-  - 오류가 발생했을 경우 ErrorServlet 으로 포워딩 한다.
-- kny.cook.servlet.ErrorServlet 변경
-  - ServletRequest 보관소에서 오류 객체를 꺼내 오류 내용을 출력한다. 
-  - doGet() 대신 GET/POST 모두 처리할 수 있는 service()를 오버라이딩 한다.
+### 작업1: 로그인 처리하기
+
+- kny.com.servlet.LoginServlet 변경
+  - 사용자 인증(authentication)이 성공하면 HttpSession 보관소에 사용자 정보를 저장한다.
   
-### 작업2: 화면의 상단과 하단을 출력할 서블릿을 만들고 각 페이지에 포함한다.
+### 작업2: 상단 메뉴바에 로그인 사용자의 정보를 출력하기
 
-- kny.cook.servlet.HeaderServlet 추가
-- kny.cook.servlet.FooterServlet 추가
-- kny.cook.servlet.XxxServlet 변경
+- kny.com.servlet.HeaderServlet 변경
+  - HttpSession에서 로그인 사용자 정보를 꺼내 이름을 출력한다.
+  
+### 작업3: 로그아웃 처리하기
+
+- kny.com.servlet.LogoutServlet 추가
+  - HttpSession을 무효화시킨다.
