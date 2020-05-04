@@ -32,7 +32,7 @@ public class ErrorServlet extends HttpServlet {
     if (url != null) {
       out.printf("<p><a href-'%s'> 뒤로가기</a></p>", url);
     }
-    out.println("</body>");
-    out.println("</html>");
+    request.getRequestDispatcher("/footer").include(request, response);
+
   }
 }

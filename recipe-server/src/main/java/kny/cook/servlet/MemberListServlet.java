@@ -18,12 +18,12 @@ public class MemberListServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse respons)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     try {
-      respons.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = respons.getWriter();
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
@@ -65,7 +65,10 @@ public class MemberListServlet extends HttpServlet {
       out.println("</body>");
       out.println("</html>");
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list");
+      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }

@@ -103,9 +103,10 @@ public class PhotoBoardAddServlet extends HttpServlet {
       response.sendRedirect("list?recipeNo=" + recipeNo);
 
     } catch (Exception e) {
-      request.getSession().setAttribute("errorMessage", e.getMessage());
-      request.getSession().setAttribute("url", "photoboard.list?recipeNo=" + recipeNo);
-      response.sendRedirect("../error");
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list");
+      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }

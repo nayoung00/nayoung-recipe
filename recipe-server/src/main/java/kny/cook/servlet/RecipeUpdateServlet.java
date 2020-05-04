@@ -47,7 +47,10 @@ public class RecipeUpdateServlet extends HttpServlet {
         response.sendRedirect("../error");
       }
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list");
+      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.getRequestDispatcher("/error").forward(request, response);
     }
   }
 }
