@@ -23,7 +23,7 @@ public class HeaderServlet extends HttpServlet {
     out.println("<html>");
     out.println("<head>");
     out.println("<meta charset='UTF-8'>");
-    out.println("<title>Bitcamp-LMS</title>");
+    out.println("<title>recipe</title>");
     out.println(
         "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>");
 
@@ -56,19 +56,14 @@ public class HeaderServlet extends HttpServlet {
     out.println("    <li class='nav-item'>");
     out.println("      <a class='nav-link' href='../member/list'>회원</a>");
     out.println("    </li>");
-    out.println("    <li class='nav-item'>");
-    out.println("      <a class='nav-link' href='../auth/login'>로그인</a>");
-    out.println("    </li>");
     out.println("  </ul>");
     Member loginUser = (Member) request.getSession().getAttribute("loginUser");
     if (loginUser != null) {
-      out.printf(" <span class='navbar-text'> %s </span>\n", loginUser.getName());
-      out.println(
-          " <button type='button' class='btn btn-outline-danger btn-sm'><a href='../auth/login'> 로그아웃 </a></button>");
+      out.printf("  <span class='navbar-text'>%s</span>\n", //
+          loginUser.getName());
+      out.println("  <a href='../auth/logout' class='btn btn-success btn-sm'>로그아웃</a>");
     } else {
-
-      out.println(
-          " <button type='button' class='btn btn-outline-danger btn-sm'><a href='../auth/login'> 로그인 </a></button>");
+      out.println("  <a href='../auth/login' class='btn btn-success btn-sm'>로그인</a>");
     }
     out.println("</div>");
     out.println("</nav>");
