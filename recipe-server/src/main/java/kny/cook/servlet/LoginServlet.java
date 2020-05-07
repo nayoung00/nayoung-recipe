@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,17 @@ public class LoginServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
+      String email = "";
+      Cookie[] cookies = request.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if (cookie.getName().equals("email")) {
+            email = cookie.getValue();
+            break;
+          }
+        }
+      }
+
       response.setContentType("text/html;charset=UTF-8");
       PrintWriter out = response.getWriter();
 
@@ -58,6 +70,15 @@ public class LoginServlet extends HttpServlet {
 
       String email = request.getParameter("email");
       String password = request.getParameter("password");
+      String saveEmail = request.getParameter("saveEmail");
+
+      Cookie cookie = new Cookie("email", email);
+      if (saveEmail != null) {
+        cookie.setMaxAge(60 * 60 * 24 * 30);
+      } else {
+        cookie.setMaxAge(0);
+      }
+      response.addCookie(cookie);
 
       Member member = memberService.get(email, password);
 

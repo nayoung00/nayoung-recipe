@@ -1,25 +1,14 @@
-# 46_5 - HttpSession을 활용하여 로그인, 로그아웃 구현하기
+# 46_6 - Cookie를 활용하여 사용자 이메일을 보관하기
+
 
 
 ## 작업 소스 및 결과
 
-- src/main/java/kny/com/servlet/HeaderServlet.java 변경
-- src/main/java/kny/com/servlet/LoginServlet.java 추가
-- src/main/java/kny/com/servlet/LogoutServlet.java 추가
+- src/main/java/kny/cook/servlet/LoginServlet.java 변경
 
 
+### 작업1: 로그인 처리 후에 이메일을 쿠키로 웹브라우저에게 보내기
 
-### 작업1: 로그인 처리하기
-
-- kny.com.servlet.LoginServlet 변경
-  - 사용자 인증(authentication)이 성공하면 HttpSession 보관소에 사용자 정보를 저장한다.
+- kny.cook.servlet.LoginServlet 변경
+  - 로그인을 처리할 때 클라이언트가 보낸 이메일을 쿠키로 보관하게 한다.
   
-### 작업2: 상단 메뉴바에 로그인 사용자의 정보를 출력하기
-
-- kny.com.servlet.HeaderServlet 변경
-  - HttpSession에서 로그인 사용자 정보를 꺼내 이름을 출력한다.
-  
-### 작업3: 로그아웃 처리하기
-
-- kny.com.servlet.LogoutServlet 추가
-  - HttpSession을 무효화시킨다.
