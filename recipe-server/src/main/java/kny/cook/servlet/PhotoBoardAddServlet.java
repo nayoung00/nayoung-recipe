@@ -21,28 +21,25 @@ public class PhotoBoardAddServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse respons)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    int recipeNo = Integer.parseInt(request.getParameter("reicpeNo"));
     try {
-      respons.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = respons.getWriter();
+      response.setContentType("text/html;charset=UTF-8");
+      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       RecipeService recipeService = iocContainer.getBean(RecipeService.class);
 
-      int recipeNo = Integer.parseInt(request.getParameter("RecipeNo"));
       Recipe recipe = recipeService.get(recipeNo);
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<title>사진 입력</title>");
-      out.println("</head>");
-      out.println("<body>");
+
+      request.getRequestDispatcher("/header").include(request, response);
+
       out.println("<h1>사진 입력</h1>");
-      out.println("<form action='add'>");
+      out.println("<form action='add' method='post' enctype='multipart/form-data'>");
       out.printf("레시피번호: <input name='recipeNo' type='text' value='%d' readonly><br>\n", //
           recipe.getNo());
       out.printf("요리명: %s<br>\n", recipe.getCook());
@@ -56,10 +53,14 @@ public class PhotoBoardAddServlet extends HttpServlet {
       out.println("사진: <input name='photo5' type='file'><br>");
       out.println("<button>제출</button>");
       out.println("</form>");
-      out.println("</body>");
-      out.println("</html>");
+
+      request.getRequestDispatcher("/footer").include(request, response);
+
     } catch (Exception e) {
-      throw new ServletException(e);
+      request.setAttribute("error", e);
+      request.setAttribute("url", "list?recipeNo=" + recipeNo);
+      request.getRequestDispatcher("/error").forward(request, response);
+
     }
   }
 

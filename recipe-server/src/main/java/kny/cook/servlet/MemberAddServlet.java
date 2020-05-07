@@ -2,12 +2,14 @@ package kny.cook.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import org.springframework.context.ApplicationContext;
 import kny.cook.domain.Member;
 import kny.cook.service.MemberService;
@@ -38,6 +40,15 @@ public class MemberAddServlet extends HttpServlet {
       member.setPhoto(request.getParameter("photo"));
       member.setTel(request.getParameter("tel"));
       memberService.add(member);
+
+
+      Part photoPart = request.getPart("photo");
+      if (photoPart.getSize() > 0) {
+        String dirPath = getServletContext().getRealPath("/upload/memger");
+        String filename = UUID.randomUUID().toString();
+        photoPart.write(dirPath + "/" + filename);
+        member.setPhoto(filename);
+      }
 
       if (memberService.add(member) > 0) {
         response.sendRedirect("list");
