@@ -32,27 +32,15 @@ public class LoginServlet extends HttpServlet {
           }
         }
       }
+      request.setAttribute("email", email);
 
       response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-
-      request.getRequestDispatcher("/header").include(request, response);
-
-
-      out.println("<h1>로그인</h1>");
-      out.println("<form action='login' method='post'>");
-      out.println("이메일: <input name='email' type='email'><br>");
-      out.println("암호: <input name='password' type='password'><br>");
-      out.println("<button>로그인</button>");
-      out.println("</form>");
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      request.getRequestDispatcher("/auth/form.jsp").include(request, response);
 
     } catch (Exception e) {
       request.setAttribute("error", e);
       request.setAttribute("url", "list");
       request.getRequestDispatcher("/error").forward(request, response);
-
     }
   }
 
@@ -81,29 +69,16 @@ public class LoginServlet extends HttpServlet {
       response.addCookie(cookie);
 
       Member member = memberService.get(email, password);
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("<meta charset='UTF-8'>");
       if (member != null) {
-        out.println("<meta http-equiv='refresh' content='2;url=../board/list'>");
+        request.getSession().setAttribute("loginUser", member);
+        response.setHeader("Refresh", "2;url=../index.html");
       } else {
-        out.println("<meta http-equiv='refresh' content='2; url=login'>");
-      }
-      out.println("<title>로그인</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>로그인 결과</h1>");
-
-      if (member != null) {
-        out.printf("<p>'%s'님 환영합니다.</p>\n", member.getName());
-      } else {
-        out.println("<p>사용자 정보가 유효하지 않습니다.</p>");
+        request.getSession().invalidate();
+        response.setHeader("Refresh", "2;url=login");
       }
 
-      out.println("</body>");
-      out.println("</html>");
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/auth/login.jsp").include(request, response);
 
     } catch (Exception e) {
       request.setAttribute("error", e);

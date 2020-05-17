@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,40 +22,24 @@ public class BoardDetailServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-
       ServletContext servletContext = request.getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       BoardService boardService = iocContainer.getBean(BoardService.class);
 
       int no = Integer.parseInt(request.getParameter("no"));
-
       Board board = boardService.get(no);
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println(" <head>");
-      out.println("<meta charset='UTF-8'>");
-      out.println("<meta http-equiv='refresh' content='2; url=list'>");
-      out.println(" <title>게시글 상세정보</title>");
-      out.println(" </head>");
-      out.println(" <body>");
-      out.println(" <h1> 게시물 상세정보</h1>");
-
-      if (board != null) {
-        out.printf("번호: %d<br>\n", board.getNo());
-        out.printf("제목: %s<br>\n", board.getTitle());
-        out.printf("등록일: %s<br>\n", board.getDate());
-        out.printf("조회수: %d<br>\n", board.getViewCount());
-        out.printf("<p><a href='delete?no=%d'>삭제</a>\n", board.getNo());
-        out.printf("<a href='update?no=%d'>변경</a></p>\n", board.getNo());
-      } else {
-        out.println("<p>해당 번호의 게시물이 없습니다.</p>");
+      if (board == null) {
+        throw new Exception("<p>해당 번호의 게시물이 없습니다.</p>");
       }
-      out.println("</body>");
-      out.println("</html>");
+
+      // JSP가 출력할 때 사용할 수 있도록 조회 결과를 ServletRequest 보관소에 담는다.
+      request.setAttribute("board", board);
+
+      // 출력을 담당할 JSP를 인클루딩 한다.
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/board/detail.jsp").include(request, response);
+
     } catch (Exception e) {
 
       request.setAttribute("error", e);

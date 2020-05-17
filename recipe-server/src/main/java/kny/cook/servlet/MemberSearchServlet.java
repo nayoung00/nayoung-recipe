@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -23,47 +22,18 @@ public class MemberSearchServlet extends HttpServlet {
       throws ServletException, IOException {
 
     try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
-
       ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       MemberService memberService = iocContainer.getBean(MemberService.class);
 
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>회원 검색</title>");
-      out.println("</head>");
-      out.println("<body>");
-      out.println("  <h1>회원 검색 결과</h1>");
-      out.println("  <table border='1'>");
-      out.println("  <tr>");
-      out.println("    <th>번호</th>");
-      out.println("    <th>이름</th>");
-      out.println("    <th>이메일</th>");
-      out.println("    <th>전화</th>");
-      out.println("    <th>등록일</th>");
-      out.println("  </tr>");
-
       String keyword = request.getParameter("keyword");
-
       List<Member> members = memberService.search(keyword);
-      for (Member member : members) {
-        out.printf(
-            "<tr> <td>%d</td><td><a href='detail?no=%d'>%s</a></td> <td>%s</td> <td>%s</td> <td>%s</td></tr>\n",
-            member.getNo(), member.getNo(), member.getName(), member.getEmail(), member.getTel(),
-            member.getRegisteredDate());
-      }
-      out.println("</table>");
-      out.println("</body>");
-      out.println("</html>");
+      request.setAttribute("list", members);
+
     } catch (Exception e) {
       request.setAttribute("error", e);
       request.setAttribute("url", "list");
-      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }
