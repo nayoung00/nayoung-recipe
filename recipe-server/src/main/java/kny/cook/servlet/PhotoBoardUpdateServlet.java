@@ -23,7 +23,6 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
     int no = Integer.parseInt(request.getParameter("no"));
     int recipeNo = 0;
     try {
@@ -56,14 +55,14 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       } else {
         photoBoard.setFiles(null);
       }
+
       recipeNo = photoBoard.getRecipe().getNo();
       photoBoardService.update(photoBoard);
       response.sendRedirect("list?recipeNo=" + recipeNo);
 
     } catch (Exception e) {
       request.setAttribute("error", e);
-      request.setAttribute("url", "list");
-      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.setAttribute("url", "list?recipeNo=" + recipeNo);
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }

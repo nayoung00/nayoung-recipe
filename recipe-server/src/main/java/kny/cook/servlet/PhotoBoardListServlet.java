@@ -1,7 +1,6 @@
 package kny.cook.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -22,61 +21,30 @@ public class PhotoBoardListServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    int recipeNo = Integer.parseInt(request.getParameter("recipeNo"));
     try {
-      response.setContentType("text/html;charset=UTF-8");
-      PrintWriter out = response.getWriter();
 
       ServletContext servletContext = getServletContext();
       ApplicationContext iocContainer =
           (ApplicationContext) servletContext.getAttribute("iocContainer");
       RecipeService recipeService = iocContainer.getBean(RecipeService.class);
       PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
-
-      out.println("<!DOCTYPE html>");
-      out.println("<html>");
-      out.println("<head>");
-      out.println("  <meta charset='UTF-8'>");
-      out.println("  <title>레시피 사진 목록</title>");
-      out.println("</head>");
-      out.println("<body>");
-
-      try {
-        int recipeNo = Integer.parseInt(request.getParameter("no"));
-        Recipe recipe = recipeService.get(recipeNo);
-        if (recipe == null) {
-          throw new Exception("레시피 번호가 유효하지 않습니다.");
-        }
-        out.printf("  <h1>요리 사진 - %s</h1>", recipe.getCook());
-        out.printf("  <a href='add?recipeNo=%d'>새 사진</a><br>\n", //
-            recipeNo);
-        out.println("  <table border='1'>");
-        out.println("  <tr>");
-        out.println("    <th>번호</th>");
-        out.println("    <th>제목</th>");
-        out.println("    <th>등록일</th>");
-        out.println("    <th>조회수</th>");
-        out.println("  </tr>");
-
-
-        List<PhotoBoard> photoBoards = photoBoardService.listRecipePhoto(recipeNo);
-
-        for (PhotoBoard photoBoard : photoBoards) {
-          out.printf(
-              "<tr><td>%d</td> <td><a href='detail?no=%d'>%s</a></td> <td>%s</td> <td>%d</td></tr>\n",
-              photoBoard.getNo(), photoBoard.getNo(), photoBoard.getTitle(),
-              photoBoard.getCreatedDate(), photoBoard.getViewCount());
-        }
-        out.println("</table>");
-
-      } catch (Exception e) {
-        out.printf("<p>%s</p>\n", e.getMessage());
+      Recipe recipe = recipeService.get(recipeNo);
+      if (recipe == null) {
+        throw new Exception("레시피 번호가 유효하지 않습니다.");
       }
-      out.println("</body>");
-      out.println("</html>");
+      request.setAttribute("recipe", recipe);
+
+      List<PhotoBoard> photoBoards = photoBoardService.listRecipePhoto(recipeNo);
+      request.setAttribute("list", photoBoards);
+
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/photoboard/list.jsp").include(request, response);
+
     } catch (Exception e) {
       request.setAttribute("error", e);
-      request.setAttribute("url", "list");
-      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.setAttribute("url", "list?recipeNo=" + recipeNo);
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }

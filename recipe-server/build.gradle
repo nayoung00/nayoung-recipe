@@ -66,4 +66,13 @@ dependencies {
  implementation 'org.springframework.security:spring-security-web:5.3.2.RELEASE'
  
  implementation 'org.springframework.security.oauth:spring-security-oauth2:2.4.1.RELEASE'
+ 
+ // Oauth2 login
+ implementation 'com.github.scribejava:scribejava-apis:6.9.0'
+ 
+ implementation 'com.github.scribejava:scribejava-core:6.9.0'
+ 
+ implementation 'com.github.spring-social:spring-social-google:1.1.3'
+ 
+ 
 }

@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import kny.cook.service.PhotoBoardService;
 import kny.cook.service.RecipeService;
 
 @WebServlet("/photoboard/add")
+@MultipartConfig(maxFileSize = 500000)
 public class PhotoBoardAddServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
@@ -35,26 +37,10 @@ public class PhotoBoardAddServlet extends HttpServlet {
       RecipeService recipeService = iocContainer.getBean(RecipeService.class);
 
       Recipe recipe = recipeService.get(recipeNo);
+      request.setAttribute("recipe", recipe);
 
-      request.getRequestDispatcher("/header").include(request, response);
-
-      out.println("<h1>사진 입력</h1>");
-      out.println("<form action='add' method='post' enctype='multipart/form-data'>");
-      out.printf("레시피번호: <input name='recipeNo' type='text' value='%d' readonly><br>\n", //
-          recipe.getNo());
-      out.printf("요리명: %s<br>\n", recipe.getCook());
-      out.println("내용:<br>");
-      out.println("<textarea name='title' rows='5' cols='60'></textarea><br>");
-      out.println("<hr>");
-      out.println("사진: <input name='photo1' type='file'><br>");
-      out.println("사진: <input name='photo2' type='file'><br>");
-      out.println("사진: <input name='photo3' type='file'><br>");
-      out.println("사진: <input name='photo4' type='file'><br>");
-      out.println("사진: <input name='photo5' type='file'><br>");
-      out.println("<button>제출</button>");
-      out.println("</form>");
-
-      request.getRequestDispatcher("/footer").include(request, response);
+      response.setContentType("text/html;charset=UTF-8");
+      request.getRequestDispatcher("/photoboard/form.jsp").include(request, response);
 
     } catch (Exception e) {
       request.setAttribute("error", e);
@@ -105,8 +91,7 @@ public class PhotoBoardAddServlet extends HttpServlet {
 
     } catch (Exception e) {
       request.setAttribute("error", e);
-      request.setAttribute("url", "list");
-      // 포워드 인쿨르드에서 루트는 현재 웹어플리케이션을 의미한다.
+      request.setAttribute("url", "list?recipeNo=" + recipeNo);
       request.getRequestDispatcher("/error").forward(request, response);
     }
   }
